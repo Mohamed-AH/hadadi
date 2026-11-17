@@ -1,10 +1,10 @@
-# CLAUDE.md — دروس فضيلة الشيخ حسن بن علي حدادي
+# CLAUDE.md — الموقع الرسمي لفضيلة الشيخ حسن بن علي بن حسن حدادي
 
 Arabic (RTL) website for the lessons, khutab and lectures of **الشيخ حسن بن علي حدادي حفظه الله** (Jeddah), built from his two Telegram channels. It runs on the same engine as Mohamed-AH/yahyaaljabri (which is itself a fork of Mohamed-AH/drwasiullah): same pipeline, player, pre-renderer, Worker and tests, but its own look and content. Read `README.md` for the pipeline.
 
 ## State (2026-11-17)
-- First version: 516 recordings in 27 series (≈247 hours) from t.me/h_haddadi7 (main channel) and t.me/masothrbj47 («دروس الشيخ … رقم 2»), JSON exports without media, 555 pages. e2e 26/26, xss pass, axe 0 violations, player 12/12, worker/bot tests pass.
-- **Not «الموقع الرسمي»:** the site says «دروس فضيلة الشيخ …» (`OFFICIAL_PRE` in `core.js`) until the Sheikh's side asks for the official wording.
+- 556 recordings in 28 series (≈257 hours) after the 2026-11-17 title/merge fixes (first version: 516 in 27) from t.me/h_haddadi7 (main channel) and t.me/masothrbj47 («دروس الشيخ … رقم 2»), JSON exports without media, 555 pages. e2e 26/26, xss pass, axe 0 violations, player 12/12, worker/bot tests pass.
+- **Official site (owner 2026-11-17):** «الموقع الرسمي لفضيلة الشيخ حسن بن علي بن حسن حدادي» (`OFFICIAL_PRE`, `FULL_NAME` in `core.js`; the header keeps the short «الشيخ حسن بن علي حدادي»). Links: the main Telegram channel and the WhatsApp group (`WA_GROUP`); the second channel (masothrbj47) is still imported but not linked.
 - **Audio not hosted yet:** every lesson page links to its Telegram post. When the owner runs `tools/fetch_audio.py` (Telethon, his own account; uploads mono AAC to R2 bucket `hadadi-media`, writes `site/data/media.json`) the pages get the docked player. Note: once `media.json` exists, `scripts/build.mjs` publishes **only** hosted lessons (the Jabri owner's rule); `SHOW_UNHOSTED=1` keeps the rest. Decide with the owner before the first upload.
 - No domain yet: `SITE` in `core.js` is the workers.dev address (`SITE_URL` overrides). `MEDIA_HOST` in `worker/index.js` is a placeholder until the bucket has a public domain.
 - No timers, announcements bot or YouTube sync yet (`JOBS = {}`, `crons: []`, no workflows). The code for them is still here from the Jabri site.

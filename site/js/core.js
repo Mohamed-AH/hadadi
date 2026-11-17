@@ -6,15 +6,16 @@ import { ICONS } from "./icons.js";
 export const SITE = ((typeof process !== "undefined" && process.env && process.env.SITE_URL) || "https://hadadi.emah84.workers.dev").replace(/\/$/, "");
 export const NAME = "الشيخ حسن بن علي حدادي";
 export const NAME_FULL = `${NAME} حفظه الله`;
-export const OFFICIAL_PRE = "دروس فضيلة الشيخ";   // not «الموقع الرسمي» until the Sheikh's side asks for that wording
-export const FULL_NAME = "حسن بن علي حدادي";
+export const OFFICIAL_PRE = "الموقع الرسمي لفضيلة الشيخ";   // owner 2026-11-17: «الموقع الرسمي لفضيلة الشيخ حسن بن علي بن حسن حدادي»
+export const FULL_NAME = "حسن بن علي بن حسن حدادي";
 export const ROLE = "";
 export const OFFICIAL_NAME = `${OFFICIAL_PRE} ${FULL_NAME}`;
 export const YT_CHANNEL = "";
 export const TG_CHANNEL = "https://t.me/h_haddadi7";
-export const TG_CHANNEL_2 = "https://t.me/masothrbj47";
+export const TG_CHANNEL_2 = "https://t.me/masothrbj47";   // lessons are still imported from it; not linked (owner 2026-11-17)
+export const WA_GROUP = "https://chat.whatsapp.com/BupKFX5G3236scpMYX05L1";
 export const LINKS = [
-  { t: "قناة الشيخ على تيليجرام", h: TG_CHANNEL }, { t: "قناة الدروس الثانية", h: TG_CHANNEL_2 },
+  { t: "قناة الشيخ على تيليجرام", h: TG_CHANNEL }, { t: "مجموعة الشيخ على واتساب", h: WA_GROUP },
 ];
 
 /* ───────── Site structure ─────────  Every series belongs to one section (series.sec). Books are their own collection. */

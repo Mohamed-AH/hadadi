@@ -1,4 +1,4 @@
-# دروس فضيلة الشيخ حسن بن علي حدادي
+# الموقع الرسمي لفضيلة الشيخ حسن بن علي بن حسن حدادي
 
 An Arabic (right-to-left) static website that organises the lessons, khutab and lectures of الشيخ حسن بن علي حدادي حفظه الله (Jeddah). It runs on the engine of [yahyaaljabri](https://github.com/Mohamed-AH/yahyaaljabri) (same pipeline, player, hosting and tests) with its own design, "Roshan", after the carved wooden windows of old Jeddah.
 

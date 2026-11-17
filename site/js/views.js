@@ -74,7 +74,7 @@ function crumbs(items) {
 const mkPage = o => ({ status: 200, noindex: false, jsonld: [], image: OG_DEFAULT, ogType: "website", nav: "", wire: { t: "none" }, ...o,
   html: `${o.band ? `<div class="band">${o.band}</div>` : ""}<div class="wrap page">${o.html}</div>` });
 const band = (inner, cls = "") => `<div class="wrap band-in${cls ? " " + cls : ""}">${inner}</div>`;
-const SITE_SUFFIX = ` | دروس ${NAME}`;
+const SITE_SUFFIX = ` | الموقع الرسمي للشيخ ${FULL_NAME}`;
 const withSite = t => t + SITE_SUFFIX;
 /* link previews (WhatsApp, Telegram, X): the page's own title; the site name comes from og:site_name */
 export const ogTitle = p => p.title.endsWith(SITE_SUFFIX) ? p.title.slice(0, -SITE_SUFFIX.length) : p.title;
@@ -110,7 +110,7 @@ function home() {
     jsonld: [
       { "@context": "https://schema.org", "@type": "WebSite", name: OFFICIAL_NAME, alternateName: ["دروس الشيخ حسن حدادي", NAME_FULL], url: SITE + "/", inLanguage: "ar",
         potentialAction: { "@type": "SearchAction", target: `${SITE}/search/?q={search_term_string}`, "query-input": "required name=search_term_string" } },
-      { "@context": "https://schema.org", "@type": "Person", name: FULL_NAME, alternateName: ["حسن حدادي", "الشيخ حسن حدادي", "الشيخ حسن بن علي حدادي"], honorificPrefix: "الشيخ", url: SITE + "/", sameAs: LINKS.map(x => x.h) },
+      { "@context": "https://schema.org", "@type": "Person", name: FULL_NAME, alternateName: ["حسن بن علي حدادي", "حسن حدادي", "الشيخ حسن حدادي", "الشيخ حسن بن علي حدادي"], honorificPrefix: "الشيخ", url: SITE + "/", sameAs: LINKS.map(x => x.h) },
     ],
   });
 }
@@ -392,7 +392,7 @@ function aboutPage() {
   return mkPage({
     nav: "about", path: "/about/", html, ogType: "profile",
     title: withSite("عن الشيخ"), description: clip(b.summary || `نبذة عن ${NAME_FULL}.`, 160),
-    jsonld: [c.ld, { "@context": "https://schema.org", "@type": "Person", name: FULL_NAME, alternateName: ["حسن حدادي", "الشيخ حسن حدادي", "الشيخ حسن بن علي حدادي"], honorificPrefix: "الشيخ", url: SITE + "/about/", ...(photo ? { image: photo.startsWith("/") ? SITE + photo : photo } : {}), sameAs: LINKS.map(x => x.h) }],
+    jsonld: [c.ld, { "@context": "https://schema.org", "@type": "Person", name: FULL_NAME, alternateName: ["حسن بن علي حدادي", "حسن حدادي", "الشيخ حسن حدادي", "الشيخ حسن بن علي حدادي"], honorificPrefix: "الشيخ", url: SITE + "/about/", ...(photo ? { image: photo.startsWith("/") ? SITE + photo : photo } : {}), sameAs: LINKS.map(x => x.h) }],
   });
 }
 
@@ -467,7 +467,7 @@ export function chromeBottom(nav) {
 }
 export const footer = () => `<footer class="foot"><div class="wrap">
   <p class="foot-official"><span class="mark" aria-hidden="true">${STAR}</span><strong>${esc(OFFICIAL_NAME)} حفظه الله ورعاه</strong>${state.bio ? `، <a href="${href.about()}">عن الشيخ</a>` : ""}${SCHEDULE.items.length ? `، <a href="${href.schedule()}">جدول الدروس</a>` : ""}${state.ann.length ? `، <a href="${href.announcements()}">إعلانات الدروس</a>` : ""}${hasDocs() ? `، <a href="${href.documents()}">التزكيات والوصايا</a>` : ""}</p>
-  <p>المواد الصوتية مأخوذة من <a href="${TG_CHANNEL}" target="_blank" rel="noopener">قنوات الشيخ على تيليجرام</a>.</p>
+  <p>المواد الصوتية مأخوذة من <a href="${TG_CHANNEL}" target="_blank" rel="noopener">قناة الشيخ على تيليجرام</a>.</p>
   <p class="foot-links">${LINKS.map(x => `<a href="${x.h}" target="_blank" rel="noopener">${x.t}</a>`).join("")}</p>
   <p class="foot-up">آخر تحديث للفهرس: ${fmtDate(state.DB.updated)}</p></div></footer>`;
 
