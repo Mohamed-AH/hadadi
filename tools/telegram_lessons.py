@@ -519,6 +519,8 @@ def main():
             bare = re.sub(r'^(?:شرح|التعليق\s*على|درس)\s*(?:كتاب|متن)?\s*', '', l['title']).strip()
             l['title'] = (l['series_title'] if len(bare) < 40 and any(w in norm_ar(l['series_title']) for w in norm_ar(bare).split()[:2])
                           else l['title']) + ' — ' + part
+        elif l['title'] and part and l['series'] in BOOK_SERIES and re.fullmatch(r'(?:شرح\s*)?' + PART.pattern, clean(l['title']).translate(AR_DIGITS)):
+            l['title'] = l['series_title'] + ' — ' + part      # «شرح الحديث 30» alone -> «التعليق على بهجة قلوب الأبرار — الحديث ٣٠»
     groups = collections.defaultdict(list)
     for l in lessons:
         groups[(l['series'], l['title'])].append(l)
