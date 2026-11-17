@@ -26,7 +26,7 @@ export async function dispatch(workflow, env, fetcher = fetch) {
 
 /* /health for an uptime monitor: 200 when the home page, the lesson data and the audio (R2 bucket, and one file through the public
    media domain) all answer, else 503. The body says which part failed; nothing secret in it. */
-export const MEDIA_HOST = "https://media.hadadi.example";   // set to the R2 bucket's public domain once it is connected
+export const MEDIA_HOST = "https://media.h-haddadi.com";   // the R2 bucket hadadi-media's public domain
 export async function health(env, fetcher = fetch) {
   const t = () => AbortSignal.timeout(8000);
   const check = async f => { try { return await f() ? "ok" : "fail"; } catch (e) { return "fail"; } };
