@@ -625,3 +625,4 @@ h1,h2,h3{line-height:1.5}
   .feat .k{font-size:14px}
   .beams{opacity:.16}
 }
+button svg, button .ic { pointer-events: none; }   /* clicks land on the button, never on an icon that may be swapped */
