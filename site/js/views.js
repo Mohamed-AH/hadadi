@@ -1,7 +1,7 @@
 /* Pure page renderers: every page is a function returning { html, title, description, path, jsonld, ... }.
    Used by scripts/build.mjs (pre-rendering to real static HTML) and by js/app.js (client-side navigation). */
 import {
-  SITE, NAME, NAME_FULL, OFFICIAL_PRE, FULL_NAME, ROLE, OFFICIAL_NAME, YT_CHANNEL, TG_CHANNEL, LINKS, SECTIONS, COVER, COVER_PALETTE, PAGE, MAXQ,
+  SITE, NAME, NAME_FULL, OFFICIAL_PRE, FULL_NAME, ROLE, OFFICIAL_NAME, YT_CHANNEL, TG_CHANNEL, LINKS, SECTIONS, COVER, COVER_PALETTE, PAGE, MAXQ, ROSHAN,
   state, byId, seriesById, secById, ic, esc, fmtNum, fmtYear, ldate, dur, isoDur, hours, dg, cleanQuery, oneOf, safeUrl, safeYt, safeLang, safeDecode, jsonLd,
   DOCS, SCHEDULE, todayRiyadh, kindIcon, useLabel, label, mainTitle, fullTitle, secOfSeries, secOfLesson, seriesOrder, lang, thumb, STAR, match, sectionCount, visible, isFlat, seriesIn, href, fmtDate,
 } from "./core.js";
@@ -52,7 +52,7 @@ export function row(l, opts = {}) {
     <span class="tt"><span class="t">${esc(mainTitle(l, !opts.noSection))}</span><span class="s">${sub}</span></span>
     ${l.duration ? `<span class="d">${dur(l.duration)}</span>` : ""}</a>`;
 }
-const chip = (s, n) => `<a class="chip" href="${href.section(s)}">${ic(s.icon, 18)}<span>${s.title}</span><small>${fmtNum(n)}</small></a>`;
+const chip = (s, n, i = 0) => `<a class="chip" href="${href.section(s)}" style="--i:${i}">${ic(s.icon, 18)}<span>${s.title}</span><small>${fmtNum(n)}</small></a>`;
 const tile = (s, n) => `<a class="tile" href="${href.section(s)}"><span class="tile-ic">${ic(s.icon, 24)}</span>
     <span class="tile-b"><strong>${s.title}</strong><span>${s.desc}</span></span><span class="tile-n">${fmtNum(n)}</span></a>`;
 /* announcement posters: a strip on the home page, a grid on /announcements/ */
@@ -88,7 +88,7 @@ function home() {
   const hours_ = Math.floor(DB.lessons.reduce((a, l) => a + (l.duration || 0), 0) / 36e4) * 100;
   const feat = f ? `<a class="feat" href="${href.lesson(f.id)}">${art(fs)}<span class="feat-b"><span class="k">أحدث درس${ldate(f) ? "، " + ldate(f) : ""}</span>
       <span class="ft">${esc(fullTitle(f))}</span>${f.duration ? `<span class="m">${ic("clock", 14)} ${dur(f.duration)}</span>` : ""}<span class="go">${ic("play", 17)} استمع الآن</span></span></a>` : "";
-  const bandHtml = band(`<div class="hero-t">
+  const bandHtml = band(`<div class="beams" aria-hidden="true"></div><div class="roshan" aria-hidden="true">${ROSHAN}</div><div class="hero-t">
       <h1 class="hero-h"><span class="pre">${OFFICIAL_PRE}</span> <span class="nm">${FULL_NAME}</span> <span class="hf">حفظه الله ورعاه</span></h1>
       ${ROLE ? `<p class="role">${ROLE}</p>` : ""}
       <p class="hero-p">دروس الشيخ في التفسير والحديث والعقيدة، وخطبه ومحاضراته، مرتّبة في سلاسل للاستماع والتحميل.</p>
@@ -96,7 +96,7 @@ function home() {
       <ul class="stats"><li><b>${fmtNum(DB.lessons.length)}</b>مادة صوتية</li><li><b>${fmtNum(DB.series.length)}</b>سلسلة علمية</li>${hours_ ? `<li><b>${fmtNum(hours_)}</b>ساعة وأكثر</li>` : ""}${DB.books.length ? `<li><b>${fmtNum(DB.books.length)}</b>كتابًا</li>` : ""}</ul></div>
     ${feat}`, "hero");
   const html = `
-    <nav class="chips" aria-label="أقسام المكتبة">${vis.map(s => chip(s, sectionCount(s.id))).join("")}</nav>
+    <nav class="chips" aria-label="أقسام المكتبة">${vis.map((s, i) => chip(s, sectionCount(s.id), i)).join("")}</nav>
     ${SCHEDULE.items.length ? `${head2("جدول الدروس الأسبوعي", more(href.schedule(), "الجدول وإعلانه"))}${scheduleTable()}` : ""}
     ${state.ann.length ? `${head2("إعلانات الدروس", more(href.announcements(), "كل الإعلانات"))}<div class="posters strip">${state.ann.slice(0, 6).map((a, i) => poster(a, i)).join("")}</div>` : ""}
     ${hasDocs() ? `${head2("التزكيات والوصايا", more(href.documents(), "عرض الكل"))}<div class="posters strip">${docsHome()}</div>` : ""}
