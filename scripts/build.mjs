@@ -61,7 +61,13 @@ for (const r of routes) {
 write("404.html", render(notFoundPage()));
 
 /* sitemap / robots / redirects */
-write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${indexable.map(r => `  <url><loc>${SITE}${r}</loc></url>`).join("\n")}\n</urlset>\n`);
+const lastmod = {};   // a lesson: its date; a series: its newest lesson; any other page: the newest lesson on the site
+for (const l of DB.lessons) if (/^\d{4}-\d\d-\d\d$/.test(l.date || "")) {
+  lastmod[href.lesson(l.id)] = l.date;
+  const sr = href.series(l.series); if (!lastmod[sr] || l.date > lastmod[sr]) lastmod[sr] = l.date;
+}
+const newest = Object.values(lastmod).sort().pop() || "";
+write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${indexable.map(r => { const d = lastmod[r] || newest; return `  <url><loc>${SITE}${r}</loc>${d ? `<lastmod>${d}</lastmod>` : ""}</url>`; }).join("\n")}\n</urlset>\n`);
 write("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
 const flat = SECTIONS.filter(s => s.id !== "books" && isFlat(s.id) && DB.series.some(x => x.sec === s.id));
 const moved = { misc: "lectures" };   // series merged into another (old links keep working)

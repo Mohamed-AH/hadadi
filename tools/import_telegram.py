@@ -1,7 +1,7 @@
 """lessons.json (from tools/telegram_lessons.py) -> site/data/library.json.
 
 Lessons that still carry a review flag (no title, another speaker, ...) are left out until a person fixes them;
-corrections go in data/telegram_overrides.json: {"<lesson id>": {"title": "...", "series": "<id>", "publish": true|false}};
+corrections go in data/telegram_overrides.json: {"<lesson id>": {"title": "...", "series": "<id>", "publish": true|false, "hd": "1445-4-12"}};
 spelling-only title fixes in data/title_spelling.json: {"<lesson id>": "<title>"} (an override title wins).
 """
 import json, os, sys, collections
@@ -31,7 +31,7 @@ for l in lessons:
         skipped['flagged' if l['flags'] else 'excluded'] += 1
         continue
     l['series'] = MERGE.get(l['series'], l['series'])
-    hd = l.get('hijri') or ''
+    hd = o.get('hd') or l.get('hijri') or ''   # an override hd fixes a slip in the post's own date (owner 2026-11-17: the post's date wins otherwise)
     out_lessons.append({k: v for k, v in {
         'id': l['id'], 'title': l['title'], 'series': l['series'], 'kind': 'audio',
         'src': '',                                   # filled by tools/mirror_media.py once the audio is in R2

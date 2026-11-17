@@ -1,5 +1,5 @@
 /* Browser app. Pages arrive pre-rendered (scripts/build.mjs); this script wires them up and handles client-side navigation. */
-import { init, setAnnouncements, todayRiyadh, state, byId, seriesById, secById, ic, safeYt, safeUrl, cleanQuery, oneOf, hashToPath, href, dur, fullTitle, NAME, PAGE, SECTIONS } from "./core.js";
+import { init, setAnnouncements, todayRiyadh, state, byId, seriesById, secById, ic, safeYt, safeUrl, cleanQuery, oneOf, hashToPath, href, dur, fullTitle, NAME, PAGE, SECTIONS, count as countAr } from "./core.js";
 import { resolve, searchResults, seriesInfo, seriesList, nextLesson, ogTitle, coverColor, speedLabel, SPEEDS } from "./views.js";
 
 const $ = s => document.querySelector(s);
@@ -92,7 +92,7 @@ function pills(container, onPick) {
 function wireSeries(id) {
   const info = seriesInfo(id), q = $("#q"), sort = $("#sort"), out = $("#out"), count = $("#count");
   const st = { q: "", sec: "", sort: oneOf(sort.value, ["new", "old", "num"], "new") };
-  const paint = () => { const r = seriesList(info, st); count.textContent = new Intl.NumberFormat("ar-EG", { useGrouping: false }).format(r.count) + " درسًا"; out.innerHTML = r.html; };
+  const paint = () => { const r = seriesList(info, st); count.textContent = countAr(r.count, "lesson"); out.innerHTML = r.html; };
   q.addEventListener("input", debounce(e => { st.q = cleanQuery(e.target.value); paint(); }));
   sort.addEventListener("change", e => { st.sort = oneOf(e.target.value, ["new", "old", "num"], "new"); paint(); });
   pills($("#secs"), s => { st.sec = s; paint(); });
@@ -102,10 +102,9 @@ function wireSearch() {
   const params = new URL(location.href).searchParams;
   const st = { q: cleanQuery(params.get("q")), sec: oneOf(params.get("sec"), SECIDS), sort: oneOf(params.get("sort"), ["new", "old"], "new"), shown: PAGE };
   const out = $("#out"), count = $("#count"), q = $("#q");
-  const nfmt = new Intl.NumberFormat("ar-EG", { useGrouping: false });
   const paint = () => {
     const r = searchResults(st);
-    count.textContent = r.count ? `${nfmt.format(r.count)} نتيجة` : "";
+    count.textContent = r.count ? countAr(r.count, "result") : "";
     out.innerHTML = r.html + (r.more ? `<button type="button" class="more" id="more">عرض المزيد</button>` : "");
     const m = $("#more"); if (m) m.onclick = () => { st.shown += PAGE; paint(); m.blur(); };
     const sp = new URLSearchParams(); if (st.q) sp.set("q", st.q); if (st.sec) sp.set("sec", st.sec); if (st.sort !== "new") sp.set("sort", st.sort);
