@@ -121,12 +121,12 @@ async function main() {
   console.log(`${list.length} announcement(s)${changed ? " (changed)" : ""}`);
 }
 
-/* --webhook: BOT_WEBHOOK=on registers the Worker (https://hadadi.emah84.workers.dev/bot) as the bot's webhook, so buttons answer at once;
+/* --webhook: BOT_WEBHOOK=on registers the Worker (https://h-haddadi.com/bot) as the bot's webhook, so buttons answer at once;
    anything else switches back to this hourly polling. Run by the workflow before main(), so the switch is one repository
    variable. The Worker needs TELEGRAM_BOT_TOKEN, BOT_ADMINS and GH_TOKEN first (docs/announcements.md). */
 async function webhookMode() {
   if (!TOKEN) return;
-  const want = /^(on|yes|true|1)$/i.test((process.env.BOT_WEBHOOK || "").trim()), url = process.env.BOT_WEBHOOK_URL || "https://hadadi.emah84.workers.dev/bot";
+  const want = /^(on|yes|true|1)$/i.test((process.env.BOT_WEBHOOK || "").trim()), url = process.env.BOT_WEBHOOK_URL || "https://h-haddadi.com/bot";
   const info = await api("getWebhookInfo");
   if (want) {
     if (info.url !== url || !(info.allowed_updates || []).includes("callback_query")) {

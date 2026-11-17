@@ -10,7 +10,7 @@
    titles are plain text, cleaned by cleanTitle(), and the site escapes them again when it renders. */
 import { today, parseCaption, parseDate, cleanTitle, hijriLabel, move, publish, draftId, webhookSecret } from "./posters.js";
 
-const REPO = "Mohamed-AH/hadadi", FILE = "site/data/announcements.json", SITE = "https://hadadi.emah84.workers.dev";
+const REPO = "Mohamed-AH/hadadi", FILE = "site/data/announcements.json", SITE = "https://h-haddadi.com";
 const IMG = /^image\/(jpeg|png|webp)$/, MAX_BYTES = 10e6;
 const AR = n => new Intl.NumberFormat("ar-EG", { useGrouping: false }).format(n);
 const short = (s, n = 28) => (s.length > n ? s.slice(0, n - 1) + "…" : s);

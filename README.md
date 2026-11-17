@@ -38,6 +38,6 @@ MEDIA_JSON=tests/fixtures/media.json node scripts/build.mjs && node tests/player
 ## Still to do
 
 - Audio files: run `tools/fetch_audio.py` (docs/audio-hosting.md) so lessons play on the site instead of linking to Telegram.
-- Domain (then `SITE` in `site/js/core.js`) and the audio bucket's public domain (`MEDIA_HOST` in `worker/index.js`).
+- The audio bucket's public domain, media.h-haddadi.com (`MEDIA_HOST` in `worker/index.js`). The site's domain, h-haddadi.com, is set (`SITE` in `site/js/core.js`).
 - Biography page: `site/data/bio.json` (format in `docs/bio-spec.md`), only from the Sheikh's side.
 - 4 flagged recordings and a few generic titles to review (`data/telegram_overrides.json`).

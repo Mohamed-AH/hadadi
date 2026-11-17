@@ -1,9 +1,9 @@
 /* Shared by the browser app and the Node pre-renderer: constants, helpers, data model. No DOM access here. */
 import { ICONS } from "./icons.js";
 
-/* Absolute base for link previews (og:image/og:url), canonical links and the sitemap. No domain yet: the Worker's own address
-   until one is bought (then change it here). SITE_URL in the build environment overrides it. */
-export const SITE = ((typeof process !== "undefined" && process.env && process.env.SITE_URL) || "https://hadadi.emah84.workers.dev").replace(/\/$/, "");
+/* Absolute base for link previews (og:image/og:url), canonical links and the sitemap: the site's domain, h-haddadi.com (attached to the
+   Worker as a custom domain 2026-11-17, with www.h-haddadi.com). SITE_URL in the build environment overrides it. */
+export const SITE = ((typeof process !== "undefined" && process.env && process.env.SITE_URL) || "https://h-haddadi.com").replace(/\/$/, "");
 export const NAME = "الشيخ حسن بن علي حدادي";
 export const NAME_FULL = `${NAME} حفظه الله`;
 export const OFFICIAL_PRE = "الموقع الرسمي لفضيلة الشيخ";   // owner 2026-11-17: «الموقع الرسمي لفضيلة الشيخ حسن بن علي بن حسن حدادي»

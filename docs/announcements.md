@@ -42,7 +42,7 @@ use it; anyone else is told their Telegram id, so the owner can add them.
      show `telegram-bot.yml: 204`. A `401` means the token expired or lacks the Actions permission.
 
 5. **The instant menu (2026-11-12).** The Worker answers the bot itself, through a Telegram webhook to
-   `https://hadadi.emah84.workers.dev/bot` (`worker/bot.js`), and saves each change straight to `site/data/announcements.json` on GitHub.
+   `https://h-haddadi.com/bot` (`worker/bot.js`), and saves each change straight to `site/data/announcements.json` on GitHub.
    - GitHub: edit the `hadadi-timer` token (Settings > Developer settings > Fine-grained tokens > the token > Edit) and add
      *Repository permissions* → **Contents: Read and write** (Actions stays Read and write). Same token, nothing to copy.
    - Cloudflare → **Workers & Pages > yahyaaljabri > Settings > Variables and Secrets > Add**:
