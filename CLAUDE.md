@@ -1,0 +1,35 @@
+# CLAUDE.md — دروس فضيلة الشيخ حسن بن علي حدادي
+
+Arabic (RTL) website for the lessons, khutab and lectures of **الشيخ حسن بن علي حدادي حفظه الله** (Jeddah), built from his two Telegram channels. It runs on the same engine as Mohamed-AH/yahyaaljabri (which is itself a fork of Mohamed-AH/drwasiullah): same pipeline, player, pre-renderer, Worker and tests, but its own look and content. Read `README.md` for the pipeline.
+
+## State (2026-11-17)
+- First version: 516 recordings in 27 series (≈247 hours) from t.me/h_haddadi7 (main channel) and t.me/masothrbj47 («دروس الشيخ … رقم 2»), JSON exports without media, 555 pages. e2e 26/26, xss pass, axe 0 violations, player 12/12, worker/bot tests pass.
+- **Not «الموقع الرسمي»:** the site says «دروس فضيلة الشيخ …» (`OFFICIAL_PRE` in `core.js`) until the Sheikh's side asks for the official wording.
+- **Audio not hosted yet:** every lesson page links to its Telegram post. When the owner runs `tools/fetch_audio.py` (Telethon, his own account; uploads mono AAC to R2 bucket `hadadi-media`, writes `site/data/media.json`) the pages get the docked player. Note: once `media.json` exists, `scripts/build.mjs` publishes **only** hosted lessons (the Jabri owner's rule); `SHOW_UNHOSTED=1` keeps the rest. Decide with the owner before the first upload.
+- No domain yet: `SITE` in `core.js` is the workers.dev address (`SITE_URL` overrides). `MEDIA_HOST` in `worker/index.js` is a placeholder until the bucket has a public domain.
+- No timers, announcements bot or YouTube sync yet (`JOBS = {}`, `crons: []`, no workflows). The code for them is still here from the Jabri site.
+- Telegram exports are not committed; `TELEGRAM_EXPORTS=/mnt/project-files/telegram` (folders named after the channel usernames: `h_haddadi7/`, `masothrbj47/`, so lesson links are `https://t.me/<folder>/<id>`).
+
+## Layout
+- `site/` — `shell.html`, `styles.css`, `js/core.js` (constants, data model, `SECTIONS`, `SCHEDULE`, `DOCS`), `js/views.js` (pages), `js/app.js` (browser). `site/data/library.json` is generated.
+- `tools/telegram_lessons.py` → `tools/import_telegram.py` → `site/data/library.json`.
+  - `SERIES` patterns at the top of `telegram_lessons.py`: every book he explains is its own series; anything starting «خطبة» is a khutba; a titled **Friday** post at جامع عبدالله بن عمار that is not a lesson is a khutba too (most of his 2021–2023 khutab don't say «خطبة»).
+  - Titles come from `hadadi_title()`: the first caption line that names the lesson after dropping the channel's boilerplate (`NOISE`: «العلم أشرف مطلوب…», «تم التسجيل», day/time/mosque lines, the speaker line), with a bare «الدرس الرابع» / «خطبة الجمعة» completed by the next line, and the speaker/mosque tail cut (`SPEAKER_TAIL`). Repeated titles in one series get the Hijri date or lesson number appended.
+  - Flagged lessons (no title, another speaker, forwarded from another channel) are left out; fix them in `data/telegram_overrides.json`.
+- Weekly schedule: `SCHEDULE` in `core.js`, typed from the channel's «🗓️ يوم …» reminder posts. Update it when they change.
+- `scripts/build.mjs` pre-renders to `dist/`; `wrangler.jsonc` deploys the Worker `hadadi` (static assets + `/dl/*`, `/health`, `/bot`).
+
+## Conventions (keep)
+- Arabic, RTL. Fonts self-hosted (OFL): **IBM Plex Sans Arabic** for text (`Plex`), **Noto Naskh Arabic** for headings and the Sheikh's name (`Naskh`).
+- Name: always «الشيخ حسن بن علي حدادي» + «حفظه الله» (the channel writes «حفظه الله ورعاه»).
+- Dates: Hijri only. Arabic text never gets `letter-spacing`.
+- **Design "Roshan"** (chosen by the owner 2026-11-17, direction A of three): the teak, coral stone and sea of old Jeddah (Al-Balad). Teak bands `--night #3a2a1e`, copper-sand accent `--brass #e0b48a`, sea-teal links `--link #1d6a65`, clay `--clay #b5652e` for rules and the band edge, coral-stone page `--bg #f3ece1`. Mark = a roshan window arch with lattice (`STAR` in `core.js`, `favicon.svg`); pattern = diagonal lattice; series artwork is arch-topped. Small radii (6–8 px), no pills. Light + dark themes. Lucide icons only.
+- URLs, navigation, compatibility (old iOS Safari) and safety rules are the engine's: see the Jabri repo's CLAUDE.md; they all still apply (`esc()`, `cleanQuery()`, `safeUrl()`, no third-party scripts, no secrets).
+
+## Content integrity
+- Do not invent biography, fiqh content or attributions. A bio comes only from the Sheikh's side (`site/data/bio.json`, format in `docs/bio-spec.md`).
+- Only the Sheikh's own recordings: the channels repost others (السحيمي، الركابي، …); those are flagged and left out.
+- Fix data in the importer or `data/*.json`, never by hand-editing `library.json`.
+
+## Testing
+After front-end changes: `node scripts/build.mjs && (cd dist && python3 -m http.server 8000) &` then `node tests/e2e.mjs`, `node tests/xss_check.mjs`, `node tests/a11y_check.mjs` (needs `axe-core`). Player: build with `MEDIA_JSON=tests/fixtures/media.json` then `node tests/player_check.mjs` (fixture = the six newest khutab), rebuild without it after. `node tests/worker_check.mjs`, `tests/bot_check.mjs`, `tests/posters_bot_check.mjs` need no server. t.me is blocked from the cloud session, so Telegram links can't be checked there.
