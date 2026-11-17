@@ -19,7 +19,7 @@ const html = `<!doctype html><meta charset="utf-8"><style>
  background:${pattern("e0b48a", .1)},#3a2a1e;background-size:84px}
 .mark{position:absolute;top:84px;right:96px;width:84px;height:84px;color:#e0b48a}
 .pre{position:absolute;top:196px;right:96px;font:700 36px Tajawal;color:#e0b48a}
-h1{position:absolute;top:250px;right:96px;margin:0;font:700 76px/1.3 Amiri}
+h1{position:absolute;top:258px;right:96px;margin:0;font:700 64px/1.3 Amiri}
 .dua{position:absolute;top:404px;right:96px;font:400 40px Tajawal;color:#dcc9b0}
 .sub{position:absolute;bottom:70px;right:96px;font:400 30px Tajawal;color:#f6ead8}
 .sub b{color:#e0b48a;font-weight:700}
@@ -31,8 +31,8 @@ h1{position:absolute;top:250px;right:96px;margin:0;font:700 76px/1.3 Amiri}
 </style>
 <div class="art art2"></div><div class="art"></div><div class="art art3">${STAR}<span>شرح كتاب التوحيد</span></div>
 <div class="mark">${STAR}</div>
-<div class="pre">دروس فضيلة الشيخ</div>
-<h1>حسن بن علي حدادي</h1><div class="dua">حفظه الله ورعاه</div>
+<div class="pre">الموقع الرسمي لفضيلة الشيخ</div>
+<h1>حسن بن علي بن حسن حدادي</h1><div class="dua">حفظه الله ورعاه</div>
 <div class="sub"><b>دروس</b> · محاضرات · خطب · للاستماع والتحميل</div>`;
 const tmp = path.join(os.tmpdir(), "og-default.html");
 fs.writeFileSync(tmp, html);
