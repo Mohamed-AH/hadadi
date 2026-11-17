@@ -12,14 +12,15 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const fonts = pathToFileURL(path.join(ROOT, "site", "fonts")).href;
 const pattern = (c, o) => `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 36 36'%3E%3Cg fill='none' stroke='%23${c}' stroke-opacity='${o}' stroke-width='1'%3E%3Cpath d='M0 0L36 36M36 0L0 36M18 0L0 18L18 36L36 18Z'/%3E%3Ccircle cx='18' cy='18' r='2.2'/%3E%3C/g%3E%3C/svg%3E")`;
 const html = `<!doctype html><meta charset="utf-8"><style>
-@font-face{font-family:Tajawal;font-weight:400;src:url(${fonts}/ibm-plex-sans-arabic-arabic-400-normal.woff2)}
-@font-face{font-family:Tajawal;font-weight:700;src:url(${fonts}/ibm-plex-sans-arabic-arabic-600-normal.woff2)}
-@font-face{font-family:Amiri;font-weight:700;src:url(${fonts}/noto-naskh-arabic-arabic-700-normal.woff2)}
+@font-face{font-family:Tajawal;font-weight:400;src:url(${fonts}/el-messiri-arabic-500-normal.woff2)}
+@font-face{font-family:Tajawal;font-weight:700;src:url(${fonts}/el-messiri-arabic-700-normal.woff2)}
+@font-face{font-family:Kufi;font-weight:700;src:url(${fonts}/reem-kufi-arabic-700-normal.woff2)}
+@font-face{font-family:Amiri;font-weight:700;src:url(${fonts}/aref-ruqaa-arabic-700-subset.woff2)}
 *{box-sizing:border-box}body{margin:0;width:1200px;height:630px;direction:rtl;position:relative;overflow:hidden;color:#f6ead8;font-family:Tajawal;
  background:${pattern("e0b48a", .1)},#3a2a1e;background-size:84px}
 .mark{position:absolute;top:84px;right:96px;width:84px;height:84px;color:#e0b48a}
 .pre{position:absolute;top:196px;right:96px;font:700 36px Tajawal;color:#e0b48a}
-h1{position:absolute;top:258px;right:96px;margin:0;font:700 64px/1.3 Amiri}
+h1{position:absolute;top:250px;right:96px;margin:0;font:700 70px/1.3 Amiri}
 .dua{position:absolute;top:404px;right:96px;font:400 40px Tajawal;color:#dcc9b0}
 .sub{position:absolute;bottom:70px;right:96px;font:400 30px Tajawal;color:#f6ead8}
 .sub b{color:#e0b48a;font-weight:700}
@@ -27,7 +28,7 @@ h1{position:absolute;top:258px;right:96px;margin:0;font:700 64px/1.3 Amiri}
 .art2{left:105px;top:150px;background-color:#8a4a22;transform:rotate(5deg)}
 .art3{left:80px;top:175px;background-color:#2f4f6b;transform:none}
 .art svg{position:absolute;top:34px;right:122px;width:56px;height:56px;color:#e0b48a}
-.art span{position:absolute;bottom:34px;right:34px;left:34px;font:700 38px/1.35 Tajawal;color:#fff}
+.art span{position:absolute;bottom:34px;right:34px;left:34px;font:700 38px/1.35 Kufi;color:#fff}
 </style>
 <div class="art art2"></div><div class="art"></div><div class="art art3">${STAR}<span>شرح كتاب التوحيد</span></div>
 <div class="mark">${STAR}</div>
