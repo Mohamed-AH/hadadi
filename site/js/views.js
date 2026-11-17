@@ -2,7 +2,7 @@
    Used by scripts/build.mjs (pre-rendering to real static HTML) and by js/app.js (client-side navigation). */
 import {
   SITE, NAME, NAME_FULL, OFFICIAL_PRE, FULL_NAME, ROLE, OFFICIAL_NAME, YT_CHANNEL, TG_CHANNEL, LINKS, SECTIONS, COVER, COVER_PALETTE, PAGE, MAXQ, ROSHAN,
-  state, byId, seriesById, secById, ic, esc, fmtNum, fmtYear, ldate, dur, isoDur, hours, dg, cleanQuery, oneOf, safeUrl, safeYt, safeLang, safeDecode, jsonLd,
+  state, byId, seriesById, secById, ic, esc, fmtNum, count, fmtYear, ldate, dur, isoDur, hours, dg, cleanQuery, oneOf, safeUrl, safeYt, safeLang, safeDecode, jsonLd,
   DOCS, SCHEDULE, todayRiyadh, kindIcon, useLabel, label, mainTitle, fullTitle, secOfSeries, secOfLesson, seriesOrder, lang, thumb, STAR, match, sectionCount, visible, isFlat, seriesIn, href, fmtDate,
 } from "./core.js";
 
@@ -18,7 +18,7 @@ export const searchBox = (ph, v = "", id = "q", asForm = false) => {
 /* A series' artwork: its colour, the star, its title and size. "mini" = colour and pattern only (beside a lesson title). */
 export const coverColor = s => COVER[s.id] || COVER_PALETTE[Math.max(0, state.DB.series.indexOf(s)) % COVER_PALETTE.length];
 export const art = (s, cls = "") => `<span class="art${cls ? " " + cls : ""}" style="--c:${coverColor(s)}" aria-hidden="true">${/\bmini\b/.test(cls) ? ""
-  : `${STAR.replace("<svg", '<svg class="art-s"')}<span class="art-t">${esc(s.title)}</span><span class="art-n">${fmtNum(s.count)} درسًا</span>`}</span>`;
+  : `${STAR.replace("<svg", '<svg class="art-s"')}<span class="art-t">${esc(s.title)}</span><span class="art-n">${count(s.count, "lesson")}</span>`}</span>`;
 
 /* Our R2 copies download through the site's /dl/ route (worker/index.js), which saves them under the lesson title;
    anything else keeps the plain link. */
@@ -29,7 +29,7 @@ const dlLink = (src, title) => {
 };
 
 export function seriesTile(s, i = 0) {
-  return `<a class="stile" href="${href.series(s.id)}" style="--i:${i}" aria-label="${esc(s.title)}، ${fmtNum(s.count)} درسًا">${art(s)}
+  return `<a class="stile" href="${href.series(s.id)}" style="--i:${i}" aria-label="${esc(s.title)}، ${count(s.count, "lesson")}">${art(s)}
     <span class="stile-m" aria-hidden="true"><span>${secOfSeries(s).title}</span>${hours(s.seconds) ? `<span>${hours(s.seconds)}</span>` : ""}</span></a>`;
 }
 export const tiles = (list, cls = "") => `<div class="stiles${cls ? " " + cls : ""}">${list.map(seriesTile).join("")}</div>`;
@@ -44,12 +44,18 @@ export function lessonCard(l, i = 0) {
 }
 export const eps = list => `<div class="eps">${list.map(lessonCard).join("")}</div>`;
 
+/* inside its own series a lesson's title need not repeat the series name: «شرح سلم الوصول — الدرس السابع» → «الدرس السابع» */
+const shortTitle = (l, s, withBook) => {
+  const t = mainTitle(l, withBook);
+  for (const p of [s.title, s.title.replace(/^شرح\s+/, "")]) if (t.startsWith(p + " — ") && !/^[٠-٩0-9]/.test(t.slice(p.length + 3))) return t.slice(p.length + 3);   // a bare date stays whole (the date line below repeats it)
+  return t;
+};
 export function row(l, opts = {}) {
   const s = seriesById[l.series];
   const sub = (opts.showSeries ? `${esc(s.title)}` : "") + (opts.showSeries && ldate(l) ? "، " : "") + ldate(l);
   return `<a class="row${opts.now ? " now" : ""}" href="${href.lesson(l.id)}" style="--i:${Math.min(opts.i || 0, 24)}"${opts.now ? ' aria-current="page"' : ""}${lang(l)}>
     <span class="no">${l.n != null ? fmtNum(l.n) : ic(opts.now ? "headphones" : kindIcon(l) === "video" ? "video" : "play", 17)}</span>
-    <span class="tt"><span class="t">${esc(mainTitle(l, !opts.noSection))}</span><span class="s">${sub}</span></span>
+    <span class="tt"><span class="t">${esc(opts.inSeries ? shortTitle(l, s, !opts.noSection) : mainTitle(l, !opts.noSection))}</span><span class="s">${sub}</span></span>
     ${l.duration ? `<span class="d">${dur(l.duration)}</span>` : ""}</a>`;
 }
 const chip = (s, n, i = 0) => `<a class="chip" href="${href.section(s)}" style="--i:${i}">${ic(s.icon, 18)}<span>${s.title}</span><small>${fmtNum(n)}</small></a>`;
@@ -71,10 +77,12 @@ function crumbs(items) {
   return { html, ld };
 }
 /* a page = an optional full-width dark band (o.band) + the content in the page column (o.html) */
+/* links that open Telegram, WhatsApp or YouTube in a new tab say so to screen readers (WCAG 3.2.5 advisory) */
+const newTab = h => h.replace(/(<a\b[^>]*target="_blank"[^>]*>)([\s\S]*?)(<\/a>)/g, (m, a, b, c) => /aria-label=/.test(a) ? m : `${a}${b}<span class="sr-only"> (يفتح في نافذة جديدة)</span>${c}`);
 const mkPage = o => ({ status: 200, noindex: false, jsonld: [], image: OG_DEFAULT, ogType: "website", nav: "", wire: { t: "none" }, ...o,
-  html: `${o.band ? `<div class="band">${o.band}</div>` : ""}<div class="wrap page">${o.html}</div>` });
+  html: newTab(`${o.band ? `<div class="band">${o.band}</div>` : ""}<div class="wrap page">${o.html}</div>`) });
 const band = (inner, cls = "") => `<div class="wrap band-in${cls ? " " + cls : ""}">${inner}</div>`;
-const SITE_SUFFIX = ` | الموقع الرسمي للشيخ ${FULL_NAME}`;
+const SITE_SUFFIX = ` | ${NAME}`;   // short, so search results show the page's own title; the full official name is on the home page and in og:site_name
 const withSite = t => t + SITE_SUFFIX;
 /* link previews (WhatsApp, Telegram, X): the page's own title; the site name comes from og:site_name */
 export const ogTitle = p => p.title.endsWith(SITE_SUFFIX) ? p.title.slice(0, -SITE_SUFFIX.length) : p.title;
@@ -97,7 +105,7 @@ function home() {
     ${feat}`, "hero");
   const html = `
     <nav class="chips" aria-label="أقسام المكتبة">${vis.map((s, i) => chip(s, sectionCount(s.id), i)).join("")}</nav>
-    ${SCHEDULE.items.length ? `${head2("جدول الدروس الأسبوعي", more(href.schedule(), "الجدول وإعلانه"))}${scheduleTable()}` : ""}
+    ${SCHEDULE.items.length ? `${head2("جدول الدروس الأسبوعي", more(href.schedule(), "الجدول كاملًا"))}${scheduleTable()}` : ""}
     ${state.ann.length ? `${head2("إعلانات الدروس", more(href.announcements(), "كل الإعلانات"))}<div class="posters strip">${state.ann.slice(0, 6).map((a, i) => poster(a, i)).join("")}</div>` : ""}
     ${hasDocs() ? `${head2("التزكيات والوصايا", more(href.documents(), "عرض الكل"))}<div class="posters strip">${docsHome()}</div>` : ""}
     ${bio ? `<section class="about-teaser" aria-labelledby="ab-h"><h2 id="ab-h">عن الشيخ</h2>${bio.summary ? `<p>${esc(bio.summary)}</p>` : ""}<a class="btn" href="${href.about()}">اقرأ المزيد ${ic("chevron-left", 16)}</a></section>` : ""}
@@ -135,7 +143,7 @@ function sectionPage(id) {
   const c = crumbs([{ t: sec.title }]);
   return mkPage({
     nav: id, path: `/section/${id}/`,
-    band: pageBand(c, secIcon(sec), sec.title, `${sec.desc} — ${fmtNum(ser.length)} سلسلة، ${fmtNum(items.length)} مادة`),
+    band: pageBand(c, secIcon(sec), sec.title, `${sec.desc} — ${count(ser.length, "series")}، ${count(items.length, "item")}`),
     html: `${head2("السلاسل")}${tiles(ser.slice().sort((a, b) => b.count - a.count), "grid")}
       ${latest.length ? `${head2("أحدث الدروس", more(href.search(`?sec=${id}`), "الكل"))}${eps(latest)}` : ""}`,
     title: withSite(`${sec.title} — ${ser.length} سلسلة`), description: clip(`${sec.desc} ${fmtNum(ser.length)} سلسلة و${fmtNum(items.length)} مادة من ${NAME_FULL}.`, 160),
@@ -158,32 +166,37 @@ export function seriesInfo(id) {
 }
 export function seriesList(info, st) {
   let r = info.all.filter(l => (!st.sec || l.section === st.sec) && match(l, st.q));
-  r = st.sort === "num" ? r.slice().sort(seriesOrder) : st.sort === "old" ? r.slice().reverse() : r;
+  r = st.sort === "num" ? r.slice().sort(seriesOrder) : st.sort === "old" ? r.slice().sort((a, b) => (a.date || "").localeCompare(b.date || "") || a.o - b.o) : r;   // oldest first, and in posting order within a day
   let html = "", last, k = 0;
   for (const l of r) {
     if (st.sort === "num" && !st.sec && info.sections.length > 1 && l.section !== last) { last = l.section; html += `<h2 class="sect">${esc(l.section || "أخرى")}</h2>`; }
-    html += row(l, { noSection: true, i: k++ });
+    html += row(l, { noSection: true, inSeries: true, i: k++ });
   }
   return { count: r.length, html: r.length ? `<div class="list cols">${html}</div>` : `<p class="empty">لا توجد نتائج.</p>` };
 }
 
+const NEWEST_FIRST = new Set(["khutab", "lectures", "tilawa", "fatawa", "tafsir"]);   // collections, not books: newest first
 function seriesPage(id) {
   const info = seriesInfo(id); if (!info) return null;
   const { s, sec, flat, ordered, sections } = info;
-  const st = { q: "", sec: "", sort: ordered ? "num" : "new" };
+  const st = { q: "", sec: "", sort: ordered ? "num" : NEWEST_FIRST.has(s.id) ? "new" : "old" };   // owner 2026-11-17: a book is followed from lesson 1
   const list = seriesList(info, st);
+  // no invented blurbs: a series without its own description says what the data says (how many lessons, from when to when)
+  const dated = info.all.filter(l => l.date).sort((a, b) => a.date.localeCompare(b.date));
+  const d1 = dated.length ? ldate(dated[0]) : "", d2 = dated.length ? ldate(dated[dated.length - 1]) : "";
+  const span = !d1 ? "" : d1 === d2 ? `في ${d1}` : `من ${d1} إلى ${d2}`;
   const c = crumbs(flat ? [{ t: sec.title }] : [{ t: sec.title, h: href.section(sec) }, { t: s.title }]);
   const html = `
     <div class="bar">${searchBox("ابحث داخل السلسلة (رقم الدرس أو الباب)…")}
-      <select id="sort" aria-label="الترتيب"><option value="new"${st.sort === "new" ? " selected" : ""}>الأحدث أولًا</option><option value="old">الأقدم أولًا</option>${ordered ? `<option value="num"${st.sort === "num" ? " selected" : ""}>بالترتيب (الأول فالأخير)</option>` : ""}</select></div>
+      <select id="sort" aria-label="الترتيب"><option value="new"${st.sort === "new" ? " selected" : ""}>الأحدث أولًا</option><option value="old"${st.sort === "old" ? " selected" : ""}>الأقدم أولًا</option>${ordered ? `<option value="num"${st.sort === "num" ? " selected" : ""}>بالترتيب (الأول فالأخير)</option>` : ""}</select></div>
     ${sections.length > 1 ? `<div class="pill-row" id="secs" role="group" aria-label="تصفية حسب الكتاب"><button type="button" class="pill on" aria-pressed="true" data-s="">الكل</button>${sections.map(x => `<button type="button" class="pill" aria-pressed="false" data-s="${esc(x)}">${esc(x)}</button>`).join("")}</div>` : ""}
-    <p class="count" id="count" role="status">${fmtNum(list.count)} درسًا</p><div id="out">${list.html}</div>`;
+    <p class="count" id="count" role="status">${count(list.count, "lesson")}</p><div id="out">${list.html}</div>`;
   return mkPage({
     nav: s.sec, path: href.series(s.id), html, wire: { t: "series", id: s.id }, ogType: "website",
-    band: pageBand(c, art(s, "big"), esc(s.title), `${esc(s.description || sec.desc)} — ${fmtNum(s.count)} درسًا${hours(s.seconds) ? "، " + hours(s.seconds) : ""}`,
+    band: pageBand(c, art(s, "big"), esc(s.title), `${s.description ? esc(s.description) + " — " : ""}${count(s.count, "lesson")}${span ? " " + span : ""}${hours(s.seconds) ? "، " + hours(s.seconds) : ""}.`,
       s.extra ? `<a class="btn" href="${esc(safeUrl(s.extra.url))}" target="_blank" rel="noopener">${ic("external-link", 17)} ${esc(s.extra.label)}</a>` : ""),
-    title: withSite(`${s.title} — ${fmtNum(s.count)} درسًا`),
-    description: clip(`${s.description ? s.description + " " : ""}${fmtNum(s.count)} درسًا${hours(s.seconds) ? " (" + hours(s.seconds) + ")" : ""} من ${sec.title} — ${NAME_FULL}.`, 160),
+    title: withSite(`${s.title} — ${count(s.count, "lesson")}`),
+    description: clip(`${s.title}: ${s.description ? s.description + " " : ""}${count(s.count, "lesson")}${span ? " " + span : ""}${hours(s.seconds) ? " (" + hours(s.seconds) + ")" : ""} — ${NAME_FULL}.`, 160),
     jsonld: [c.ld, { "@context": "https://schema.org", "@type": "CollectionPage", name: s.title, url: SITE + href.series(s.id), inLanguage: "ar",
       mainEntity: { "@type": "ItemList", numberOfItems: info.sib.length, itemListElement: info.sib.map((l, i) => ({ "@type": "ListItem", position: i + 1, url: SITE + href.lesson(l.id), name: fullTitle(l) })) } }],
   });
@@ -212,7 +225,7 @@ function lessonPage(id) {
              <div class="speeds" role="group" aria-label="سرعة التشغيل">${SPEEDS.map(v => `<button type="button" data-v="${v}" class="${v === 1 ? "on" : ""}" aria-pressed="${v === 1}">${speedLabel(v)}</button>`).join("")}</div></div></div></div>`
     : `<div class="frame"><div class="player lite" data-yt="${safeYt(l.id)}"><img src="https://i.ytimg.com/vi/${safeYt(l.id)}/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="lite-play" aria-label="تشغيل الفيديو: ${esc(title)}"><i>${ic("play", 30)}</i></button></div></div>`;
   const ext = l.kind === "audio" && !l.src
-    ? (tg ? `<a class="btn" href="${esc(tg)}" target="_blank" rel="noopener">${ic("external-link", 17)} المنشور على تيليجرام</a>` : "")
+    ? ""   // the band's «استمع على تيليجرام» already opens the same post
     : l.kind === "audio"
     ? dlLink(l.src, title) + (tg ? `<a class="btn" href="${esc(tg)}" target="_blank" rel="noopener">${ic("external-link", 17)} المنشور على تيليجرام</a>` : "")
     : `<a class="btn" href="https://www.youtube.com/watch?v=${safeYt(l.id)}" target="_blank" rel="noopener">${ic("external-link", 17)} فتح في يوتيوب</a>`;
@@ -226,8 +239,8 @@ function lessonPage(id) {
         ${prev ? `<a class="btn" rel="prev" href="${href.lesson(prev.id)}">${ic("chevron-left", 17, "flip")} السابق</a>` : `<span class="btn" aria-disabled="true">${ic("chevron-left", 17, "flip")} السابق</span>`}
         ${ext}<button type="button" class="btn" id="share">${ic("link", 17)} نسخ الرابط</button></div>
     <section class="side" aria-labelledby="side-h">${head2(`<span id="side-h">دروس السلسلة</span>`, more(href.series(s.id), `كل الدروس (${fmtNum(sib.length)})`))}
-      <div class="list">${win.map(x => row(x, { now: x.id === l.id })).join("")}</div></section>`;
-  const desc = clip(`${s.title}${ldate(l) ? "، " + ldate(l) : ""}. ${l.kind === "audio" ? "درس صوتي" : "درس مرئي"} لفضيلة الشيخ ${FULL_NAME} حفظه الله، للاستماع والتحميل.`, 200);
+      <div class="list">${win.map(x => row(x, { now: x.id === l.id, inSeries: true })).join("")}</div></section>`;
+  const desc = clip(`${title}${title.includes(s.title) ? "" : " — " + s.title}${ldate(l) ? "، " + ldate(l) : ""}. ${l.kind === "audio" ? "درس صوتي" : "درس مرئي"} لفضيلة الشيخ ${FULL_NAME} حفظه الله، للاستماع والتحميل.`, 200);
   const ld = l.kind === "audio"
     ? !l.src ? { "@type": "AudioObject", url: tg }
     : { "@type": "AudioObject", contentUrl: safeUrl(l.src), encodingFormat: MIME[(l.src.split("?")[0].split(".").pop() || "").toLowerCase()] || "audio/mpeg" }
@@ -239,7 +252,7 @@ function lessonPage(id) {
     title: withSite(title), description: desc,
     jsonld: [c.ld, { "@context": "https://schema.org", ...ld, name: title, description: desc, inLanguage: "ar",
       ...(l.date ? (l.kind === "video" ? { uploadDate: when } : { dateCreated: when }) : {}), ...(l.duration ? { duration: isoDur(l.duration) } : {}),
-      author: { "@type": "Person", name: FULL_NAME, url: SITE + href.about() }, isPartOf: { "@type": "CreativeWorkSeries", name: s.title, url: SITE + href.series(s.id) } }],
+      author: { "@type": "Person", name: FULL_NAME, url: SITE + (state.bio ? href.about() : "/") }, isPartOf: { "@type": "CreativeWorkSeries", name: s.title, url: SITE + href.series(s.id) } }],
   });
 }
 
@@ -283,9 +296,9 @@ function booksPage() {
   const c = crumbs([{ t: "الكتب" }]);
   return mkPage({
     nav: "books", path: "/books/",
-    band: pageBand(c, `<span class="sec-ic" aria-hidden="true">${ic("book-open", 34)}</span>`, "الكتب", `${secById.books.desc} — ${fmtNum(DB.books.length)} كتابًا`),
+    band: pageBand(c, `<span class="sec-ic" aria-hidden="true">${ic("book-open", 34)}</span>`, "الكتب", `${secById.books.desc} — ${count(DB.books.length, "book")}`),
     html: `${groups.map(g => `<section>${head2(esc(g.g))}<div class="books">${g.items.map(card).join("")}</div></section>`).join("")}`,
-    title: withSite(`الكتب — ${fmtNum(DB.books.length)} كتابًا للقراءة والتحميل`), description: `مؤلفات ${NAME_FULL} وتحقيقاته وبحوثه للقراءة والتحميل (PDF).`, jsonld: [c.ld],
+    title: withSite(`الكتب — ${count(DB.books.length, "book")} للقراءة والتحميل`), description: `مؤلفات ${NAME_FULL} وتحقيقاته وبحوثه للقراءة والتحميل (PDF).`, jsonld: [c.ld],
   });
 }
 
@@ -316,7 +329,7 @@ export function scheduleTable(cls = "") {
     const until = got && /^\d{4}-\d\d-\d\d$/.test(got.last.date || "") ? addDays(got.last.date, NEW_DAYS) : "";
     const fresh = until && until >= today ? `<span class="sc-new" data-until="${until}">جديد</span>` : "";
     const book = s ? `<a href="${href.series(s.id)}">${esc(x.book)}</a>${fresh}` : `<span>${esc(x.book)}</span>`;
-    const last = got ? `<a class="sc-n" href="${href.lesson(got.last.id)}" title="آخر درس: ${esc(fullTitle(got.last))}" aria-label="آخر درس، ${fmtNum(got.n)} درسًا: ${esc(fullTitle(got.last))}">${fmtNum(got.n)}</a>`
+    const last = got ? `<a class="sc-n" href="${href.lesson(got.last.id)}" title="آخر درس: ${esc(fullTitle(got.last))}" aria-label="آخر درس، ${count(got.n, "lesson")}: ${esc(fullTitle(got.last))}">${fmtNum(got.n)}</a>`
       : `<span class="sc-n none" title="لم تُنشر دروس منه بعد" aria-label="لم تُنشر دروس منه بعد">—</span>`;
     return `<tr><td class="sc-day">${esc(x.when)}</td><td class="sc-time">${esc(x.time)}</td>
       <td class="sc-book">${book}<span class="sc-place">${ic("map-pin", 14)} ${esc(x.mosque)}، ${esc(x.area)}</span></td><td class="sc-last">${last}</td></tr>`;
@@ -446,7 +459,7 @@ export function chromeTop(nav) {
   <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="القائمة الرئيسية" aria-hidden="true">
     <div class="drawer-h"><span>القائمة</span><button type="button" class="icon-btn" id="drawer-x" aria-label="إغلاق">${ic("x", 21)}</button></div>
     <nav class="drawer-nav" id="drawer-nav" aria-label="القائمة">${drawerItems.map(x => `<a href="${x.h}" data-nav="${x.id}"${cur(nav, x.id)}>${ic(x.i, 21)}<span>${x.t}</span>${x.n ? `<small>${fmtNum(x.n)}</small>` : ""}</a>`).join("")}</nav>
-    <div class="drawer-f">${LINKS.slice(0, 3).map(x => `<a href="${x.h}" target="_blank" rel="noopener">${ic("external-link", 17)} ${x.t}</a>`).join("")}</div>
+    <div class="drawer-f">${newTab(LINKS.slice(0, 3).map(x => `<a href="${x.h}" target="_blank" rel="noopener">${ic("external-link", 17)} ${x.t}</a>`).join(""))}</div>
   </aside>`;
 }
 /* The docked player: one <audio> for the whole visit, so listening carries on while the visitor browses. Filled by app.js. */
@@ -468,7 +481,7 @@ export function chromeBottom(nav) {
 export const footer = () => `<footer class="foot"><div class="wrap">
   <p class="foot-official"><span class="mark" aria-hidden="true">${STAR}</span><strong>${esc(OFFICIAL_NAME)} حفظه الله ورعاه</strong>${state.bio ? `، <a href="${href.about()}">عن الشيخ</a>` : ""}${SCHEDULE.items.length ? `، <a href="${href.schedule()}">جدول الدروس</a>` : ""}${state.ann.length ? `، <a href="${href.announcements()}">إعلانات الدروس</a>` : ""}${hasDocs() ? `، <a href="${href.documents()}">التزكيات والوصايا</a>` : ""}</p>
   <p>المواد الصوتية مأخوذة من <a href="${TG_CHANNEL}" target="_blank" rel="noopener">قناة الشيخ على تيليجرام</a>.</p>
-  <p class="foot-links">${LINKS.map(x => `<a href="${x.h}" target="_blank" rel="noopener">${x.t}</a>`).join("")}</p>
+  <p class="foot-links">${newTab(LINKS.map(x => `<a href="${x.h}" target="_blank" rel="noopener">${x.t}</a>`).join(""))}</p>
   <p class="foot-up">آخر تحديث للفهرس: ${fmtDate(state.DB.updated)}</p></div></footer>`;
 
 export function headHtml(p) {

@@ -104,7 +104,19 @@ export const fmtYear = d => d ? hijriYear.format(at(d)).replace(/\s*هـ$/, "") 
 export const dur = s => { if (!s) return ""; const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
   return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0"); };
 export const isoDur = s => s ? `PT${Math.floor(s / 3600)}H${Math.floor(s % 3600 / 60)}M${s % 60}S` : "";
-export const hours = s => { const h = Math.round(s / 3600); return h ? fmtNum(h) + " ساعة" : ""; };
+/* Arabic number agreement: ١ درس واحد، ٢ درسان، ٣–١٠ دروس، ١١–٩٩ درسًا، ١٠٠ درس، ١٠٣ دروس، ١١١ درسًا … */
+export const NOUNS = { lesson: ["درس", "درسان", "دروس", "درسًا", "درس واحد"], series: ["سلسلة", "سلسلتان", "سلاسل", "سلسلة", "سلسلة واحدة"],
+  hour: ["ساعة", "ساعتان", "ساعات", "ساعة", "ساعة واحدة"], book: ["كتاب", "كتابان", "كتب", "كتابًا", "كتاب واحد"], item: ["مادة", "مادتان", "مواد", "مادة", "مادة واحدة"],
+  result: ["نتيجة", "نتيجتان", "نتائج", "نتيجة", "نتيجة واحدة"] };
+export const count = (n, kind) => {
+  const [one, two, few, many, single] = NOUNS[kind], r = n % 100;
+  if (n === 1) return single;
+  if (n === 2) return two;
+  if (r >= 3 && r <= 10) return `${fmtNum(n)} ${few}`;
+  if (r >= 11) return `${fmtNum(n)} ${many}`;
+  return `${fmtNum(n)} ${one}`;   // 0, 100, 101, 102, 200 …
+};
+export const hours = s => { const h = Math.round(s / 3600); return h ? count(h, "hour") : ""; };
 export const dg = s => String(s ?? "").replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);   // Arabic-Indic digits for titles from any source
 
 /* ───────── Input sanitising ─────────  Everything that comes from the user (search boxes, URL) or from data files goes through these. */
@@ -167,7 +179,7 @@ export const SCHEDULE = {
     { book: "كتاب التوحيد", series: "tawhid", day: 1, when: "الأحد", time: "من أذان العشاء إلى بعد الصلاة", mosque: "جامع عبدالله بن عمار", area: "الأندلس" },
     { book: "فضل الإسلام", series: "fadl-islam", day: 2, when: "الاثنين", time: "بعد العشاء", mosque: "مسجد الشيخ محمد بن عثيمين", area: "الربوة" },
     { book: "مختصر سيرة الرسول ﷺ", series: "sira", day: 3, when: "الثلاثاء", time: "بعد العشاء", mosque: "جامع الملك فهد", area: "الشرفية" },
-    { book: "كتاب الكبائر للإمام محمد بن عبدالوهاب", series: "", day: 4, when: "الأربعاء", time: "بعد المغرب", mosque: "جامع أسامة بن زيد", area: "الوزيرية" },
+    { book: "كتاب الكبائر للإمام محمد بن عبدالوهاب", series: "kabair", day: 4, when: "الأربعاء", time: "بعد المغرب", mosque: "جامع أسامة بن زيد", area: "الوزيرية" },
     { book: "سلم الوصول إلى علم الأصول", series: "sullam", day: 4, when: "الأربعاء", time: "بعد العشاء", mosque: "جامع طيبة", area: "الوزيرية" },
     { book: "الوابل الصيب لابن القيم", series: "wabil", day: 5, when: "الخميس", time: "بعد المغرب", mosque: "جامع البيان", area: "الصفا" },
     { book: "خطبة الجمعة", series: "khutab", day: 6, when: "الجمعة", time: "صلاة الجمعة", mosque: "جامع عبدالله بن عمار", area: "الأندلس" },
