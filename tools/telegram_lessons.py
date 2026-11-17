@@ -30,6 +30,7 @@ SERIES = [
     ('bahja',       'التعليق على بهجة قلوب الأبرار',   'hadith',   r'بهجة\s*قلوب'),
     ('hadith-course','الدورة العلمية في الحديث وعلومه', 'hadith',  r'الحديث\s*وعلوم|الدور[ةه]?\s*العلمية|أصول\s*الأخبار|البيقونية'),
     ('bukhari',     'التعليق على كتاب الصيام من صحيح البخاري',                'hadith',   r'صحيح\s*البخاري'),
+    ('kabair',      'شرح كتاب الكبائر',                'aqeedah',  r'كتاب\s*-?\s*\[?\s*الكبائر'),
     ('sullam',      'شرح سلم الوصول',                  'aqeedah',  r'سلم\s*الوصول'),
     ('kashf',       'شرح كشف الشبهات',                 'aqeedah',  r'كشف\s*الشبهات'),
     ('qawaid',      'شرح القواعد الأربع',              'aqeedah',  r'القواعد\s*ال[أا]ربع|القاعدة\s*(?:الأولى|الاولى|الثانية|الثالثة|الرابعة)'),
@@ -289,7 +290,7 @@ PART = re.compile(r'(المجلس|الدرس|اللقاء|القاء|الحلق�
                   r'(?:\s*(?:عشر|عاشر|و\s*ال?عشر(?:و|ي)ن|و\s*ال?ثلاث(?:و|ي)ن|و\s*ال?[أا]ربع(?:و|ي)ن))?)(?![\u0621-\u064A])')
 CALIPHS = [('الحسن بن علي', r'الحسن بن علي'), ('أبو بكر الصديق', r'ابو ?بكر'), ('عمر بن الخطاب', r'عمر بن الخطاب'),
            ('عثمان بن عفان', r'عثمان بن عفان'), ('علي بن أبي طالب', r'علي بن ابي طالب')]
-BOOK_SERIES = {'umdah', 'arbain', 'imara', 'bahja', 'hadith-course', 'bukhari', 'sullam', 'kashf', 'qawaid', 'fadl-islam', 'usul', 'haiyya',
+BOOK_SERIES = {'kabair', 'umdah', 'arbain', 'imara', 'bahja', 'hadith-course', 'bukhari', 'sullam', 'kashf', 'qawaid', 'fadl-islam', 'usul', 'haiyya',
                'daa-dawa', 'wabil', 'tawhid', 'hajj', 'siyam', 'sira', 'khulafa', 'usul-tafsir', 'qisar', 'saadi-hajj', 'ramadan'}
 
 
