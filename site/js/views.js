@@ -166,7 +166,7 @@ export function seriesInfo(id) {
 }
 export function seriesList(info, st) {
   let r = info.all.filter(l => (!st.sec || l.section === st.sec) && match(l, st.q));
-  r = st.sort === "num" ? r.slice().sort(seriesOrder) : st.sort === "old" ? r.slice().reverse() : r;
+  r = st.sort === "num" ? r.slice().sort(seriesOrder) : st.sort === "old" ? r.slice().sort((a, b) => (a.date || "").localeCompare(b.date || "") || a.o - b.o) : r;   // oldest first, and in posting order within a day
   let html = "", last, k = 0;
   for (const l of r) {
     if (st.sort === "num" && !st.sec && info.sections.length > 1 && l.section !== last) { last = l.section; html += `<h2 class="sect">${esc(l.section || "أخرى")}</h2>`; }
@@ -175,10 +175,11 @@ export function seriesList(info, st) {
   return { count: r.length, html: r.length ? `<div class="list cols">${html}</div>` : `<p class="empty">لا توجد نتائج.</p>` };
 }
 
+const NEWEST_FIRST = new Set(["khutab", "lectures", "tilawa", "fatawa", "tafsir"]);   // collections, not books: newest first
 function seriesPage(id) {
   const info = seriesInfo(id); if (!info) return null;
   const { s, sec, flat, ordered, sections } = info;
-  const st = { q: "", sec: "", sort: ordered ? "num" : "new" };
+  const st = { q: "", sec: "", sort: ordered ? "num" : NEWEST_FIRST.has(s.id) ? "new" : "old" };   // owner 2026-11-17: a book is followed from lesson 1
   const list = seriesList(info, st);
   // no invented blurbs: a series without its own description says what the data says (how many lessons, from when to when)
   const dated = info.all.filter(l => l.date).sort((a, b) => a.date.localeCompare(b.date));
@@ -187,7 +188,7 @@ function seriesPage(id) {
   const c = crumbs(flat ? [{ t: sec.title }] : [{ t: sec.title, h: href.section(sec) }, { t: s.title }]);
   const html = `
     <div class="bar">${searchBox("ابحث داخل السلسلة (رقم الدرس أو الباب)…")}
-      <select id="sort" aria-label="الترتيب"><option value="new"${st.sort === "new" ? " selected" : ""}>الأحدث أولًا</option><option value="old">الأقدم أولًا</option>${ordered ? `<option value="num"${st.sort === "num" ? " selected" : ""}>بالترتيب (الأول فالأخير)</option>` : ""}</select></div>
+      <select id="sort" aria-label="الترتيب"><option value="new"${st.sort === "new" ? " selected" : ""}>الأحدث أولًا</option><option value="old"${st.sort === "old" ? " selected" : ""}>الأقدم أولًا</option>${ordered ? `<option value="num"${st.sort === "num" ? " selected" : ""}>بالترتيب (الأول فالأخير)</option>` : ""}</select></div>
     ${sections.length > 1 ? `<div class="pill-row" id="secs" role="group" aria-label="تصفية حسب الكتاب"><button type="button" class="pill on" aria-pressed="true" data-s="">الكل</button>${sections.map(x => `<button type="button" class="pill" aria-pressed="false" data-s="${esc(x)}">${esc(x)}</button>`).join("")}</div>` : ""}
     <p class="count" id="count" role="status">${count(list.count, "lesson")}</p><div id="out">${list.html}</div>`;
   return mkPage({
