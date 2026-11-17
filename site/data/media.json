@@ -1,0 +1,26 @@
+{
+ "https://t.me/h_haddadi7/1283": {
+  "url": "https://media.h-haddadi.com/audio/d4bcba9e116ffbe9.m4a",
+  "key": "audio/d4bcba9e116ffbe9.m4a",
+  "sha256": "d4bcba9e116ffbe92dd2a49b80041876ebf8cd50110704606cc65e378f2e78d9",
+  "size": 8525176,
+  "duration": 1369,
+  "src_size": 22182083
+ },
+ "https://t.me/h_haddadi7/1286": {
+  "url": "https://media.h-haddadi.com/audio/78a49a1c56ae5a00.m4a",
+  "key": "audio/78a49a1c56ae5a00.m4a",
+  "sha256": "78a49a1c56ae5a00fa1fc00e3de93ab25756d6bce01157e30e1b3e6c82f34872",
+  "size": 15958903,
+  "duration": 2566,
+  "src_size": 41579024
+ },
+ "https://t.me/h_haddadi7/1299": {
+  "url": "https://media.h-haddadi.com/audio/7c2dbb921b3fe91d.m4a",
+  "key": "audio/7c2dbb921b3fe91d.m4a",
+  "sha256": "7c2dbb921b3fe91dc31d71f85a462c5de85e5480180a63275b9ee486f6f83d4c",
+  "size": 9591367,
+  "duration": 1541,
+  "src_size": 25145641
+ }
+}

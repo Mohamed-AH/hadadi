@@ -28,7 +28,7 @@ let hits = [];
 r = await health(henv(true), async (u, o) => (hits.push([u, o.method]), new Response(null, { status: 200 })));
 let hj = await r.json();
 t("health 200 when all answer", r.status === 200 && hj.ok && hj.audio_public === "ok" && hj.timer === "no GH_TOKEN"
-  && hits[0][0] === "https://media.hadadi.example/audio/2137b5d426dbcd69.m4a" && hits[0][1] === "HEAD" && r.headers.get("cache-control") === "no-store");
+  && hits[0][0] === "https://media.h-haddadi.com/audio/2137b5d426dbcd69.m4a" && hits[0][1] === "HEAD" && r.headers.get("cache-control") === "no-store");
 r = await health(henv(true), async () => new Response(null, { status: 404 })); hj = await r.json();
 t("health 503 when public audio fails", r.status === 503 && hj.audio_public === "fail" && hj.site === "ok");
 r = await health({ ...henv(false), MEDIA: { list: async () => { throw new Error("x"); } } }, async () => new Response(null)); hj = await r.json();
