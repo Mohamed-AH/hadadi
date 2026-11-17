@@ -287,6 +287,8 @@ TENS = {'العشرون': 20, 'العشرين': 20, 'الثلاثون': 30, 'ا�
 PART = re.compile(r'(المجلس|الدرس|اللقاء|القاء|الحلقة|الحديث)\s*[:،,]?\s*[\[\(«{]?\s*(?:رقم\s*)?[\[\(«{]?\s*'
                   r'((?:\d{1,3})|(?:ال[أا]ول|الواحد|الثاني|الثالث|الرابع|الخامس|السادس|السابع|الثامن|التاسع|العاشر|الحادي|العشرون|الثلاثون)'
                   r'(?:\s*(?:عشر|عاشر|و\s*ال?عشر(?:و|ي)ن|و\s*ال?ثلاث(?:و|ي)ن|و\s*ال?[أا]ربع(?:و|ي)ن))?)(?![\u0621-\u064A])')
+CALIPHS = [('الحسن بن علي', r'الحسن بن علي'), ('أبو بكر الصديق', r'ابو ?بكر'), ('عمر بن الخطاب', r'عمر بن الخطاب'),
+           ('عثمان بن عفان', r'عثمان بن عفان'), ('علي بن أبي طالب', r'علي بن ابي طالب')]
 BOOK_SERIES = {'umdah', 'arbain', 'imara', 'bahja', 'hadith-course', 'bukhari', 'sullam', 'kashf', 'qawaid', 'fadl-islam', 'usul', 'haiyya',
                'daa-dawa', 'wabil', 'tawhid', 'hajj', 'siyam', 'sira', 'khulafa', 'usul-tafsir', 'qisar', 'saadi-hajj', 'ramadan'}
 
@@ -528,6 +530,14 @@ def main():
         if l['series'] in ('misc', 'lectures', '') and l['title'] and friday(l['date']) and not re.search(r'درس|الدرس|المجلس|اللقاء|شرح|محاضرة|ندوة|كلمة', clean(l['caption'])) \
                 and re.search(r'جامع\s*عبد\s*الله\s*بن\s*عمار|ابو\s*عمار|أبو\s*عمار|خطب', clean(l['caption'] + ' ' + l['file_name'])):
             l['series'], l['series_title'], l['section'] = 'khutab', 'خطب الجمعة والعيدين', 'khutab'
+    for l in lessons:   # سيرة الخلفاء الراشدين: each caliph's lessons restart at «الدرس الأول», so name the caliph from the post
+        if l['series'] == 'khulafa':
+            c = norm_ar(l['caption'])
+            who = next((n for n, rx in CALIPHS if re.search(rx, c)), '')
+            part, _ = part_label(l['caption'])
+            if who:
+                l['title'] = 'سيرة الخلفاء الراشدين — ' + who + ('، ' + part if part else '')
+                l['part'] = None
     for l in lessons:   # short-surah tafsir: the post names the surahs on a line of their own («سورة الماعون», «تفسير سورتي الفلق و الناس»)
         if l['series'] == 'qisar' and l['title'] and not re.search(r'سورة\s', l['title']):
             names = []
