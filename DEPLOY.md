@@ -9,8 +9,9 @@ The site source is in `site/`; `node scripts/build.mjs` pre-renders it into `dis
    URL (`<branch>-hadadi.<account>.workers.dev`).
 2. **R2 bucket** `hadadi-media` (R2 → Create bucket). The Worker binds it as `MEDIA`; the deploy fails if it does not exist.
    It stays empty until `tools/fetch_audio.py` uploads audio (docs/audio-hosting.md).
-3. *(Later)* **Domain:** Workers & Pages → hadadi → Settings → Domains & Routes → Add → Custom domain. Then set `SITE` in
-   `site/js/core.js`. Connect `media.<domain>` to the bucket and set `MEDIA_HOST` in `worker/index.js`.
+3. **Domain (done 2026-11-17):** h-haddadi.com and www.h-haddadi.com are custom domains of the Worker; `SITE` in
+   `site/js/core.js` is https://h-haddadi.com. When audio is hosted, connect `media.h-haddadi.com` to the bucket and set
+   `MEDIA_HOST` in `worker/index.js`.
 
 ## How a change goes live
 Work on a branch → pull request (Cloudflare posts a preview link) → merge to `main` → Cloudflare builds and deploys in a minute or two
