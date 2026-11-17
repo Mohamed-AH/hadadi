@@ -107,7 +107,12 @@ export const isoDur = s => s ? `PT${Math.floor(s / 3600)}H${Math.floor(s % 3600 
 /* Arabic number agreement: ١ درس واحد، ٢ درسان، ٣–١٠ دروس، ١١–٩٩ درسًا، ١٠٠ درس، ١٠٣ دروس، ١١١ درسًا … */
 export const NOUNS = { lesson: ["درس", "درسان", "دروس", "درسًا", "درس واحد"], series: ["سلسلة", "سلسلتان", "سلاسل", "سلسلة", "سلسلة واحدة"],
   hour: ["ساعة", "ساعتان", "ساعات", "ساعة", "ساعة واحدة"], book: ["كتاب", "كتابان", "كتب", "كتابًا", "كتاب واحد"], item: ["مادة", "مادتان", "مواد", "مادة", "مادة واحدة"],
-  result: ["نتيجة", "نتيجتان", "نتائج", "نتيجة", "نتيجة واحدة"] };
+  result: ["نتيجة", "نتيجتان", "نتائج", "نتيجة", "نتيجة واحدة"],
+  khutba: ["خطبة", "خطبتان", "خطب", "خطبة", "خطبة واحدة"], lecture: ["محاضرة", "محاضرتان", "محاضرات", "محاضرة", "محاضرة واحدة"],
+  tilawa: ["تلاوة", "تلاوتان", "تلاوات", "تلاوة", "تلاوة واحدة"] };
+/* what a series' items are called when counted (owner 2026-11-17: «١٧٤ خطبة», «٧٣ محاضرة», not «درسًا») */
+const ITEM = { khutab: "khutba", lectures: "lecture", tilawa: "tilawa" };
+export const itemKind = sid => ITEM[sid] || "lesson";
 export const count = (n, kind) => {
   const [one, two, few, many, single] = NOUNS[kind], r = n % 100;
   if (n === 1) return single;

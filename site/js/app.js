@@ -1,5 +1,5 @@
 /* Browser app. Pages arrive pre-rendered (scripts/build.mjs); this script wires them up and handles client-side navigation. */
-import { init, setAnnouncements, todayRiyadh, state, byId, seriesById, secById, ic, safeYt, safeUrl, cleanQuery, oneOf, hashToPath, href, dur, fullTitle, esc, NAME, PAGE, SECTIONS, count as countAr } from "./core.js";
+import { init, setAnnouncements, todayRiyadh, state, byId, seriesById, secById, ic, safeYt, safeUrl, cleanQuery, oneOf, hashToPath, href, dur, fullTitle, esc, NAME, PAGE, SECTIONS, count as countAr, itemKind } from "./core.js";
 import { resolve, searchResults, seriesInfo, seriesList, listenOrder, moreBtn, SERIES_PAGE, ogTitle, coverColor, speedLabel, SPEEDS } from "./views.js";
 
 const $ = s => document.querySelector(s);
@@ -97,7 +97,7 @@ function wireSeries(id) {
   let r;
   const paint = () => {
     r = seriesList(info, st);
-    count.textContent = countAr(r.count, "lesson");
+    count.textContent = countAr(r.count, itemKind(id));
     out.innerHTML = r.html + (r.more ? moreBtn(r.count - st.shown) : "");
   };
   out.addEventListener("click", e => { if (e.target.closest("#more")) { st.shown += SERIES_PAGE; paint(); $("#more")?.focus(); } });
@@ -114,7 +114,7 @@ function wireSeries(id) {
   const resume = $("#resume"), last = byId[store.get("lastIn", {})[id]];
   plays.hidden = !order.length;
   const note = $("#plays-n");
-  if (note) note.textContent = order.length < info.all.length ? `يمكن تشغيل ${countAr(order.length, "lesson")} هنا من ${countAr(info.all.length, "lesson")} حتى الآن، والبقية على تيليجرام.` : "";
+  if (note) note.textContent = order.length < info.all.length ? `يمكن تشغيل ${countAr(order.length, itemKind(id))} هنا من ${countAr(info.all.length, itemKind(id))} حتى الآن، والبقية على تيليجرام.` : "";
   if (last && last.src && last.series === id && !progress(last.id)?.done) {
     resume.hidden = false;
     resume.innerHTML = `${ic("headphones", 17)} متابعة: <span class="rs-t">${esc(fullTitle(last))}</span>${saved(last.id) ? ` <span class="rs-d">(${tfmt(saved(last.id))})</span>` : ""}`;

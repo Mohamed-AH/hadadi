@@ -2,7 +2,7 @@
    Used by scripts/build.mjs (pre-rendering to real static HTML) and by js/app.js (client-side navigation). */
 import {
   SITE, NAME, NAME_FULL, OFFICIAL_PRE, FULL_NAME, ROLE, OFFICIAL_NAME, YT_CHANNEL, TG_CHANNEL, LINKS, SECTIONS, COVER, COVER_PALETTE, PAGE, MAXQ, ROSHAN,
-  state, byId, seriesById, secById, ic, esc, fmtNum, count, fmtYear, ldate, dur, isoDur, hours, dg, cleanQuery, oneOf, safeUrl, safeYt, safeLang, safeDecode, jsonLd,
+  state, byId, seriesById, secById, ic, esc, fmtNum, count, itemKind, fmtYear, ldate, dur, isoDur, hours, dg, cleanQuery, oneOf, safeUrl, safeYt, safeLang, safeDecode, jsonLd,
   DOCS, SCHEDULE, todayRiyadh, kindIcon, useLabel, label, mainTitle, fullTitle, secOfSeries, secOfLesson, seriesOrder, lang, thumb, STAR, match, sectionCount, visible, isFlat, seriesIn, href, fmtDate,
 } from "./core.js";
 
@@ -18,7 +18,7 @@ export const searchBox = (ph, v = "", id = "q", asForm = false) => {
 /* A series' artwork: its colour, the star, its title and size. "mini" = colour and pattern only (beside a lesson title). */
 export const coverColor = s => COVER[s.id] || COVER_PALETTE[Math.max(0, state.DB.series.indexOf(s)) % COVER_PALETTE.length];
 export const art = (s, cls = "") => `<span class="art${cls ? " " + cls : ""}" style="--c:${coverColor(s)}" aria-hidden="true">${/\bmini\b/.test(cls) ? ""
-  : `${STAR.replace("<svg", '<svg class="art-s"')}<span class="art-t">${esc(s.title)}</span><span class="art-n">${count(s.count, "lesson")}</span>`}</span>`;
+  : `${STAR.replace("<svg", '<svg class="art-s"')}<span class="art-t">${esc(s.title)}</span><span class="art-n">${count(s.count, itemKind(s.id))}</span>`}</span>`;
 
 /* Our R2 copies download through the site's /dl/ route (worker/index.js), which saves them under the lesson title;
    anything else keeps the plain link. */
@@ -29,7 +29,7 @@ const dlLink = (src, title) => {
 };
 
 export function seriesTile(s, i = 0) {
-  return `<a class="stile" href="${href.series(s.id)}" style="--i:${i}" aria-label="${esc(s.title)}، ${count(s.count, "lesson")}">${art(s)}
+  return `<a class="stile" href="${href.series(s.id)}" style="--i:${i}" aria-label="${esc(s.title)}، ${count(s.count, itemKind(s.id))}">${art(s)}
     <span class="stile-m" aria-hidden="true"><span>${secOfSeries(s).title}</span>${hours(s.seconds) ? `<span>${hours(s.seconds)}</span>` : ""}</span></a>`;
 }
 export const tiles = (list, cls = "") => `<div class="stiles${cls ? " " + cls : ""}">${list.map(seriesTile).join("")}</div>`;
@@ -226,14 +226,14 @@ function seriesPage(id) {
       <select id="sort" aria-label="الترتيب"><option value="new"${st.sort === "new" ? " selected" : ""}>الأحدث أولًا</option><option value="old"${st.sort === "old" ? " selected" : ""}>الأقدم أولًا</option>${ordered ? `<option value="num"${st.sort === "num" ? " selected" : ""}>بالترتيب (الأول فالأخير)</option>` : ""}</select>
       ${audio ? `<select id="only" aria-label="تصفية حسب الاستماع" hidden><option value="">كل الدروس</option><option value="new">لم أستمع إليها</option><option value="part">لم أكملها</option></select>` : ""}</div>
     ${sections.length > 1 ? `<div class="pill-row" id="secs" role="group" aria-label="تصفية حسب الكتاب"><button type="button" class="pill on" aria-pressed="true" data-s="">الكل</button>${sections.map(x => `<button type="button" class="pill" aria-pressed="false" data-s="${esc(x)}">${esc(x)}</button>`).join("")}</div>` : ""}
-    <p class="count" id="count" role="status">${count(list.count, "lesson")}</p><div id="out">${list.html}${list.more ? moreBtn(list.count - SERIES_PAGE) : ""}</div>
+    <p class="count" id="count" role="status">${count(list.count, itemKind(s.id))}</p><div id="out">${list.html}${list.more ? moreBtn(list.count - SERIES_PAGE) : ""}</div>
     ${list.more ? `<noscript>${seriesList(info, { ...st, shown: 1e9 }).html}</noscript>` : ""}`;   // visitors without scripts get the whole list; with scripts the browser never builds it, so big series stay light
   return mkPage({
     nav: s.sec, path: href.series(s.id), html, wire: { t: "series", id: s.id }, ogType: "website",
-    band: pageBand(c, art(s, "big"), esc(s.title), `${s.description ? esc(s.description) + " — " : ""}${count(s.count, "lesson")}${span ? " " + span : ""}${hours(s.seconds) ? "، " + hours(s.seconds) : ""}.`,
+    band: pageBand(c, art(s, "big"), esc(s.title), `${s.description ? esc(s.description) + " — " : ""}${count(s.count, itemKind(s.id))}${span ? " " + span : ""}${hours(s.seconds) ? "، " + hours(s.seconds) : ""}.`,
       s.extra ? `<a class="btn" href="${esc(safeUrl(s.extra.url))}" target="_blank" rel="noopener">${ic("external-link", 17)} ${esc(s.extra.label)}</a>` : ""),
-    title: withSite(`${s.title} — ${count(s.count, "lesson")}`),
-    description: clip(`${s.title}: ${s.description ? s.description + " " : ""}${count(s.count, "lesson")}${span ? " " + span : ""}${hours(s.seconds) ? " (" + hours(s.seconds) + ")" : ""} — ${NAME_FULL}.`, 160),
+    title: withSite(`${s.title} — ${count(s.count, itemKind(s.id))}`),
+    description: clip(`${s.title}: ${s.description ? s.description + " " : ""}${count(s.count, itemKind(s.id))}${span ? " " + span : ""}${hours(s.seconds) ? " (" + hours(s.seconds) + ")" : ""} — ${NAME_FULL}.`, 160),
     jsonld: [c.ld, { "@context": "https://schema.org", "@type": "CollectionPage", name: s.title, url: SITE + href.series(s.id), inLanguage: "ar",
       mainEntity: { "@type": "ItemList", numberOfItems: info.sib.length, itemListElement: info.sib.map((l, i) => ({ "@type": "ListItem", position: i + 1, url: SITE + href.lesson(l.id), name: fullTitle(l) })) } }],
   });
@@ -366,7 +366,7 @@ export function scheduleTable(cls = "") {
     const until = got && /^\d{4}-\d\d-\d\d$/.test(got.last.date || "") ? addDays(got.last.date, NEW_DAYS) : "";
     const fresh = until && until >= today ? `<span class="sc-new" data-until="${until}">جديد</span>` : "";
     const book = s ? `<a href="${href.series(s.id)}">${esc(x.book)}</a>${fresh}` : `<span>${esc(x.book)}</span>`;
-    const last = got ? `<a class="sc-n" href="${href.lesson(got.last.id)}" title="آخر درس: ${esc(fullTitle(got.last))}" aria-label="آخر درس، ${count(got.n, "lesson")}: ${esc(fullTitle(got.last))}">${fmtNum(got.n)}</a>`
+    const last = got ? `<a class="sc-n" href="${href.lesson(got.last.id)}" title="${x.series === "khutab" ? "آخر خطبة" : "آخر درس"}: ${esc(fullTitle(got.last))}" aria-label="${x.series === "khutab" ? "آخر خطبة" : "آخر درس"}، ${count(got.n, itemKind(x.series))}: ${esc(fullTitle(got.last))}">${fmtNum(got.n)}</a>`
       : `<span class="sc-n none" title="لم تُنشر دروس منه بعد" aria-label="لم تُنشر دروس منه بعد">—</span>`;
     return `<tr><td class="sc-day">${esc(x.when)}</td><td class="sc-time">${esc(x.time)}</td>
       <td class="sc-book">${book}<span class="sc-place">${ic("map-pin", 14)} ${esc(x.mosque)}، ${esc(x.area)}</span></td><td class="sc-last">${last}</td></tr>`;
