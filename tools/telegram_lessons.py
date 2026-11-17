@@ -270,8 +270,51 @@ def hijri_words(hd):
     return ' '.join(x for x in [d, HM[int(m) - 1] if m and 1 <= int(m) <= 12 else '', y + 'هـ'] if x).translate(str.maketrans('0123456789', '٠١٢٣٤٥٦٧٨٩'))
 
 
+def hijri_year(date):
+    """Hijri year of a Gregorian YYYY-MM-DD (tabular calendar; only the year is used, so a day's difference from Umm al-Qura is harmless
+    except in the last days of ذو الحجة)."""
+    jd = datetime.fromisoformat(date[:10]).toordinal() + 1721424.5
+    return int((30 * (jd - 1948439.5) + 10646) // 10631)
+
+
 def friday(date):
     return datetime.fromisoformat(date[:10]).weekday() == 4
+
+
+ORD_WORDS = ['الأول', 'الاول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 'السادس', 'السابع', 'الثامن', 'التاسع', 'العاشر', 'الحادي', 'الحاديعشر']
+ORD_N = {'الاول': 1, 'الثاني': 2, 'الثالث': 3, 'الرابع': 4, 'الخامس': 5, 'السادس': 6, 'السابع': 7, 'الثامن': 8, 'التاسع': 9, 'العاشر': 10, 'الحادي': 1}
+TENS = {'العشرون': 20, 'العشرين': 20, 'الثلاثون': 30, 'الثلاثين': 30, 'الاربعون': 40, 'الاربعين': 40}
+PART = re.compile(r'(المجلس|الدرس|اللقاء|القاء|الحلقة|الحديث)\s*[\[\(«{]?\s*(?:رقم\s*)?[\[\(«{]?\s*'
+                  r'((?:\d{1,3})|(?:ال[أا]ول|الثاني|الثالث|الرابع|الخامس|السادس|السابع|الثامن|التاسع|العاشر|الحادي|العشرون|الثلاثون)'
+                  r'(?:\s*(?:عشر|عاشر|و\s*ال?عشر(?:و|ي)ن|و\s*ال?ثلاث(?:و|ي)ن|و\s*ال?[أا]ربع(?:و|ي)ن))?)(?![\u0621-\u064A])')
+BOOK_SERIES = {'umdah', 'arbain', 'imara', 'bahja', 'hadith-course', 'bukhari', 'sullam', 'kashf', 'qawaid', 'fadl-islam', 'usul', 'haiyya',
+               'daa-dawa', 'wabil', 'tawhid', 'hajj', 'siyam', 'sira', 'khulafa', 'usul-tafsir', 'qisar', 'saadi-hajj', 'ramadan'}
+
+
+def norm_ar(s):
+    return re.sub(r'\s+', ' ', clean(s).replace('أ', 'ا').replace('إ', 'ا').replace('آ', 'ا').replace('ة', 'ه').replace('ى', 'ي')).strip()
+
+
+def part_label(t):
+    """«📎المجلس [ الثاني ]», «الدرس (3)», «اللقاء السابع عشر» anywhere in a post -> ('المجلس الثاني', 2)."""
+    c = clean(t).translate(AR_DIGITS)
+    ms = [m for m in PART.finditer(c) if not re.search(r'رابط\s*$', c[max(0, m.start() - 8):m.start()])]   # «رابط الدرس الأول» points elsewhere
+    ms.sort(key=lambda m: '[' not in m.group(0) and '(' not in m.group(0))                               # «المجلس [ الثاني ]» first
+    for m in ms:
+        word, num = m.group(1).replace('القاء', 'اللقاء'), re.sub(r'\s+', ' ', m.group(2)).strip()
+        num = re.sub(r'^(\S+) عاشر$', r'\1 عشر', num)                  # «المجلس [ الثاني عاشر ]» = الثاني عشر
+        if word == 'الحديث' and not num.isdigit():
+            continue                                        # «الحديث الأول» is a hadith, not a sitting
+        if num.isdigit():
+            n = int(num)
+        else:
+            k = norm_ar(num).split(' ')
+            n = ORD_N.get(k[0], TENS.get(k[0], 0))
+            if len(k) > 1 and k[1] == 'عشر': n += 10
+            elif len(k) > 1: n += TENS.get(re.sub(r'^و\s*', '', ' '.join(k[1:])).replace(' ', ''), 0) or TENS.get(k[-1], 0)
+        if n:
+            return f"{word} {num}" if not num.isdigit() else f"{word} {str(n).translate(str.maketrans('0123456789', '٠١٢٣٤٥٦٧٨٩'))}", n
+    return '', None
 
 
 def length(x):
@@ -443,6 +486,7 @@ def main():
         if others: flags.append('mentions ' + ' / '.join(others))
         if not series[0]: flags.append('no series')
         if anns and not good_ann and not title: flags.append('description length mismatch')
+        part, part_n = part_label(' '.join(caps + ([good_ann[1]] if good_ann else [])))
         if title and series[1] and len(re.findall(r'[\u0621-\u064A]{3,}', title)) <= 1:
             title = series[1] + ' ' + title            # a bare date as title: prefix the series name
         hd = hijri(blob) or (good_ann[2][1] if good_ann else '')
@@ -450,7 +494,7 @@ def main():
             'id': f"{main_post['_ch']}-{main_post['id']}",
             'title': title, 'title_source': source,
             'series': series[0], 'series_title': series[1], 'section': series[2],
-            'lesson_number': lesson_no(blob), 'hijri': hd,
+            'lesson_number': part_n or lesson_no(blob), 'part': part, 'hijri': hd,
             'date': main_post['date'][:10],
             'duration_min': round(dur / 60, 1) if dur else None,
             'duration_exact': exact,
@@ -469,13 +513,32 @@ def main():
         if l['series'] in ('misc', 'lectures', '') and l['title'] and friday(l['date']) and not re.search(r'درس|الدرس|المجلس|اللقاء|شرح|محاضرة|ندوة|كلمة', clean(l['caption'])) \
                 and re.search(r'جامع\s*عبد\s*الله\s*بن\s*عمار|ابو\s*عمار|أبو\s*عمار|خطب', clean(l['caption'] + ' ' + l['file_name'])):
             l['series'], l['series_title'], l['section'] = 'khutab', 'خطب الجمعة والعيدين', 'khutab'
-    seen = collections.Counter((l['series'], l['title']) for l in lessons)
-    for l in lessons:   # «شرح كتاب الأربعين النووية» four times: tell them apart by the Hijri date (or the lesson number)
-        if l['title'] and seen[(l['series'], l['title'])] > 1:
-            if l['hijri'] and l['hijri'].split('-')[0] not in l['title'].translate(AR_DIGITS):
-                l['title'] += ' — ' + hijri_words(l['hijri'])
-            elif l['lesson_number'] and not GENERIC.match(l['title'].split(':')[0]):
-                l['title'] += ' — الدرس ' + str(l['lesson_number']).translate(str.maketrans('0123456789', '٠١٢٣٤٥٦٧٨٩'))
+    for l in lessons:   # «📎المجلس [ الثاني ]» in the post (owner 2026-11-17): a bare book line becomes «<series> — المجلس الثاني»
+        part = l.get('part')
+        if l['title'] and part and l['series'] in BOOK_SERIES and norm_ar(part) not in norm_ar(l['title']) and not PART.search(clean(l['title']).translate(AR_DIGITS)):
+            bare = re.sub(r'^(?:شرح|التعليق\s*على|درس)\s*(?:كتاب|متن)?\s*', '', l['title']).strip()
+            l['title'] = (l['series_title'] if len(bare) < 40 and any(w in norm_ar(l['series_title']) for w in norm_ar(bare).split()[:2])
+                          else l['title']) + ' — ' + part
+    groups = collections.defaultdict(list)
+    for l in lessons:
+        groups[(l['series'], l['title'])].append(l)
+    for (sid, t), ls in groups.items():   # still the same title: the Hijri date if they differ, else «الجزء ١ / ٢» (two recordings of one sitting)
+        if not t or len(ls) < 2:
+            continue
+        dates = [l['hijri'] for l in ls]
+        years = [hijri_year(l['date']) for l in ls]
+        ar = str.maketrans('0123456789', '٠١٢٣٤٥٦٧٨٩')
+        if all(dates) and len(set(dates)) == len(dates):
+            for l in ls:
+                if l['hijri'].split('-')[0] not in t.translate(AR_DIGITS):
+                    l['title'] += ' — ' + hijri_words(l['hijri'])
+            continue
+        by_year = collections.defaultdict(list)
+        for l in sorted(ls, key=lambda l: (l['date'], l['id'])):
+            by_year[hijri_year(l['date'])].append(l)
+        for y, yl in by_year.items():   # the same book taught again another year: the year; two recordings of one sitting: الجزء ١ / ٢
+            for i, l in enumerate(yl):
+                l['title'] += (f' — {str(y).translate(ar)}هـ' if len(by_year) > 1 else '') + (' — الجزء ' + str(i + 1).translate(ar) if len(yl) > 1 else '')
     lessons.sort(key=lambda l: l['date'])
     json.dump(lessons, open(f'{ROOT}/lessons.json', 'w'), ensure_ascii=False, indent=1)
     return posts, lessons
