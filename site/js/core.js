@@ -1,5 +1,5 @@
 /* Shared by the browser app and the Node pre-renderer: constants, helpers, data model. No DOM access here. */
-import { ICONS } from "./icons.js";
+import { ICONS, BRANDS } from "./icons.js";
 
 /* Absolute base for link previews (og:image/og:url), canonical links and the sitemap: the site's domain, h-haddadi.com (attached to the
    Worker as a custom domain 2026-11-17, with www.h-haddadi.com). SITE_URL in the build environment overrides it. */
@@ -15,8 +15,10 @@ export const TG_CHANNEL = "https://t.me/h_haddadi7";
 export const TG_CHANNEL_2 = "https://t.me/masothrbj47";   // lessons are still imported from it; not linked (owner 2026-11-17)
 export const WA_GROUP = "https://chat.whatsapp.com/BupKFX5G3236scpMYX05L1";
 export const LINKS = [
-  { t: "قناة الشيخ على تيليجرام", h: TG_CHANNEL }, { t: "مجموعة الشيخ على واتساب", h: WA_GROUP },
+  { t: "قناة الشيخ على تيليجرام", s: "تيليجرام", b: "telegram", h: TG_CHANNEL }, { t: "مجموعة الشيخ على واتساب", s: "واتساب", b: "whatsapp", h: WA_GROUP },
 ];
+/* «تواصل معنا»: the address the footer button and the drawer link write to. Empty = the button is not shown. */
+export const CONTACT_EMAIL = "info@h-haddadi.com";   // Cloudflare Email Routing forwards it (owner 2026-11-18)
 
 /* ───────── Site structure ─────────  Every series belongs to one section (series.sec). Books are their own collection. */
 export const SECTIONS = [
@@ -81,6 +83,7 @@ export function init(cat, lib = {}, bio = null, media = null) {
 }
 
 /* ───────── Helpers ───────── */
+export const brand = (n, s = 20) => `<svg class="ic brand-${n}" width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="${BRANDS[n] || ""}"/></svg>`;
 export const ic = (n, s = 20, cls = "") => `<svg class="ic ${cls}" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[n] || ""}</svg>`;
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 // Arabic-insensitive search: drop tashkeel/tatweel, unify alef/ya/ta-marbuta, Arabic digits -> latin

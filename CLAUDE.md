@@ -10,6 +10,9 @@ Arabic (RTL) website for the lessons, khutab and lectures of **الشيخ حسن
 - No timers, announcements bot or YouTube sync yet (`JOBS = {}`, `crons: []`, no workflows). The code for them is still here from the Jabri site.
 - Telegram exports are not committed; `TELEGRAM_EXPORTS=/mnt/project-files/telegram` (folders named after the channel usernames: `h_haddadi7/`, `masothrbj47/`, so lesson links are `https://t.me/<folder>/<id>`).
 
+- **Footer + contact (owner 2026-11-18):** teak-band footer (identity + socials + «تواصل معنا», sections, links, bottom bar). Socials use the **official Telegram/WhatsApp marks** (`BRANDS` in `icons.js`, Simple Icons CC0, brand colours) — the only exception to Lucide-only; `CONTACT_EMAIL` = info@h-haddadi.com (Cloudflare Email Routing forwards it). The home «أحدث الدروس» list skips the featured latest lesson (no repeat).
+- **Next (plan approved 2026-11-18, doc «Team review — plan in phases»):** admin portal ported from Mohamed-AH/drwasiullah as patches over the Telegram import, Publish through Cloudflare only (owner can't use GitHub), then super admin / admin / editor roles.
+
 ## Layout
 - `site/` — `shell.html`, `styles.css`, `js/core.js` (constants, data model, `SECTIONS`, `SCHEDULE`, `DOCS`), `js/views.js` (pages), `js/app.js` (browser). `site/data/library.json` is generated.
 - `tools/telegram_lessons.py` → `tools/import_telegram.py` → `site/data/library.json`.

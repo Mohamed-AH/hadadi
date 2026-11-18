@@ -331,15 +331,38 @@ body.has-dock{padding-bottom:80px}
 .lc-n{display:block;font-size:15.5px;color:var(--mute)}
 
 /* ───────── Footer ───────── */
-.foot{margin-top:64px;padding:30px 0 36px;border-top:1px solid var(--line);color:var(--mute);font-size:17px}
-.foot p{margin:4px 0}
-.foot a{color:var(--link);text-decoration:underline;text-underline-offset:4px}
-.foot-links a{text-decoration:none}
-.foot a:hover{text-decoration:underline}
-.foot-official{display:flex;align-items:center;gap:10px;color:var(--ink)}
-.foot-official .mark{width:30px;height:30px;color:var(--link)}
-.foot-links{display:flex;flex-wrap:wrap;gap:4px 18px}
-.foot-up{font-size:15px}
+/* footer: a teak band like the header, three columns (identity + socials, sections, links), a thin bottom bar */
+.foot{position:relative;margin-top:72px;padding:52px 0 0;background:var(--night) var(--pattern);background-size:36px;color:var(--on-night-2);font-size:17.5px}
+.foot a{color:var(--on-night);text-decoration:none}
+.foot a:hover{color:var(--brass)}
+.foot a:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:4px}
+.foot ul{list-style:none;margin:0;padding:0}
+.foot-in{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);gap:40px 56px;padding-bottom:44px}
+.foot-id{display:flex;align-items:center;gap:14px}
+.foot-id .mark{width:48px;height:48px;color:var(--brass)}
+.foot-id>span{display:flex;flex-direction:column;line-height:1.35;min-width:0}
+.foot-id small{font-size:15.5px;color:var(--on-night-2)}
+.foot-id strong{font:700 26px/1.35 var(--name);color:var(--on-night)}
+.foot-id .hd{font-size:15.5px;color:var(--brass)}
+.foot-tag{margin:16px 0 20px;max-width:42ch;line-height:1.65}
+.soc{display:flex;flex-wrap:wrap;gap:10px}
+.soc a{display:grid;place-items:center;width:44px;height:44px;border-radius:8px;border:1px solid var(--night-line);background:var(--night-2);color:var(--brass);transition:background .2s,border-color .2s,color .2s,transform .2s}
+.soc a:hover{background:var(--brass);border-color:var(--brass);color:#2b1d12;transform:translateY(-2px)}
+.soc .soc-telegram{color:#26a5e4}.soc .soc-whatsapp{color:#25d366}
+.soc .soc-telegram:hover{background:#26a5e4;border-color:#26a5e4;color:#fff}.soc .soc-whatsapp:hover{background:#25d366;border-color:#25d366;color:#fff}
+.drawer-f .brand-telegram{color:#26a5e4}.drawer-f .brand-whatsapp{color:#1fa855}
+.foot-cta{display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:10px 20px;min-height:44px;border-radius:6px;background:var(--brass);color:#2b1d12!important;font-weight:700}
+.foot-cta:hover{filter:brightness(1.06)}
+.foot-col h2{margin:4px 0 16px;font:700 18px/1.4 var(--ui);color:var(--brass)}
+.foot-col ul{display:grid;gap:4px}
+.foot-col a{display:inline-flex;align-items:center;min-height:36px;padding:2px 0;color:var(--on-night-2)}
+.foot-col a:hover{color:var(--on-night)}
+.foot-bar{border-top:1px solid var(--night-line);background:rgba(0,0,0,.14);font-size:15.5px}
+.foot-bar-in{display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;padding-top:14px;padding-bottom:14px}
+.foot-bar p{margin:0}
+.foot-top{display:inline-flex;align-items:center;gap:6px;min-height:36px;color:var(--brass)!important}
+@media(max-width:900px){.foot-in{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.foot-brand{grid-column:1/-1}.foot-bar-in{padding-bottom:34px}}
+@media(max-width:520px){.foot{padding-top:40px}.foot-in{grid-template-columns:minmax(0,1fr);gap:28px}.foot-col ul{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px}.foot-id strong{font-size:23px}.foot-bar-in{flex-direction:column;align-items:flex-start}}
 
 /* ───────── Drawer (hamburger menu) ───────── */
 body.lock{overflow:hidden}
@@ -539,7 +562,7 @@ body{background:var(--bg) var(--stone);background-size:220px}
 :root[data-theme=dark] body{background-blend-mode:normal}
 
 /* type roles */
-h3,.brand strong,.nav a,.chip,.btn,.more,.pill,.stats,.feat .k,.feat .go,.cover-t,.tile-b strong,.tile-n,.sect,.drawer-h,.drawer-nav a,.bn,.sc-day,.sc-n,.sched th,.crumb,.count,.speeds button,.d-rate,.sec a,.foot-official{font-family:var(--ui)}
+h3,.brand strong,.nav a,.chip,.btn,.more,.pill,.stats,.feat .k,.feat .go,.cover-t,.tile-b strong,.tile-n,.sect,.drawer-h,.drawer-nav a,.bn,.sc-day,.sc-n,.sched th,.crumb,.count,.speeds button,.d-rate,.sec a,.foot-cta,.foot-bar,.foot-col a{font-family:var(--ui)}
 h1,h2,.art-t{font-family:var(--head)}
 h1,h2,h3{line-height:1.5}
 .page-h,.w-title,.feat .ft{letter-spacing:0}
@@ -641,8 +664,7 @@ h1,h2,h3{line-height:1.5}
 .seek::-moz-range-progress{background:var(--sea-hi)}
 
 /* footer: a carved frieze above it */
-.foot{position:relative;border-top:0;padding-top:40px}
-.foot::before{content:"";position:absolute;inset-inline:0;top:0;height:10px;background:var(--frieze) repeat-x;background-size:24px 10px;opacity:.55;transform:scaleY(-1)}
+.foot::before{content:"";position:absolute;inset-inline:0;top:-10px;height:10px;background:var(--frieze) repeat-x;background-size:24px 10px}
 
 @media(max-width:900px){
   .roshan{width:200px;left:-40px;top:auto;height:360px;opacity:.28;animation-name:open-m}
