@@ -16,7 +16,7 @@ for (const w of [1280, 375]) {
     r.fulfill({ contentType: "application/json", body: JSON.stringify(b.body.includes("fail") ? { ok: false, error: "captcha" } : { ok: true }) }); });
   await page.goto(BASE + "/");
   ok(await page.locator("footer a.foot-cta[href='/contact/']").count() === 1, "footer button links to /contact/");
-  ok(await page.locator("footer .soc a[href='/contact/']").count() === 1, "mail icon links to /contact/");
+  ok(await page.locator("footer a[href='/contact/']").count() === 1, "contact linked once in the footer");
   ok(await page.locator("a[href^='mailto:']").count() === 0, "no mailto anywhere");
   await page.locator("footer a.foot-cta").click();
   await page.waitForURL("**/contact/");

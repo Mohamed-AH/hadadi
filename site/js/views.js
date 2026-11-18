@@ -540,21 +540,18 @@ export function chromeBottom(nav) {
   return `${dock()}<nav class="bottom" id="bottom" aria-label="التنقل السريع">${items.map(x => `<a class="bn${x.mid ? " mid" : ""}" href="${x.h}" data-nav="${x.id}"${nav === x.id ? ' aria-current="page"' : ""}><span class="bn-i">${ic(x.i, x.mid ? 24 : 22)}</span><span>${x.t}</span></a>`).join("")}
     <a class="bn" href="#" role="button" data-nav="more" id="bn-more"><span class="bn-i">${ic("menu", 22)}</span><span>المزيد</span></a></nav>`;
 }
-/* Social links as icon buttons: the official Telegram and WhatsApp marks (owner 2026-11-18) and Lucide mail. */
-export const socials = () => `<ul class="soc" role="list">${LINKS.map(x => `<li><a class="soc-${x.b}" href="${x.h}" target="_blank" rel="noopener" title="${esc(x.t)}" aria-label="${esc(x.t)} (يفتح في نافذة جديدة)">${brand(x.b, 22)}</a></li>`).join("")}${hasContact() ? `<li><a href="${href.contact()}" title="تواصل معنا" aria-label="تواصل معنا">${ic("mail", 21)}</a></li>` : ""}</ul>`;
+/* Social links as icon buttons: the official Telegram and WhatsApp marks (owner 2026-11-18). Contact is the «تواصل معنا» button beside them. */
+export const socials = () => `<ul class="soc" role="list">${LINKS.map(x => `<li><a class="soc-${x.b}" href="${x.h}" target="_blank" rel="noopener" title="${esc(x.t)}" aria-label="${esc(x.t)} (يفتح في نافذة جديدة)">${brand(x.b, 22)}</a></li>`).join("")}</ul>`;
 export function footer() {
-  const secs = visible().map(s => `<li><a href="${href.section(s)}">${s.title}</a></li>`).join("");
-  const links = [{ t: "كل الأقسام", h: href.library() }, ...(SCHEDULE.items.length ? [{ t: "جدول الدروس", h: href.schedule() }] : []), ...(state.ann.length ? [{ t: "إعلانات الدروس", h: href.announcements() }] : []),
-    ...(state.bio ? [{ t: "عن الشيخ", h: href.about() }] : []), ...(hasDocs() ? [{ t: "التزكيات والوصايا", h: href.documents() }] : []), { t: "بحث", h: href.search() }];
   return `<footer class="foot"><div class="wrap foot-in">
   <div class="foot-brand">
     <a class="foot-id" href="/"><span class="mark" aria-hidden="true">${STAR}</span><span><small>${esc(OFFICIAL_PRE)}</small><strong>${esc(FULL_NAME)}</strong><span class="hd">حفظه الله ورعاه</span></span></a>
     <p class="foot-tag">دروس ومحاضرات وخطب الشيخ في جدة، مرتبة في سلاسل يسهل الاستماع إليها ومتابعتها.</p>
+  </div>
+  <div class="foot-reach">
     ${socials()}
     ${hasContact() ? `<a class="foot-cta" href="${href.contact()}">${ic("mail", 19)}<span>تواصل معنا</span></a>` : ""}
   </div>
-  <nav class="foot-col" aria-label="أقسام الموقع"><h2>الأقسام</h2><ul role="list">${secs}</ul></nav>
-  <nav class="foot-col" aria-label="روابط سريعة"><h2>روابط</h2><ul role="list">${links.map(x => `<li><a href="${x.h}">${x.t}</a></li>`).join("")}</ul></nav>
   </div>
   <div class="foot-bar"><div class="wrap foot-bar-in">
     <p>التسجيلات من قناة الشيخ على تيليجرام · آخر تحديث للفهرس: ${fmtDate(state.DB.updated)}</p>
