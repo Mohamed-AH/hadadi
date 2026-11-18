@@ -1,4 +1,508 @@
 {
+ "https://t.me/h_haddadi7/1012": {
+  "url": "https://media.h-haddadi.com/audio/1e26ac2b8421e4bd.m4a",
+  "key": "audio/1e26ac2b8421e4bd.m4a",
+  "sha256": "1e26ac2b8421e4bd46a832b63012d96a1c47034dfb35b398b5f12dd4d28783c3",
+  "size": 5650339,
+  "duration": 909,
+  "src_size": 14823789
+ },
+ "https://t.me/h_haddadi7/1013": {
+  "url": "https://media.h-haddadi.com/audio/3cd028f93c920804.m4a",
+  "key": "audio/3cd028f93c920804.m4a",
+  "sha256": "3cd028f93c92080416084c281b22ff45b424748d46b66128e3b6001d4f58d256",
+  "size": 6654612,
+  "duration": 2152,
+  "src_size": 4875420
+ },
+ "https://t.me/h_haddadi7/1019": {
+  "url": "https://media.h-haddadi.com/audio/b832b741f50eb9d3.m4a",
+  "key": "audio/b832b741f50eb9d3.m4a",
+  "sha256": "b832b741f50eb9d37eaccb5fb02ee1d5aa41085b51c5fb3f54c51b9cb2be1f1b",
+  "size": 5355077,
+  "duration": 1823,
+  "src_size": 3790743
+ },
+ "https://t.me/h_haddadi7/1024": {
+  "url": "https://media.h-haddadi.com/audio/f23e717a16c27275.m4a",
+  "key": "audio/f23e717a16c27275.m4a",
+  "sha256": "f23e717a16c2727555dde71f67d979fbd2e3807ff360cfcc29de806dcde2457e",
+  "size": 22596917,
+  "duration": 3637,
+  "src_size": 73656165
+ },
+ "https://t.me/h_haddadi7/1026": {
+  "url": "https://media.h-haddadi.com/audio/2fe3f77dc3ec964d.m4a",
+  "key": "audio/2fe3f77dc3ec964d.m4a",
+  "sha256": "2fe3f77dc3ec964d51f75cfec34c0d17becb76b628f5d07cb2f74e3abc3b0d6c",
+  "size": 12246264,
+  "duration": 4119,
+  "src_size": 9460612
+ },
+ "https://t.me/h_haddadi7/1037": {
+  "url": "https://media.h-haddadi.com/audio/65e290b155694d1b.m4a",
+  "key": "audio/65e290b155694d1b.m4a",
+  "sha256": "65e290b155694d1bfced9b3a2bb96fd9ba80f8f3810d6a33bb18eac368812c75",
+  "size": 5294786,
+  "duration": 851,
+  "src_size": 13882072
+ },
+ "https://t.me/h_haddadi7/1038": {
+  "url": "https://media.h-haddadi.com/audio/091253329d4db5ba.m4a",
+  "key": "audio/091253329d4db5ba.m4a",
+  "sha256": "091253329d4db5ba3dc8dffce6358a692b1f51d580b31a3aca5832adc36bdaf1",
+  "size": 6935026,
+  "duration": 2265,
+  "src_size": 5256520
+ },
+ "https://t.me/h_haddadi7/1048": {
+  "url": "https://media.h-haddadi.com/audio/c7c651f45bc06a4c.m4a",
+  "key": "audio/c7c651f45bc06a4c.m4a",
+  "sha256": "c7c651f45bc06a4cb128e64b36818f5c2991810c421140a9097201f509b7a512",
+  "size": 20420895,
+  "duration": 3293,
+  "src_size": 53250484
+ },
+ "https://t.me/h_haddadi7/1051": {
+  "url": "https://media.h-haddadi.com/audio/c3787095469d74a6.m4a",
+  "key": "audio/c3787095469d74a6.m4a",
+  "sha256": "c3787095469d74a680c2acfd759ee06193ed8bad9c7cf3e31b6d14d6f1967918",
+  "size": 14173956,
+  "duration": 2280,
+  "src_size": 36879633
+ },
+ "https://t.me/h_haddadi7/1054": {
+  "url": "https://media.h-haddadi.com/audio/678af03e12d375d4.m4a",
+  "key": "audio/678af03e12d375d4.m4a",
+  "sha256": "678af03e12d375d4ac4091eb646b55d51448218c310bdf38f0bbc9cbc9a894e8",
+  "size": 4385985,
+  "duration": 705,
+  "src_size": 11500509
+ },
+ "https://t.me/h_haddadi7/1055": {
+  "url": "https://media.h-haddadi.com/audio/c5ded48326e0ad6b.m4a",
+  "key": "audio/c5ded48326e0ad6b.m4a",
+  "sha256": "c5ded48326e0ad6b78cb2d5ad3b8a9dde248c64c9db307fc74faa454fde45fec",
+  "size": 8502664,
+  "duration": 2726,
+  "src_size": 6307490
+ },
+ "https://t.me/h_haddadi7/1061": {
+  "url": "https://media.h-haddadi.com/audio/dcb79904cd8c0f5f.m4a",
+  "key": "audio/dcb79904cd8c0f5f.m4a",
+  "sha256": "dcb79904cd8c0f5f972f4699a462a3cc6ec4a16782c4bd6e20b7fb0946b2ea5f",
+  "size": 5968964,
+  "duration": 2023,
+  "src_size": 4625214
+ },
+ "https://t.me/h_haddadi7/1065": {
+  "url": "https://media.h-haddadi.com/audio/de65bf6d2b16cc1e.m4a",
+  "key": "audio/de65bf6d2b16cc1e.m4a",
+  "sha256": "de65bf6d2b16cc1e7bbea850b14e89ae69fe3f9648cab34b9479bf8731ea1eba",
+  "size": 11980308,
+  "duration": 4002,
+  "src_size": 8396029
+ },
+ "https://t.me/h_haddadi7/1068": {
+  "url": "https://media.h-haddadi.com/audio/63c42347bf016604.m4a",
+  "key": "audio/63c42347bf016604.m4a",
+  "sha256": "63c42347bf016604b4234fde6fa73361647c242f0de8629fd2384eb6af8bcc05",
+  "size": 7905229,
+  "duration": 2587,
+  "src_size": 5444185
+ },
+ "https://t.me/h_haddadi7/1069": {
+  "url": "https://media.h-haddadi.com/audio/fdbfbdf569793125.m4a",
+  "key": "audio/fdbfbdf569793125.m4a",
+  "sha256": "fdbfbdf5697931255a6343331a8d03464fdffe930f653030236a0fe815246b10",
+  "size": 4319448,
+  "duration": 694,
+  "src_size": 11328578
+ },
+ "https://t.me/h_haddadi7/1074": {
+  "url": "https://media.h-haddadi.com/audio/bff557408e82f1ca.m4a",
+  "key": "audio/bff557408e82f1ca.m4a",
+  "sha256": "bff557408e82f1ca1ce83c08ff73dd8b3ae6423760bf076123c66826f0702f8b",
+  "size": 7428600,
+  "duration": 1194,
+  "src_size": 19479759
+ },
+ "https://t.me/h_haddadi7/1077": {
+  "url": "https://media.h-haddadi.com/audio/ae8981c6536e06f3.m4a",
+  "key": "audio/ae8981c6536e06f3.m4a",
+  "sha256": "ae8981c6536e06f3fe76beb8ba6708e2968d2c6a3b2565da0afe7b86ade995f4",
+  "size": 7212400,
+  "duration": 1159,
+  "src_size": 18915272
+ },
+ "https://t.me/h_haddadi7/1086": {
+  "url": "https://media.h-haddadi.com/audio/d0474991e475155b.m4a",
+  "key": "audio/d0474991e475155b.m4a",
+  "sha256": "d0474991e475155b9d43bd3421e4157d79569b0444febaec42b00ae3c38e75ff",
+  "size": 21471011,
+  "duration": 3451,
+  "src_size": 47362365
+ },
+ "https://t.me/h_haddadi7/1088": {
+  "url": "https://media.h-haddadi.com/audio/b65c8028d4c0ae60.m4a",
+  "key": "audio/b65c8028d4c0ae60.m4a",
+  "sha256": "b65c8028d4c0ae600b9665c63cf31f08186833a09d87987053f2fa56fc8a132f",
+  "size": 7127188,
+  "duration": 1146,
+  "src_size": 9848350
+ },
+ "https://t.me/h_haddadi7/1123": {
+  "url": "https://media.h-haddadi.com/audio/afb67a8fdf9a74a1.m4a",
+  "key": "audio/afb67a8fdf9a74a1.m4a",
+  "sha256": "afb67a8fdf9a74a13ed7f1777c5e830cefce7f07d19b1bddab8e5f8900c498b7",
+  "size": 8002645,
+  "duration": 1287,
+  "src_size": 10814476
+ },
+ "https://t.me/h_haddadi7/1124": {
+  "url": "https://media.h-haddadi.com/audio/b5758b7a452d7098.m4a",
+  "key": "audio/b5758b7a452d7098.m4a",
+  "sha256": "b5758b7a452d7098d96924265cf43af108621b6cb22d3d04a8254255811150a0",
+  "size": 19233683,
+  "duration": 3092,
+  "src_size": 42900631
+ },
+ "https://t.me/h_haddadi7/1136": {
+  "url": "https://media.h-haddadi.com/audio/72c380bf80472327.m4a",
+  "key": "audio/72c380bf80472327.m4a",
+  "sha256": "72c380bf80472327f228c009657182f9dbfdc4f52d6579c87b3a76619ab93864",
+  "size": 24281792,
+  "duration": 3903,
+  "src_size": 63673276
+ },
+ "https://t.me/h_haddadi7/1149": {
+  "url": "https://media.h-haddadi.com/audio/81963967280b40c3.m4a",
+  "key": "audio/81963967280b40c3.m4a",
+  "sha256": "81963967280b40c3115c7940a1e064d16931609052f519fb489626c7069d4efc",
+  "size": 6212756,
+  "duration": 999,
+  "src_size": 16296351
+ },
+ "https://t.me/h_haddadi7/1150": {
+  "url": "https://media.h-haddadi.com/audio/06751359a51dc249.m4a",
+  "key": "audio/06751359a51dc249.m4a",
+  "sha256": "06751359a51dc249718c56c8b097b73b06b0d928ec35d1c750fde08140ab514e",
+  "size": 20740657,
+  "duration": 3339,
+  "src_size": 28471614
+ },
+ "https://t.me/h_haddadi7/1155": {
+  "url": "https://media.h-haddadi.com/audio/0ede93de43026421.m4a",
+  "key": "audio/0ede93de43026421.m4a",
+  "sha256": "0ede93de43026421a85cb1847b4c1041920311784d41b23ddc5f9cb9375b6e91",
+  "size": 8194695,
+  "duration": 2718,
+  "src_size": 6369705
+ },
+ "https://t.me/h_haddadi7/1159": {
+  "url": "https://media.h-haddadi.com/audio/f37a7af2ccd531d8.m4a",
+  "key": "audio/f37a7af2ccd531d8.m4a",
+  "sha256": "f37a7af2ccd531d86c3c48ebc37e2acb0203ff8c805d90a450b6d1ffedcdb55e",
+  "size": 20671312,
+  "duration": 3328,
+  "src_size": 28594745
+ },
+ "https://t.me/h_haddadi7/1167": {
+  "url": "https://media.h-haddadi.com/audio/bc965ee2d69c9377.m4a",
+  "key": "audio/bc965ee2d69c9377.m4a",
+  "sha256": "bc965ee2d69c9377e1c1d02b0fc743097de2b701e276d02939842fa2a7feb273",
+  "size": 6069241,
+  "duration": 976,
+  "src_size": 15920893
+ },
+ "https://t.me/h_haddadi7/1171": {
+  "url": "https://media.h-haddadi.com/audio/19cf7c46135971f0.m4a",
+  "key": "audio/19cf7c46135971f0.m4a",
+  "sha256": "19cf7c46135971f0678e91acce5464171b8a540a1346d56545ea398b63731818",
+  "size": 821630,
+  "duration": 132,
+  "src_size": 2658465
+ },
+ "https://t.me/h_haddadi7/1177": {
+  "url": "https://media.h-haddadi.com/audio/baf6143b346b71b4.m4a",
+  "key": "audio/baf6143b346b71b4.m4a",
+  "sha256": "baf6143b346b71b497c566daec4bfee547d5cf7e498d451229334217c3625eab",
+  "size": 6707780,
+  "duration": 1078,
+  "src_size": 17589271
+ },
+ "https://t.me/h_haddadi7/1179": {
+  "url": "https://media.h-haddadi.com/audio/b42a91021ecd541c.m4a",
+  "key": "audio/b42a91021ecd541c.m4a",
+  "sha256": "b42a91021ecd541ce083534b4313a070ec3f2fa7f82caa204b51cd60dc56fe2a",
+  "size": 6143652,
+  "duration": 2087,
+  "src_size": 4518419
+ },
+ "https://t.me/h_haddadi7/1181": {
+  "url": "https://media.h-haddadi.com/audio/86e37d9e90be5cf9.m4a",
+  "key": "audio/86e37d9e90be5cf9.m4a",
+  "sha256": "86e37d9e90be5cf91c843440ccb05d6691754e721cd0f0014b75c23844905198",
+  "size": 20068425,
+  "duration": 3230,
+  "src_size": 92207041
+ },
+ "https://t.me/h_haddadi7/1184": {
+  "url": "https://media.h-haddadi.com/audio/616a167dc054cc12.m4a",
+  "key": "audio/616a167dc054cc12.m4a",
+  "sha256": "616a167dc054cc123ac13639af04c45a2fcaba55ff7ef513b280b96f8f1dbdc8",
+  "size": 8136746,
+  "duration": 2736,
+  "src_size": 6120262
+ },
+ "https://t.me/h_haddadi7/1190": {
+  "url": "https://media.h-haddadi.com/audio/1fda83f670bac25a.m4a",
+  "key": "audio/1fda83f670bac25a.m4a",
+  "sha256": "1fda83f670bac25ae1c8a6d62ef5d79922b72c1ec36ae0ec86cecf4856416a1a",
+  "size": 22355704,
+  "duration": 3590,
+  "src_size": 58178045
+ },
+ "https://t.me/h_haddadi7/1191": {
+  "url": "https://media.h-haddadi.com/audio/3aba854f5bce37e7.m4a",
+  "key": "audio/3aba854f5bce37e7.m4a",
+  "sha256": "3aba854f5bce37e714bbc83264c79d4b511f5632d986a7fd415a7cfbf215dc8e",
+  "size": 23980266,
+  "duration": 3869,
+  "src_size": 31102282
+ },
+ "https://t.me/h_haddadi7/1196": {
+  "url": "https://media.h-haddadi.com/audio/f3907e5093332c31.m4a",
+  "key": "audio/f3907e5093332c31.m4a",
+  "sha256": "f3907e5093332c31bdf4875e07d14828ccc8e037943d2c55312f8815dd55cf33",
+  "size": 31398480,
+  "duration": 5048,
+  "src_size": 81646504
+ },
+ "https://t.me/h_haddadi7/1197": {
+  "url": "https://media.h-haddadi.com/audio/ffec76d5f644e68a.m4a",
+  "key": "audio/ffec76d5f644e68a.m4a",
+  "sha256": "ffec76d5f644e68a628eef39ed2f9a98395c785a7438e36d69864e9fa5aac4d1",
+  "size": 11578337,
+  "duration": 3724,
+  "src_size": 8452433
+ },
+ "https://t.me/h_haddadi7/1200": {
+  "url": "https://media.h-haddadi.com/audio/875c084023f67bab.m4a",
+  "key": "audio/875c084023f67bab.m4a",
+  "sha256": "875c084023f67bab96f98da7803de0f8838518c9dad1adb1775384cf1b3fbe50",
+  "size": 8688337,
+  "duration": 1397,
+  "src_size": 22786061
+ },
+ "https://t.me/h_haddadi7/1202": {
+  "url": "https://media.h-haddadi.com/audio/c69a2563bcef27e1.m4a",
+  "key": "audio/c69a2563bcef27e1.m4a",
+  "sha256": "c69a2563bcef27e1aaa45035e9e64eccb98f26918e9586f1f8c6367dfe5eecd6",
+  "size": 7809926,
+  "duration": 2557,
+  "src_size": 5297488
+ },
+ "https://t.me/h_haddadi7/1204": {
+  "url": "https://media.h-haddadi.com/audio/baf3b61f1b7070e7.m4a",
+  "key": "audio/baf3b61f1b7070e7.m4a",
+  "sha256": "baf3b61f1b7070e7a5ac2083c4baf9595c141907efdd4e85c7be9d3363d9da5c",
+  "size": 15461855,
+  "duration": 2488,
+  "src_size": 19944989
+ },
+ "https://t.me/h_haddadi7/1205": {
+  "url": "https://media.h-haddadi.com/audio/3c7e8e24e30c5194.m4a",
+  "key": "audio/3c7e8e24e30c5194.m4a",
+  "sha256": "3c7e8e24e30c5194239dbe2b0fb974bd00565c6477d43bd6e0ceb36b2be2daeb",
+  "size": 233140,
+  "duration": 37,
+  "src_size": 365784
+ },
+ "https://t.me/h_haddadi7/1206": {
+  "url": "https://media.h-haddadi.com/audio/70f49456979243a3.m4a",
+  "key": "audio/70f49456979243a3.m4a",
+  "sha256": "70f49456979243a30d74787fad915ead775a912ac56539ababc9636a73f2f0d2",
+  "size": 684190,
+  "duration": 110,
+  "src_size": 1205616
+ },
+ "https://t.me/h_haddadi7/1207": {
+  "url": "https://media.h-haddadi.com/audio/13fbde6a9c091315.m4a",
+  "key": "audio/13fbde6a9c091315.m4a",
+  "sha256": "13fbde6a9c0913150b8419348a8b117e9e910db261ae682d115e743675ebc742",
+  "size": 363074,
+  "duration": 58,
+  "src_size": 646656
+ },
+ "https://t.me/h_haddadi7/1208": {
+  "url": "https://media.h-haddadi.com/audio/dba80a79659992c4.m4a",
+  "key": "audio/dba80a79659992c4.m4a",
+  "sha256": "dba80a79659992c4c6688ad99465eb3aa657df60b8b05b3a4fbe6b07345e77d7",
+  "size": 441607,
+  "duration": 71,
+  "src_size": 778944
+ },
+ "https://t.me/h_haddadi7/1209": {
+  "url": "https://media.h-haddadi.com/audio/22966d119a412645.m4a",
+  "key": "audio/22966d119a412645.m4a",
+  "sha256": "22966d119a4126457ce31c7891b8c8d332628cc2e923133e0e217fc047012598",
+  "size": 914694,
+  "duration": 147,
+  "src_size": 1632744
+ },
+ "https://t.me/h_haddadi7/1210": {
+  "url": "https://media.h-haddadi.com/audio/3b024e644eab3633.m4a",
+  "key": "audio/3b024e644eab3633.m4a",
+  "sha256": "3b024e644eab36333a46111ee2c5346989ff1fbb744c1739b4e31d271dd2bc04",
+  "size": 532261,
+  "duration": 86,
+  "src_size": 956880
+ },
+ "https://t.me/h_haddadi7/1211": {
+  "url": "https://media.h-haddadi.com/audio/67ac46ee3fda4285.m4a",
+  "key": "audio/67ac46ee3fda4285.m4a",
+  "sha256": "67ac46ee3fda42857f5d52ab9fd691f25a8804c819753ef85775a6d1dac87bfa",
+  "size": 624839,
+  "duration": 100,
+  "src_size": 1141248
+ },
+ "https://t.me/h_haddadi7/1212": {
+  "url": "https://media.h-haddadi.com/audio/73a65234dc3ce536.m4a",
+  "key": "audio/73a65234dc3ce536.m4a",
+  "sha256": "73a65234dc3ce53631aa649a31f5d7e340bd8f6eaa49307f261e6192f87ed074",
+  "size": 509656,
+  "duration": 82,
+  "src_size": 930192
+ },
+ "https://t.me/h_haddadi7/1213": {
+  "url": "https://media.h-haddadi.com/audio/1f0c6c8bd6a71634.m4a",
+  "key": "audio/1f0c6c8bd6a71634.m4a",
+  "sha256": "1f0c6c8bd6a71634b972d654d0b047873b621a3dabd132f4fec3d92fc08101fe",
+  "size": 1541740,
+  "duration": 248,
+  "src_size": 2827152
+ },
+ "https://t.me/h_haddadi7/1214": {
+  "url": "https://media.h-haddadi.com/audio/ff8ea0a801fc3903.m4a",
+  "key": "audio/ff8ea0a801fc3903.m4a",
+  "sha256": "ff8ea0a801fc3903e999310050f8e5b1445e002d1c9294aeb127e3ff804d9436",
+  "size": 528311,
+  "duration": 85,
+  "src_size": 972960
+ },
+ "https://t.me/h_haddadi7/1215": {
+  "url": "https://media.h-haddadi.com/audio/db7f5656220b92e9.m4a",
+  "key": "audio/db7f5656220b92e9.m4a",
+  "sha256": "db7f5656220b92e9675700cc99b46afcd1106dfd979e1b55288aceb7f4adf941",
+  "size": 444871,
+  "duration": 72,
+  "src_size": 817200
+ },
+ "https://t.me/h_haddadi7/1216": {
+  "url": "https://media.h-haddadi.com/audio/c7f183cc4b946b9e.m4a",
+  "key": "audio/c7f183cc4b946b9e.m4a",
+  "sha256": "c7f183cc4b946b9e8a8b34cd6e010e4f6cde83630b98effced2bd7c4eb22f4f8",
+  "size": 545607,
+  "duration": 88,
+  "src_size": 1004352
+ },
+ "https://t.me/h_haddadi7/1219": {
+  "url": "https://media.h-haddadi.com/audio/cad6e193e1ac3d41.m4a",
+  "key": "audio/cad6e193e1ac3d41.m4a",
+  "sha256": "cad6e193e1ac3d418acebbb15aee7597e19b74b154036a22d2fed06f1fa16df5",
+  "size": 7625464,
+  "duration": 2577,
+  "src_size": 5881375
+ },
+ "https://t.me/h_haddadi7/1224": {
+  "url": "https://media.h-haddadi.com/audio/99942e85d3d77f35.m4a",
+  "key": "audio/99942e85d3d77f35.m4a",
+  "sha256": "99942e85d3d77f358e30f87e21617bbd581ba6fcf214f3dcc9c84f74cbd02e90",
+  "size": 5964426,
+  "duration": 959,
+  "src_size": 15532672
+ },
+ "https://t.me/h_haddadi7/1225": {
+  "url": "https://media.h-haddadi.com/audio/fedb18ae711b8984.m4a",
+  "key": "audio/fedb18ae711b8984.m4a",
+  "sha256": "fedb18ae711b8984767315e6eb1f04ff5eaf67a60bd01c041ae01aa9076e0849",
+  "size": 19147883,
+  "duration": 3082,
+  "src_size": 24780005
+ },
+ "https://t.me/h_haddadi7/1236": {
+  "url": "https://media.h-haddadi.com/audio/a8f1dd888a9769d0.m4a",
+  "key": "audio/a8f1dd888a9769d0.m4a",
+  "sha256": "a8f1dd888a9769d001045e001a2a943e55fedae3d18006fec108e57a7ec3c3d9",
+  "size": 29022135,
+  "duration": 4664,
+  "src_size": 75330829
+ },
+ "https://t.me/h_haddadi7/1241": {
+  "url": "https://media.h-haddadi.com/audio/04c7d87155c6d37e.m4a",
+  "key": "audio/04c7d87155c6d37e.m4a",
+  "sha256": "04c7d87155c6d37e66e9cb6693b173fd434274b2d1026617ad04c2fddae68b9a",
+  "size": 7628175,
+  "duration": 1226,
+  "src_size": 19865027
+ },
+ "https://t.me/h_haddadi7/1242": {
+  "url": "https://media.h-haddadi.com/audio/8a050baf0fe06bb1.m4a",
+  "key": "audio/8a050baf0fe06bb1.m4a",
+  "sha256": "8a050baf0fe06bb19486790793b7e1305a27d66d354334572314da35374b4991",
+  "size": 20505501,
+  "duration": 3297,
+  "src_size": 53424308
+ },
+ "https://t.me/h_haddadi7/1252": {
+  "url": "https://media.h-haddadi.com/audio/c8bf9dd0cc02607f.m4a",
+  "key": "audio/c8bf9dd0cc02607f.m4a",
+  "sha256": "c8bf9dd0cc02607fbc6c729d9ba85eb286f78422cc2cc988ddda0ffe48eefacd",
+  "size": 15284430,
+  "duration": 2458,
+  "src_size": 40097593
+ },
+ "https://t.me/h_haddadi7/1258": {
+  "url": "https://media.h-haddadi.com/audio/61bbc6e67efb316b.m4a",
+  "key": "audio/61bbc6e67efb316b.m4a",
+  "sha256": "61bbc6e67efb316b0229d5faeb9627a2e780e6b47db235e7bc81227a38955237",
+  "size": 989122,
+  "duration": 161,
+  "src_size": 1435320
+ },
+ "https://t.me/h_haddadi7/1259": {
+  "url": "https://media.h-haddadi.com/audio/dbafeef61419360d.m4a",
+  "key": "audio/dbafeef61419360d.m4a",
+  "sha256": "dbafeef61419360d11fdcd9184b52fd79cadc7048f60e452a9ec8c730edf697f",
+  "size": 2120941,
+  "duration": 342,
+  "src_size": 3281664
+ },
+ "https://t.me/h_haddadi7/1268": {
+  "url": "https://media.h-haddadi.com/audio/aa8e007caa1a5411.m4a",
+  "key": "audio/aa8e007caa1a5411.m4a",
+  "sha256": "aa8e007caa1a5411ea14794cb87663f8866b163fbbd84820aeaca1403121ae85",
+  "size": 24631977,
+  "duration": 3951,
+  "src_size": 64452687
+ },
+ "https://t.me/h_haddadi7/1271": {
+  "url": "https://media.h-haddadi.com/audio/5461d666d1e2ec56.m4a",
+  "key": "audio/5461d666d1e2ec56.m4a",
+  "sha256": "5461d666d1e2ec56594eeae9b8506e05a0c414fbc49be138a3f470077a1b29a8",
+  "size": 16250873,
+  "duration": 2612,
+  "src_size": 42612785
+ },
+ "https://t.me/h_haddadi7/1274": {
+  "url": "https://media.h-haddadi.com/audio/3d4b6bf8c7cce2c2.m4a",
+  "key": "audio/3d4b6bf8c7cce2c2.m4a",
+  "sha256": "3d4b6bf8c7cce2c26128b08c8c6263655502109969a2adf1b511a2a214200754",
+  "size": 6887654,
+  "duration": 2186,
+  "src_size": 5063722
+ },
  "https://t.me/h_haddadi7/1283": {
   "url": "https://media.h-haddadi.com/audio/d4bcba9e116ffbe9.m4a",
   "key": "audio/d4bcba9e116ffbe9.m4a",
@@ -22,5 +526,1077 @@
   "size": 9591367,
   "duration": 1541,
   "src_size": 25145641
+ },
+ "https://t.me/h_haddadi7/629": {
+  "url": "https://media.h-haddadi.com/audio/22712cbe2c559848.m4a",
+  "key": "audio/22712cbe2c559848.m4a",
+  "sha256": "22712cbe2c559848fab819a233cad3b1ee33e9821e16ec03ea95ea178bda6cce",
+  "size": 10889226,
+  "duration": 3584,
+  "src_size": 8359101
+ },
+ "https://t.me/h_haddadi7/630": {
+  "url": "https://media.h-haddadi.com/audio/0780e72f80291cd1.m4a",
+  "key": "audio/0780e72f80291cd1.m4a",
+  "sha256": "0780e72f80291cd19fea921cd19ef693d27b3736c3abffc18f0399193bb2a25d",
+  "size": 7135026,
+  "duration": 2377,
+  "src_size": 5548326
+ },
+ "https://t.me/h_haddadi7/631": {
+  "url": "https://media.h-haddadi.com/audio/6f7e8cfe8c9263ae.m4a",
+  "key": "audio/6f7e8cfe8c9263ae.m4a",
+  "sha256": "6f7e8cfe8c9263aecbee6917f6135f1a258b79b824ac8ac26851884b4b089fef",
+  "size": 7694042,
+  "duration": 1240,
+  "src_size": 39696044
+ },
+ "https://t.me/h_haddadi7/632": {
+  "url": "https://media.h-haddadi.com/audio/792ed2980c69d86b.m4a",
+  "key": "audio/792ed2980c69d86b.m4a",
+  "sha256": "792ed2980c69d86b662c726c6e330f966014d741630b42daad7a816ad77c6cea",
+  "size": 7419855,
+  "duration": 1196,
+  "src_size": 38276524
+ },
+ "https://t.me/h_haddadi7/635": {
+  "url": "https://media.h-haddadi.com/audio/b58de9d817925b8d.m4a",
+  "key": "audio/b58de9d817925b8d.m4a",
+  "sha256": "b58de9d817925b8dce5f9138c34f499999611fb546e54b924ee1668c1275a377",
+  "size": 48051,
+  "duration": 15,
+  "src_size": 32144
+ },
+ "https://t.me/h_haddadi7/636": {
+  "url": "https://media.h-haddadi.com/audio/7788f5d525fe65a7.m4a",
+  "key": "audio/7788f5d525fe65a7.m4a",
+  "sha256": "7788f5d525fe65a71858168393174fdd243c7ad0e61f76198356b9202e83bd97",
+  "size": 5997796,
+  "duration": 967,
+  "src_size": 30953004
+ },
+ "https://t.me/h_haddadi7/638": {
+  "url": "https://media.h-haddadi.com/audio/a7bd863800b1ad46.m4a",
+  "key": "audio/a7bd863800b1ad46.m4a",
+  "sha256": "a7bd863800b1ad46cdc8b8458b97743ebec6959562e38e3bf2e7d892975bc609",
+  "size": 14584416,
+  "duration": 4936,
+  "src_size": 10805694
+ },
+ "https://t.me/h_haddadi7/639": {
+  "url": "https://media.h-haddadi.com/audio/7ea6d4d195ed104f.m4a",
+  "key": "audio/7ea6d4d195ed104f.m4a",
+  "sha256": "7ea6d4d195ed104fe548126360ea164026a7fe222cb72a25d74d9399e5443f6a",
+  "size": 10095233,
+  "duration": 3433,
+  "src_size": 7701761
+ },
+ "https://t.me/h_haddadi7/641": {
+  "url": "https://media.h-haddadi.com/audio/30e5e2f259429598.m4a",
+  "key": "audio/30e5e2f259429598.m4a",
+  "sha256": "30e5e2f2594295984c5d5b7fe8d3b6bcef2bcff80a87b696a9c2b93dbaee57c4",
+  "size": 11256929,
+  "duration": 3735,
+  "src_size": 8718902
+ },
+ "https://t.me/h_haddadi7/642": {
+  "url": "https://media.h-haddadi.com/audio/eb04add5fbe8ea9f.m4a",
+  "key": "audio/eb04add5fbe8ea9f.m4a",
+  "sha256": "eb04add5fbe8ea9f62924ea73fc94f9f5bcedb51ef6433631689b1a50e276745",
+  "size": 11762289,
+  "duration": 3878,
+  "src_size": 9069336
+ },
+ "https://t.me/h_haddadi7/644": {
+  "url": "https://media.h-haddadi.com/audio/be87913a918661d8.m4a",
+  "key": "audio/be87913a918661d8.m4a",
+  "sha256": "be87913a918661d897042d55e5d88f24c0d9b825cce316e0ecf73b1221a04e7b",
+  "size": 9056010,
+  "duration": 2946,
+  "src_size": 6885453
+ },
+ "https://t.me/h_haddadi7/646": {
+  "url": "https://media.h-haddadi.com/audio/7fc63cec336d49b3.m4a",
+  "key": "audio/7fc63cec336d49b3.m4a",
+  "sha256": "7fc63cec336d49b3b4ad2cc73eb7c7e1cf7b6da703d9838ca1f78673f59882b3",
+  "size": 9202654,
+  "duration": 3000,
+  "src_size": 7001440
+ },
+ "https://t.me/h_haddadi7/648": {
+  "url": "https://media.h-haddadi.com/audio/1204a0a010470160.m4a",
+  "key": "audio/1204a0a010470160.m4a",
+  "sha256": "1204a0a010470160d3da5d63f0b3f2019f4c4e3aa622048403b1856c669436a9",
+  "size": 11469094,
+  "duration": 3738,
+  "src_size": 8744291
+ },
+ "https://t.me/h_haddadi7/649": {
+  "url": "https://media.h-haddadi.com/audio/2db78b7872ce4646.m4a",
+  "key": "audio/2db78b7872ce4646.m4a",
+  "sha256": "2db78b7872ce464642449eb0eea586411fff51a23c068b4213ac86e063adfd60",
+  "size": 10872148,
+  "duration": 3614,
+  "src_size": 8472622
+ },
+ "https://t.me/h_haddadi7/650": {
+  "url": "https://media.h-haddadi.com/audio/ad194cca5acf13a9.m4a",
+  "key": "audio/ad194cca5acf13a9.m4a",
+  "sha256": "ad194cca5acf13a949556494c03604522ff02b9c625e1798cadbfa26bc64fa7d",
+  "size": 9956958,
+  "duration": 3309,
+  "src_size": 7751919
+ },
+ "https://t.me/h_haddadi7/651": {
+  "url": "https://media.h-haddadi.com/audio/9d938c80cc18ca68.m4a",
+  "key": "audio/9d938c80cc18ca68.m4a",
+  "sha256": "9d938c80cc18ca687fb0581bb0a57cc30a5e4ca24bbb8e23fc36780d1990a525",
+  "size": 10773981,
+  "duration": 3533,
+  "src_size": 8225442
+ },
+ "https://t.me/h_haddadi7/653": {
+  "url": "https://media.h-haddadi.com/audio/7879c0e9fab98929.m4a",
+  "key": "audio/7879c0e9fab98929.m4a",
+  "sha256": "7879c0e9fab9892999385d2021f9acd9f0a950c9f98130415183b1826799fbaa",
+  "size": 8378140,
+  "duration": 2829,
+  "src_size": 6334039
+ },
+ "https://t.me/h_haddadi7/654": {
+  "url": "https://media.h-haddadi.com/audio/5152fc7cc47c621d.m4a",
+  "key": "audio/5152fc7cc47c621d.m4a",
+  "sha256": "5152fc7cc47c621d8dc847cfa02f5e207d8c898555be287c72e67059418a65df",
+  "size": 7768362,
+  "duration": 2650,
+  "src_size": 5912344
+ },
+ "https://t.me/h_haddadi7/655": {
+  "url": "https://media.h-haddadi.com/audio/25f511b33e7b9c00.m4a",
+  "key": "audio/25f511b33e7b9c00.m4a",
+  "sha256": "25f511b33e7b9c00a3768a8d97f651cddce880cdb986ffd86642739e932d547f",
+  "size": 4379951,
+  "duration": 1493,
+  "src_size": 3339388
+ },
+ "https://t.me/h_haddadi7/656": {
+  "url": "https://media.h-haddadi.com/audio/713a33024b566baa.m4a",
+  "key": "audio/713a33024b566baa.m4a",
+  "sha256": "713a33024b566baac41cdd257f6c81257d643a1d1e15d6b24a5c77e1e01da3bf",
+  "size": 7933306,
+  "duration": 2663,
+  "src_size": 5911482
+ },
+ "https://t.me/h_haddadi7/657": {
+  "url": "https://media.h-haddadi.com/audio/487fe5b7b40f591b.m4a",
+  "key": "audio/487fe5b7b40f591b.m4a",
+  "sha256": "487fe5b7b40f591b2da4c06e76ca8ce4d820634c754724e7895c27b7fc7a29d4",
+  "size": 6727992,
+  "duration": 2269,
+  "src_size": 5056460
+ },
+ "https://t.me/h_haddadi7/659": {
+  "url": "https://media.h-haddadi.com/audio/7ac8a4f420866df3.m4a",
+  "key": "audio/7ac8a4f420866df3.m4a",
+  "sha256": "7ac8a4f420866df32fda75b2493a98314a1fa33c8cb369a79cfcf7fd9a36daa6",
+  "size": 8700086,
+  "duration": 2911,
+  "src_size": 6687144
+ },
+ "https://t.me/h_haddadi7/660": {
+  "url": "https://media.h-haddadi.com/audio/b811b1b00dc07194.m4a",
+  "key": "audio/b811b1b00dc07194.m4a",
+  "sha256": "b811b1b00dc07194be573669f7b2b166a8244b095a4466aa0366a1ebd65f31b7",
+  "size": 7792770,
+  "duration": 2608,
+  "src_size": 5998975
+ },
+ "https://t.me/h_haddadi7/661": {
+  "url": "https://media.h-haddadi.com/audio/9ba4db856b9c658a.m4a",
+  "key": "audio/9ba4db856b9c658a.m4a",
+  "sha256": "9ba4db856b9c658ae5c9277435c8f91f38ffd781ecce40a8d90396499fd95c78",
+  "size": 3704205,
+  "duration": 1232,
+  "src_size": 2829632
+ },
+ "https://t.me/h_haddadi7/662": {
+  "url": "https://media.h-haddadi.com/audio/9f6fdf0b2233abe7.m4a",
+  "key": "audio/9f6fdf0b2233abe7.m4a",
+  "sha256": "9f6fdf0b2233abe7a64172bc3b090894b9b2f6f9421927396a9f7fd5c1c79756",
+  "size": 7703051,
+  "duration": 2528,
+  "src_size": 5876390
+ },
+ "https://t.me/h_haddadi7/663": {
+  "url": "https://media.h-haddadi.com/audio/4adf4528effa4288.m4a",
+  "key": "audio/4adf4528effa4288.m4a",
+  "sha256": "4adf4528effa4288dc992f1d50b544f8ac6afce911cd1afefafb025c5fd68049",
+  "size": 4331195,
+  "duration": 1438,
+  "src_size": 3303252
+ },
+ "https://t.me/h_haddadi7/664": {
+  "url": "https://media.h-haddadi.com/audio/e204afce668f50e3.m4a",
+  "key": "audio/e204afce668f50e3.m4a",
+  "sha256": "e204afce668f50e3d74e4e10da3fd04c5de3aa0f96d1f50a7d4d0a1d99c8f9c7",
+  "size": 12032769,
+  "duration": 4087,
+  "src_size": 9493236
+ },
+ "https://t.me/h_haddadi7/666": {
+  "url": "https://media.h-haddadi.com/audio/ad31c2e53492fa95.m4a",
+  "key": "audio/ad31c2e53492fa95.m4a",
+  "sha256": "ad31c2e53492fa95bd424a47c3ef939f26b1f3070d18ff8c96880c67435b3639",
+  "size": 13609362,
+  "duration": 4596,
+  "src_size": 10321354
+ },
+ "https://t.me/h_haddadi7/667": {
+  "url": "https://media.h-haddadi.com/audio/75beabf4dc3943ab.m4a",
+  "key": "audio/75beabf4dc3943ab.m4a",
+  "sha256": "75beabf4dc3943abbeb2be10493493e06c3b0325e769b27b180c53b17293af4f",
+  "size": 9492065,
+  "duration": 3208,
+  "src_size": 7352350
+ },
+ "https://t.me/h_haddadi7/668": {
+  "url": "https://media.h-haddadi.com/audio/3f86eb69f3c2e02d.m4a",
+  "key": "audio/3f86eb69f3c2e02d.m4a",
+  "sha256": "3f86eb69f3c2e02d60c957c3a1a5b57fb642be8e5b2c3402c88e63cb0dc17491",
+  "size": 7020652,
+  "duration": 1133,
+  "src_size": 36255404
+ },
+ "https://t.me/h_haddadi7/669": {
+  "url": "https://media.h-haddadi.com/audio/3a8e0685b57f915d.m4a",
+  "key": "audio/3a8e0685b57f915d.m4a",
+  "sha256": "3a8e0685b57f915d35753c7f1c2eba6a08a2822b8fe7b9a8b41b1fa4af3f5a3d",
+  "size": 12167572,
+  "duration": 3857,
+  "src_size": 9033326
+ },
+ "https://t.me/h_haddadi7/672": {
+  "url": "https://media.h-haddadi.com/audio/9b7bfc0fdedd2e01.m4a",
+  "key": "audio/9b7bfc0fdedd2e01.m4a",
+  "sha256": "9b7bfc0fdedd2e01d887fd63e499e1da2d6a9c8760c2ae179ff2c1c94d5b717f",
+  "size": 16108266,
+  "duration": 5218,
+  "src_size": 12313192
+ },
+ "https://t.me/h_haddadi7/673": {
+  "url": "https://media.h-haddadi.com/audio/febc5db04f66efa3.m4a",
+  "key": "audio/febc5db04f66efa3.m4a",
+  "sha256": "febc5db04f66efa35fc5b29a4c9419bb2d13ca5b50a56357bd8adbbcbfdbfe38",
+  "size": 6255032,
+  "duration": 1008,
+  "src_size": 32271404
+ },
+ "https://t.me/h_haddadi7/675": {
+  "url": "https://media.h-haddadi.com/audio/d37175fa3c24883c.m4a",
+  "key": "audio/d37175fa3c24883c.m4a",
+  "sha256": "d37175fa3c24883cfadb2ab008ad544afd1176d456343c8f4451814ef1765e4b",
+  "size": 15069124,
+  "duration": 5116,
+  "src_size": 11486352
+ },
+ "https://t.me/h_haddadi7/677": {
+  "url": "https://media.h-haddadi.com/audio/cc56b5795339d7e3.m4a",
+  "key": "audio/cc56b5795339d7e3.m4a",
+  "sha256": "cc56b5795339d7e31fe76cb14b100fc1c4e423784b246f5ca2487860bca4382d",
+  "size": 14682545,
+  "duration": 5000,
+  "src_size": 10807993
+ },
+ "https://t.me/h_haddadi7/679": {
+  "url": "https://media.h-haddadi.com/audio/1af856acfffcdd82.m4a",
+  "key": "audio/1af856acfffcdd82.m4a",
+  "sha256": "1af856acfffcdd82c53d2572024b02023be6e19faaa96f2f82632a60b5713904",
+  "size": 5182296,
+  "duration": 1657,
+  "src_size": 3899896
+ },
+ "https://t.me/h_haddadi7/681": {
+  "url": "https://media.h-haddadi.com/audio/794bc34fada7a9cf.m4a",
+  "key": "audio/794bc34fada7a9cf.m4a",
+  "sha256": "794bc34fada7a9cfe8e446110b5bf4e15fec061d3a1d265492d428b506b78a50",
+  "size": 5737654,
+  "duration": 1965,
+  "src_size": 4510435
+ },
+ "https://t.me/h_haddadi7/683": {
+  "url": "https://media.h-haddadi.com/audio/47b7bfe39ea3c94e.m4a",
+  "key": "audio/47b7bfe39ea3c94e.m4a",
+  "sha256": "47b7bfe39ea3c94edc9cb0787b50d3acca67c4dfd2197e1ddfe01c0748e0839d",
+  "size": 9208594,
+  "duration": 3007,
+  "src_size": 7074480
+ },
+ "https://t.me/h_haddadi7/684": {
+  "url": "https://media.h-haddadi.com/audio/bdda12048826c664.m4a",
+  "key": "audio/bdda12048826c664.m4a",
+  "sha256": "bdda12048826c664563dce54004afba51c9ce3b2342ccde56d395edffcdfcf8c",
+  "size": 14289423,
+  "duration": 4813,
+  "src_size": 10806650
+ },
+ "https://t.me/h_haddadi7/686": {
+  "url": "https://media.h-haddadi.com/audio/984d701932442e10.m4a",
+  "key": "audio/984d701932442e10.m4a",
+  "sha256": "984d701932442e1093107d108b33a5aead2098e65d84f787505d7791ee4a3752",
+  "size": 5146965,
+  "duration": 1755,
+  "src_size": 4049124
+ },
+ "https://t.me/h_haddadi7/688": {
+  "url": "https://media.h-haddadi.com/audio/342d81b3b669e580.m4a",
+  "key": "audio/342d81b3b669e580.m4a",
+  "sha256": "342d81b3b669e580fb0bab35e25ef78826538e4570a7985b220f4fa73a67c44f",
+  "size": 7242202,
+  "duration": 1168,
+  "src_size": 37367724
+ },
+ "https://t.me/h_haddadi7/689": {
+  "url": "https://media.h-haddadi.com/audio/f70bec7d54f7f7ef.m4a",
+  "key": "audio/f70bec7d54f7f7ef.m4a",
+  "sha256": "f70bec7d54f7f7ef0b8996604fc174d5ac85bd0e72c783340783bbf9a5da1ac4",
+  "size": 5882172,
+  "duration": 949,
+  "src_size": 30367404
+ },
+ "https://t.me/h_haddadi7/692": {
+  "url": "https://media.h-haddadi.com/audio/f125df8633e5715a.m4a",
+  "key": "audio/f125df8633e5715a.m4a",
+  "sha256": "f125df8633e5715ac096383d37208199843d7babe6b81cd575befd588fcb4193",
+  "size": 10481878,
+  "duration": 3323,
+  "src_size": 7781818
+ },
+ "https://t.me/h_haddadi7/694": {
+  "url": "https://media.h-haddadi.com/audio/e5fdad04cda03d7a.m4a",
+  "key": "audio/e5fdad04cda03d7a.m4a",
+  "sha256": "e5fdad04cda03d7a5c98944f049bf6803c8736b2a688594b5ce19d9aadd4f8ee",
+  "size": 7040227,
+  "duration": 1136,
+  "src_size": 36365484
+ },
+ "https://t.me/h_haddadi7/696": {
+  "url": "https://media.h-haddadi.com/audio/b29312fe487f94da.m4a",
+  "key": "audio/b29312fe487f94da.m4a",
+  "sha256": "b29312fe487f94da12c1763c05591bc1335e53a920c5affdd2b376ad4eb776b5",
+  "size": 11127802,
+  "duration": 3741,
+  "src_size": 8367605
+ },
+ "https://t.me/h_haddadi7/697": {
+  "url": "https://media.h-haddadi.com/audio/0a184faa253031cc.m4a",
+  "key": "audio/0a184faa253031cc.m4a",
+  "sha256": "0a184faa253031cc820b9c22d510298669ccb831c234744e600dffce30b025e5",
+  "size": 10347882,
+  "duration": 3465,
+  "src_size": 7749385
+ },
+ "https://t.me/h_haddadi7/698": {
+  "url": "https://media.h-haddadi.com/audio/4c528938ea1aad25.m4a",
+  "key": "audio/4c528938ea1aad25.m4a",
+  "sha256": "4c528938ea1aad25a97775efa3ae976dffe10d358cbd6383d006c3108a5e9a19",
+  "size": 5843899,
+  "duration": 942,
+  "src_size": 30168364
+ },
+ "https://t.me/h_haddadi7/699": {
+  "url": "https://media.h-haddadi.com/audio/5f96a925b618dc71.m4a",
+  "key": "audio/5f96a925b618dc71.m4a",
+  "sha256": "5f96a925b618dc71184420fa68f3ab1de6181d008d7f59849d348c684882bb66",
+  "size": 5979766,
+  "duration": 964,
+  "src_size": 30845484
+ },
+ "https://t.me/h_haddadi7/700": {
+  "url": "https://media.h-haddadi.com/audio/f7bae492b520ef33.m4a",
+  "key": "audio/f7bae492b520ef33.m4a",
+  "sha256": "f7bae492b520ef3349fb61aaf82389a482cb9fbd85633db24fc4dd664c74cc7d",
+  "size": 7799790,
+  "duration": 1257,
+  "src_size": 40242604
+ },
+ "https://t.me/h_haddadi7/702": {
+  "url": "https://media.h-haddadi.com/audio/57017c36a4569f9b.m4a",
+  "key": "audio/57017c36a4569f9b.m4a",
+  "sha256": "57017c36a4569f9bafe9a57411413c6df6e413fa7b794ff134ea422db0e5adad",
+  "size": 5298638,
+  "duration": 1724,
+  "src_size": 3846693
+ },
+ "https://t.me/h_haddadi7/703": {
+  "url": "https://media.h-haddadi.com/audio/cae7b364f1b0eef4.m4a",
+  "key": "audio/cae7b364f1b0eef4.m4a",
+  "sha256": "cae7b364f1b0eef46ba21aa98d19af5692aa1e288771e73f5843c8185e1f48fb",
+  "size": 6864720,
+  "duration": 2234,
+  "src_size": 5047631
+ },
+ "https://t.me/h_haddadi7/704": {
+  "url": "https://media.h-haddadi.com/audio/6dd790f2424755bb.m4a",
+  "key": "audio/6dd790f2424755bb.m4a",
+  "sha256": "6dd790f2424755bb3e8cc62c345c60624b78eff7d8e47056df827b930d23cc6f",
+  "size": 6463214,
+  "duration": 2148,
+  "src_size": 4656333
+ },
+ "https://t.me/h_haddadi7/705": {
+  "url": "https://media.h-haddadi.com/audio/df5ad9bf366eb4e5.m4a",
+  "key": "audio/df5ad9bf366eb4e5.m4a",
+  "sha256": "df5ad9bf366eb4e58a9b42e74cf62f34286dbbd06d78a1e025be5cb8f739bb21",
+  "size": 5463308,
+  "duration": 1768,
+  "src_size": 3913162
+ },
+ "https://t.me/h_haddadi7/710": {
+  "url": "https://media.h-haddadi.com/audio/44c09931c0f9be08.m4a",
+  "key": "audio/44c09931c0f9be08.m4a",
+  "sha256": "44c09931c0f9be0837d35b1e341d9c55ce20399fd390798255b1ad4964c8f7ce",
+  "size": 8634818,
+  "duration": 2901,
+  "src_size": 6653440
+ },
+ "https://t.me/h_haddadi7/711": {
+  "url": "https://media.h-haddadi.com/audio/f16baaece1a8f806.m4a",
+  "key": "audio/f16baaece1a8f806.m4a",
+  "sha256": "f16baaece1a8f806775b6d41273169645b8042d0fb8da8b54f0920adbdace2bc",
+  "size": 6885348,
+  "duration": 2308,
+  "src_size": 5293269
+ },
+ "https://t.me/h_haddadi7/713": {
+  "url": "https://media.h-haddadi.com/audio/a844caeb3d91c09f.m4a",
+  "key": "audio/a844caeb3d91c09f.m4a",
+  "sha256": "a844caeb3d91c09f0449ddb8c1755e619b58ffe99695bf67bac24fcdedcf6e06",
+  "size": 6019290,
+  "duration": 2038,
+  "src_size": 4505456
+ },
+ "https://t.me/h_haddadi7/715": {
+  "url": "https://media.h-haddadi.com/audio/0802c7e5df606ab7.m4a",
+  "key": "audio/0802c7e5df606ab7.m4a",
+  "sha256": "0802c7e5df606ab70c9876f2bb4dece3a0685443fdf12edb85d662d2f6db10dd",
+  "size": 6793860,
+  "duration": 2295,
+  "src_size": 5119777
+ },
+ "https://t.me/h_haddadi7/716": {
+  "url": "https://media.h-haddadi.com/audio/d19fd52dc3b7f2e7.m4a",
+  "key": "audio/d19fd52dc3b7f2e7.m4a",
+  "sha256": "d19fd52dc3b7f2e758c9ab9b8f607c1659b07826b34e2d4f65677fc9f9fd0c33",
+  "size": 6999563,
+  "duration": 1130,
+  "src_size": 36159404
+ },
+ "https://t.me/h_haddadi7/717": {
+  "url": "https://media.h-haddadi.com/audio/ba006d1e0ce10cb2.m4a",
+  "key": "audio/ba006d1e0ce10cb2.m4a",
+  "sha256": "ba006d1e0ce10cb251d82792234471d23c3e305c44968400170b8428d0dd75ce",
+  "size": 4774136,
+  "duration": 1598,
+  "src_size": 3681930
+ },
+ "https://t.me/h_haddadi7/718": {
+  "url": "https://media.h-haddadi.com/audio/59c628bbe27924ef.m4a",
+  "key": "audio/59c628bbe27924ef.m4a",
+  "sha256": "59c628bbe27924ef3349baf6ca12e81976b8b1cb8d1efb09c0be495e47245dde",
+  "size": 5369572,
+  "duration": 866,
+  "src_size": 27710124
+ },
+ "https://t.me/h_haddadi7/719": {
+  "url": "https://media.h-haddadi.com/audio/736edce2db368f68.m4a",
+  "key": "audio/736edce2db368f68.m4a",
+  "sha256": "736edce2db368f68825addd2b4b49ceb5713aecaaf26990fb02837a83839e10f",
+  "size": 5924133,
+  "duration": 1968,
+  "src_size": 4549053
+ },
+ "https://t.me/h_haddadi7/721": {
+  "url": "https://media.h-haddadi.com/audio/aa628a1859aa33e3.m4a",
+  "key": "audio/aa628a1859aa33e3.m4a",
+  "sha256": "aa628a1859aa33e33a0c264b0980ab4518e3d07864c9802df25f61c00992bc4b",
+  "size": 7103481,
+  "duration": 2412,
+  "src_size": 5522471
+ },
+ "https://t.me/h_haddadi7/723": {
+  "url": "https://media.h-haddadi.com/audio/7a9e450ccc92f8a1.m4a",
+  "key": "audio/7a9e450ccc92f8a1.m4a",
+  "sha256": "7a9e450ccc92f8a1113924ec69a9561fc7ec6b73c0daa2508aa4e832b246d827",
+  "size": 7883993,
+  "duration": 2611,
+  "src_size": 6015445
+ },
+ "https://t.me/h_haddadi7/724": {
+  "url": "https://media.h-haddadi.com/audio/bab22523468297f1.m4a",
+  "key": "audio/bab22523468297f1.m4a",
+  "sha256": "bab22523468297f1bdf90ede937e2f9b5afb4f226239c7c34ccba4d019e43952",
+  "size": 4954588,
+  "duration": 799,
+  "src_size": 25562284
+ },
+ "https://t.me/h_haddadi7/725": {
+  "url": "https://media.h-haddadi.com/audio/6c84a4ee07c5266c.m4a",
+  "key": "audio/6c84a4ee07c5266c.m4a",
+  "sha256": "6c84a4ee07c5266ca33e2558eef94c27ebbc963d30e579cb1cf2e520a9643073",
+  "size": 5781952,
+  "duration": 1845,
+  "src_size": 4098781
+ },
+ "https://t.me/h_haddadi7/726": {
+  "url": "https://media.h-haddadi.com/audio/3eacdab3d1e19c19.m4a",
+  "key": "audio/3eacdab3d1e19c19.m4a",
+  "sha256": "3eacdab3d1e19c19a90b24663c7af11c307a57b2e4335dae323cf5f35aaa322c",
+  "size": 6532163,
+  "duration": 1053,
+  "src_size": 33694124
+ },
+ "https://t.me/h_haddadi7/728": {
+  "url": "https://media.h-haddadi.com/audio/3cef03b5e2e12c67.m4a",
+  "key": "audio/3cef03b5e2e12c67.m4a",
+  "sha256": "3cef03b5e2e12c6750353779ce413ec9eb07f3b449f3091b853819dababf76ad",
+  "size": 8107735,
+  "duration": 2676,
+  "src_size": 6085232
+ },
+ "https://t.me/h_haddadi7/729": {
+  "url": "https://media.h-haddadi.com/audio/e85f58d72b6f87c8.m4a",
+  "key": "audio/e85f58d72b6f87c8.m4a",
+  "sha256": "e85f58d72b6f87c8946b2eacf02f43cbe4df09a3099bfd01bee129334bf2e4a0",
+  "size": 7045797,
+  "duration": 1136,
+  "src_size": 36366124
+ },
+ "https://t.me/h_haddadi7/731": {
+  "url": "https://media.h-haddadi.com/audio/fcf511dafd2eb181.m4a",
+  "key": "audio/fcf511dafd2eb181.m4a",
+  "sha256": "fcf511dafd2eb1814f2f98ee4352a2c9bcad50f88a54398df6598cb598755da8",
+  "size": 7770602,
+  "duration": 2657,
+  "src_size": 5852281
+ },
+ "https://t.me/h_haddadi7/732": {
+  "url": "https://media.h-haddadi.com/audio/2631fe82f0a6560a.m4a",
+  "key": "audio/2631fe82f0a6560a.m4a",
+  "sha256": "2631fe82f0a6560ae115248903ef0c584aed541bb46a9e07ee9b8a96184c5841",
+  "size": 7880179,
+  "duration": 2673,
+  "src_size": 5940760
+ },
+ "https://t.me/h_haddadi7/733": {
+  "url": "https://media.h-haddadi.com/audio/a52e01fe0a03793c.m4a",
+  "key": "audio/a52e01fe0a03793c.m4a",
+  "sha256": "a52e01fe0a03793c563b219c541fb20c3a9126f33eecb073297cc7e1298c094f",
+  "size": 7334932,
+  "duration": 2492,
+  "src_size": 5524728
+ },
+ "https://t.me/h_haddadi7/735": {
+  "url": "https://media.h-haddadi.com/audio/a977ec9b26a864d3.m4a",
+  "key": "audio/a977ec9b26a864d3.m4a",
+  "sha256": "a977ec9b26a864d39de55b0cb4dad79dfb4d1a343c6b08e40516c3cb1f742f6f",
+  "size": 7021944,
+  "duration": 2400,
+  "src_size": 5225712
+ },
+ "https://t.me/h_haddadi7/736": {
+  "url": "https://media.h-haddadi.com/audio/53311b73183bf99d.m4a",
+  "key": "audio/53311b73183bf99d.m4a",
+  "sha256": "53311b73183bf99d3f8b6b0b1859e57d31a4b3f70df0cb7568fc98d33a0eaea4",
+  "size": 6726860,
+  "duration": 2295,
+  "src_size": 5000630
+ },
+ "https://t.me/h_haddadi7/737": {
+  "url": "https://media.h-haddadi.com/audio/199544b80c85cc77.m4a",
+  "key": "audio/199544b80c85cc77.m4a",
+  "sha256": "199544b80c85cc77adbf64b0d1dd7674a24fe126fcd52b0ff77a2c2a0c7998f9",
+  "size": 7759018,
+  "duration": 2668,
+  "src_size": 5807186
+ },
+ "https://t.me/h_haddadi7/738": {
+  "url": "https://media.h-haddadi.com/audio/ed0257fab8b8a92f.m4a",
+  "key": "audio/ed0257fab8b8a92f.m4a",
+  "sha256": "ed0257fab8b8a92f235a84570304f2005289f11b1980bda58ba5a79250696167",
+  "size": 7312702,
+  "duration": 2503,
+  "src_size": 5596537
+ },
+ "https://t.me/h_haddadi7/740": {
+  "url": "https://media.h-haddadi.com/audio/69c9a07674e6916f.m4a",
+  "key": "audio/69c9a07674e6916f.m4a",
+  "sha256": "69c9a07674e6916f3fc11d9dd354522076151ac1b349b660bdb089570f5bbbc4",
+  "size": 7996036,
+  "duration": 2723,
+  "src_size": 6218505
+ },
+ "https://t.me/h_haddadi7/741": {
+  "url": "https://media.h-haddadi.com/audio/b70f2f78b1f9792f.m4a",
+  "key": "audio/b70f2f78b1f9792f.m4a",
+  "sha256": "b70f2f78b1f9792ffbed42e3b5a13319679f9dafbc9521d82d979a93bdaa7890",
+  "size": 6911278,
+  "duration": 2371,
+  "src_size": 5433194
+ },
+ "https://t.me/h_haddadi7/742": {
+  "url": "https://media.h-haddadi.com/audio/d9c77babf235ae72.m4a",
+  "key": "audio/d9c77babf235ae72.m4a",
+  "sha256": "d9c77babf235ae72e5823bc34194bcb045556d34ee8069340aee8e7e79acbd40",
+  "size": 2752873,
+  "duration": 946,
+  "src_size": 2171244
+ },
+ "https://t.me/h_haddadi7/744": {
+  "url": "https://media.h-haddadi.com/audio/ec5ac34ca328a0de.m4a",
+  "key": "audio/ec5ac34ca328a0de.m4a",
+  "sha256": "ec5ac34ca328a0de03234b35840b5ee5154bc625ff5adee256203d4f8b1ce52b",
+  "size": 8110555,
+  "duration": 2739,
+  "src_size": 6197140
+ },
+ "https://t.me/h_haddadi7/745": {
+  "url": "https://media.h-haddadi.com/audio/84a807797c743706.m4a",
+  "key": "audio/84a807797c743706.m4a",
+  "sha256": "84a807797c7437065909c1254f7531dfa71c8af4858c51c488e2b47ae3f7638b",
+  "size": 7260789,
+  "duration": 2473,
+  "src_size": 5736361
+ },
+ "https://t.me/h_haddadi7/746": {
+  "url": "https://media.h-haddadi.com/audio/d7165995b07fcf0a.m4a",
+  "key": "audio/d7165995b07fcf0a.m4a",
+  "sha256": "d7165995b07fcf0abad563c9656e9f1ecc86b11480e55dcf45fb530284de2c01",
+  "size": 4132733,
+  "duration": 1422,
+  "src_size": 3333037
+ },
+ "https://t.me/h_haddadi7/747": {
+  "url": "https://media.h-haddadi.com/audio/5dfd04ae9cacc6a4.m4a",
+  "key": "audio/5dfd04ae9cacc6a4.m4a",
+  "sha256": "5dfd04ae9cacc6a49191204509825f92558a232d66e2a4921490e78bb545d0f3",
+  "size": 8124682,
+  "duration": 2739,
+  "src_size": 6404060
+ },
+ "https://t.me/h_haddadi7/748": {
+  "url": "https://media.h-haddadi.com/audio/3c499cb11263a924.m4a",
+  "key": "audio/3c499cb11263a924.m4a",
+  "sha256": "3c499cb11263a92462c951f7f5ed0ff21ac618f63bd20ce90a9b9c1af01988bf",
+  "size": 7048373,
+  "duration": 2386,
+  "src_size": 5553735
+ },
+ "https://t.me/h_haddadi7/749": {
+  "url": "https://media.h-haddadi.com/audio/ff1c16a1efdfd79b.m4a",
+  "key": "audio/ff1c16a1efdfd79b.m4a",
+  "sha256": "ff1c16a1efdfd79b991b0195ba51c85777621ea7af265dfeef3eff96b8bce509",
+  "size": 6825909,
+  "duration": 2330,
+  "src_size": 5423727
+ },
+ "https://t.me/h_haddadi7/750": {
+  "url": "https://media.h-haddadi.com/audio/8303b1f0d69b3109.m4a",
+  "key": "audio/8303b1f0d69b3109.m4a",
+  "sha256": "8303b1f0d69b3109298247e859e33a9c43055d9dc28afef8beea48bc65876121",
+  "size": 2892855,
+  "duration": 994,
+  "src_size": 2347568
+ },
+ "https://t.me/h_haddadi7/751": {
+  "url": "https://media.h-haddadi.com/audio/337811d6026bb2e2.m4a",
+  "key": "audio/337811d6026bb2e2.m4a",
+  "sha256": "337811d6026bb2e2d2bd9614552b6adb124cced2a7b1fe3129faabfdb822b052",
+  "size": 4942636,
+  "duration": 1629,
+  "src_size": 3583379
+ },
+ "https://t.me/h_haddadi7/756": {
+  "url": "https://media.h-haddadi.com/audio/f5da8a9b4e1ae839.m4a",
+  "key": "audio/f5da8a9b4e1ae839.m4a",
+  "sha256": "f5da8a9b4e1ae839c64e1fd3caed3adf860c46d7d7028fb049370da002e4bfa4",
+  "size": 6693027,
+  "duration": 2196,
+  "src_size": 4641524
+ },
+ "https://t.me/h_haddadi7/757": {
+  "url": "https://media.h-haddadi.com/audio/dc4e94bf502c7937.m4a",
+  "key": "audio/dc4e94bf502c7937.m4a",
+  "sha256": "dc4e94bf502c7937ca0cd44841ef98a7d8050c1383e7273eddd88b684a830259",
+  "size": 3020402,
+  "duration": 1005,
+  "src_size": 1929030
+ },
+ "https://t.me/h_haddadi7/759": {
+  "url": "https://media.h-haddadi.com/audio/188c5df22b6c5dc0.m4a",
+  "key": "audio/188c5df22b6c5dc0.m4a",
+  "sha256": "188c5df22b6c5dc0e43b8f824a4c8d2f6bf5b3d6e6c65f1256ca0949bd844739",
+  "size": 5840513,
+  "duration": 1935,
+  "src_size": 4052193
+ },
+ "https://t.me/h_haddadi7/760": {
+  "url": "https://media.h-haddadi.com/audio/957bab2edccbd726.m4a",
+  "key": "audio/957bab2edccbd726.m4a",
+  "sha256": "957bab2edccbd7263f268521b577b7ab49c582a7d00398b806aa37f53d1a6222",
+  "size": 6382978,
+  "duration": 2099,
+  "src_size": 4502607
+ },
+ "https://t.me/h_haddadi7/761": {
+  "url": "https://media.h-haddadi.com/audio/57d99ff1e9323645.m4a",
+  "key": "audio/57d99ff1e9323645.m4a",
+  "sha256": "57d99ff1e932364596c5d34ab25cd4a176906fc5faa5c099398adc525ea6717f",
+  "size": 5297290,
+  "duration": 854,
+  "src_size": 27347244
+ },
+ "https://t.me/h_haddadi7/762": {
+  "url": "https://media.h-haddadi.com/audio/0d3c2dd75694f21c.m4a",
+  "key": "audio/0d3c2dd75694f21c.m4a",
+  "sha256": "0d3c2dd75694f21c0b95b2690b881a699c17c36ec6e9d2ea87a91483dc0aa451",
+  "size": 15735864,
+  "duration": 2535,
+  "src_size": 35688481
+ },
+ "https://t.me/h_haddadi7/764": {
+  "url": "https://media.h-haddadi.com/audio/8296dd1b4f5ac55b.m4a",
+  "key": "audio/8296dd1b4f5ac55b.m4a",
+  "sha256": "8296dd1b4f5ac55b174056b72d02213866b60a9f823b5251411a05024f359416",
+  "size": 6896077,
+  "duration": 2291,
+  "src_size": 4892735
+ },
+ "https://t.me/h_haddadi7/765": {
+  "url": "https://media.h-haddadi.com/audio/6668a69fadbef856.m4a",
+  "key": "audio/6668a69fadbef856.m4a",
+  "sha256": "6668a69fadbef856b5b8412550e6d55d6e2e74316d7d7c1e6efcdf776361f588",
+  "size": 7302739,
+  "duration": 2429,
+  "src_size": 4775679
+ },
+ "https://t.me/h_haddadi7/766": {
+  "url": "https://media.h-haddadi.com/audio/7cc34c97b19893a8.m4a",
+  "key": "audio/7cc34c97b19893a8.m4a",
+  "sha256": "7cc34c97b19893a8278ff513724ddd7f0bca84525f11c1c40ed7339ceab0dac3",
+  "size": 8903261,
+  "duration": 3023,
+  "src_size": 6402648
+ },
+ "https://t.me/h_haddadi7/767": {
+  "url": "https://media.h-haddadi.com/audio/5ba453c66c3264a6.m4a",
+  "key": "audio/5ba453c66c3264a6.m4a",
+  "sha256": "5ba453c66c3264a6abc9e80a489268c1e378907543deb8fb15dc7ee4c38611db",
+  "size": 7921691,
+  "duration": 2647,
+  "src_size": 5460387
+ },
+ "https://t.me/h_haddadi7/768": {
+  "url": "https://media.h-haddadi.com/audio/db8dcc02842bf5da.m4a",
+  "key": "audio/db8dcc02842bf5da.m4a",
+  "sha256": "db8dcc02842bf5da9cba106f82ee90ada823bd329deb44afd71fb3d72bf90d3d",
+  "size": 8528337,
+  "duration": 2830,
+  "src_size": 5829404
+ },
+ "https://t.me/h_haddadi7/769": {
+  "url": "https://media.h-haddadi.com/audio/d11b3dfb783b1933.m4a",
+  "key": "audio/d11b3dfb783b1933.m4a",
+  "sha256": "d11b3dfb783b1933a404cc54d42a0334c0d6798a53a7e4e871608514e40d0f6e",
+  "size": 7792188,
+  "duration": 2628,
+  "src_size": 5282909
+ },
+ "https://t.me/h_haddadi7/771": {
+  "url": "https://media.h-haddadi.com/audio/dce07110ef6dccdc.m4a",
+  "key": "audio/dce07110ef6dccdc.m4a",
+  "sha256": "dce07110ef6dccdc43ee475295517f33acf81559a547d6eaf18d8e72bcde3c07",
+  "size": 6474008,
+  "duration": 2201,
+  "src_size": 4694852
+ },
+ "https://t.me/h_haddadi7/774": {
+  "url": "https://media.h-haddadi.com/audio/4e584de7d9c1ad6a.m4a",
+  "key": "audio/4e584de7d9c1ad6a.m4a",
+  "sha256": "4e584de7d9c1ad6a8c05e3ecaf0c56c55c4310064144f299e4ef19f3bc388ed3",
+  "size": 6454386,
+  "duration": 2150,
+  "src_size": 4647892
+ },
+ "https://t.me/h_haddadi7/775": {
+  "url": "https://media.h-haddadi.com/audio/b64e14d258de6593.m4a",
+  "key": "audio/b64e14d258de6593.m4a",
+  "sha256": "b64e14d258de65939c793cf38523f5187e7efc6359f8629f3cbbdd3ceee2e189",
+  "size": 6408262,
+  "duration": 1034,
+  "src_size": 33098284
+ },
+ "https://t.me/h_haddadi7/776": {
+  "url": "https://media.h-haddadi.com/audio/fd328be494ff6b90.m4a",
+  "key": "audio/fd328be494ff6b90.m4a",
+  "sha256": "fd328be494ff6b90586d0e2bc75be3dd31fa97ed17dae4045718415d5a3d051a",
+  "size": 8121425,
+  "duration": 1310,
+  "src_size": 41914924
+ },
+ "https://t.me/h_haddadi7/777": {
+  "url": "https://media.h-haddadi.com/audio/6697ef4effe7f60e.m4a",
+  "key": "audio/6697ef4effe7f60e.m4a",
+  "sha256": "6697ef4effe7f60e044e1f12dbccd0fa789fdf4b1d9f9e2f409d4302ae4a6a5a",
+  "size": 6020670,
+  "duration": 971,
+  "src_size": 31076524
+ },
+ "https://t.me/h_haddadi7/778": {
+  "url": "https://media.h-haddadi.com/audio/98161ed5fb08d874.m4a",
+  "key": "audio/98161ed5fb08d874.m4a",
+  "sha256": "98161ed5fb08d874b498d279b003cbf4130fa0491addee51a8e3155e9500e4fa",
+  "size": 6528842,
+  "duration": 1052,
+  "src_size": 33680044
+ },
+ "https://t.me/h_haddadi7/785": {
+  "url": "https://media.h-haddadi.com/audio/02a7d134710a3d98.m4a",
+  "key": "audio/02a7d134710a3d98.m4a",
+  "sha256": "02a7d134710a3d981736b2b7d010f8a4a27785de40c8714b9717e245f06dad0f",
+  "size": 8112551,
+  "duration": 2603,
+  "src_size": 6073724
+ },
+ "https://t.me/h_haddadi7/797": {
+  "url": "https://media.h-haddadi.com/audio/4ab3791933a99ea1.m4a",
+  "key": "audio/4ab3791933a99ea1.m4a",
+  "sha256": "4ab3791933a99ea1b72e59ef900f77b4d88b43a6fa78d113cc530c17c26a97d0",
+  "size": 10947902,
+  "duration": 1761,
+  "src_size": 28483099
+ },
+ "https://t.me/h_haddadi7/818": {
+  "url": "https://media.h-haddadi.com/audio/8ed342b48855711c.m4a",
+  "key": "audio/8ed342b48855711c.m4a",
+  "sha256": "8ed342b48855711c3705c728fc9628ce4768f2d42f8362a406daba9c079f3609",
+  "size": 6582587,
+  "duration": 2192,
+  "src_size": 4502937
+ },
+ "https://t.me/h_haddadi7/821": {
+  "url": "https://media.h-haddadi.com/audio/52b313d12e5702b2.m4a",
+  "key": "audio/52b313d12e5702b2.m4a",
+  "sha256": "52b313d12e5702b203488d5b3d1b2446a68e3f692d1bf0e2386d2b193f1677ed",
+  "size": 13627736,
+  "duration": 2193,
+  "src_size": 35469822
+ },
+ "https://t.me/h_haddadi7/828": {
+  "url": "https://media.h-haddadi.com/audio/167bcbc94d1f8b66.m4a",
+  "key": "audio/167bcbc94d1f8b66.m4a",
+  "sha256": "167bcbc94d1f8b66d1118d4cf86db9a5f5cca5c70fd1246bd77f99e15fc12b8f",
+  "size": 7130309,
+  "duration": 1148,
+  "src_size": 28391904
+ },
+ "https://t.me/h_haddadi7/856": {
+  "url": "https://media.h-haddadi.com/audio/2d38e92aa61711dd.m4a",
+  "key": "audio/2d38e92aa61711dd.m4a",
+  "sha256": "2d38e92aa61711dd2f427491dad30b5e90a43460fd94e8fd6a13385f85c9efb5",
+  "size": 18069766,
+  "duration": 2904,
+  "src_size": 47413116
+ },
+ "https://t.me/h_haddadi7/866": {
+  "url": "https://media.h-haddadi.com/audio/62cdd78045f166a3.m4a",
+  "key": "audio/62cdd78045f166a3.m4a",
+  "sha256": "62cdd78045f166a3593ff59604b10bfc32df320d44ca5e3863fc24bdd8971fd6",
+  "size": 19204851,
+  "duration": 3088,
+  "src_size": 59833809
+ },
+ "https://t.me/h_haddadi7/885": {
+  "url": "https://media.h-haddadi.com/audio/36d09746f893a0ed.m4a",
+  "key": "audio/36d09746f893a0ed.m4a",
+  "sha256": "36d09746f893a0ed91162dffdaf2551e9fb87ae48c910181726e1a0aa19ea6e6",
+  "size": 4478400,
+  "duration": 721,
+  "src_size": 17835905
+ },
+ "https://t.me/h_haddadi7/891": {
+  "url": "https://media.h-haddadi.com/audio/e9aa2e76cb3e9780.m4a",
+  "key": "audio/e9aa2e76cb3e9780.m4a",
+  "sha256": "e9aa2e76cb3e9780ead9294e397bc9f4fd0cf5533e8fe9bc4b11a1ed4ba8e4f2",
+  "size": 4539301,
+  "duration": 730,
+  "src_size": 11938374
+ },
+ "https://t.me/h_haddadi7/897": {
+  "url": "https://media.h-haddadi.com/audio/ed8ab6364469356f.m4a",
+  "key": "audio/ed8ab6364469356f.m4a",
+  "sha256": "ed8ab6364469356f7cc41e93a8062e4db2ece71eeb0217a8b11bb14c4d4ade0e",
+  "size": 5819722,
+  "duration": 935,
+  "src_size": 15289819
+ },
+ "https://t.me/h_haddadi7/906": {
+  "url": "https://media.h-haddadi.com/audio/74edbcc7bd42603a.m4a",
+  "key": "audio/74edbcc7bd42603a.m4a",
+  "sha256": "74edbcc7bd42603a8156f8ac64ea441c861926accde3559246e98c9a9bd927b0",
+  "size": 4415295,
+  "duration": 710,
+  "src_size": 11612565
+ },
+ "https://t.me/h_haddadi7/907": {
+  "url": "https://media.h-haddadi.com/audio/afd077ccefb93419.m4a",
+  "key": "audio/afd077ccefb93419.m4a",
+  "sha256": "afd077ccefb934197bbb2f4a0d9cca26acece21ca47dc350c5a655966d225df8",
+  "size": 10206838,
+  "duration": 3283,
+  "src_size": 7560016
+ },
+ "https://t.me/h_haddadi7/935": {
+  "url": "https://media.h-haddadi.com/audio/ffd40808af20619f.m4a",
+  "key": "audio/ffd40808af20619f.m4a",
+  "sha256": "ffd40808af20619fcdb22992107b7c4edb42c8b3780d7bafd8195d76cc4fd294",
+  "size": 5914062,
+  "duration": 950,
+  "src_size": 15507739
+ },
+ "https://t.me/h_haddadi7/936": {
+  "url": "https://media.h-haddadi.com/audio/041031eba0074c5b.m4a",
+  "key": "audio/041031eba0074c5b.m4a",
+  "sha256": "041031eba0074c5b86247a4f9bfceac95da3379871930b88d62e73cc6bc9ad38",
+  "size": 9680191,
+  "duration": 3112,
+  "src_size": 6913635
+ },
+ "https://t.me/h_haddadi7/942": {
+  "url": "https://media.h-haddadi.com/audio/862f38aa312ad8a1.m4a",
+  "key": "audio/862f38aa312ad8a1.m4a",
+  "sha256": "862f38aa312ad8a16823f3bd923daf7d51a05d6160e1b0883ea559d1f7e65e12",
+  "size": 1789777,
+  "duration": 589,
+  "src_size": 750688
+ },
+ "https://t.me/h_haddadi7/944": {
+  "url": "https://media.h-haddadi.com/audio/bbf8ee9e44d904f0.m4a",
+  "key": "audio/bbf8ee9e44d904f0.m4a",
+  "sha256": "bbf8ee9e44d904f0174af60f3b9a3906d3616bbeae2f03f147bca5b30e41cd59",
+  "size": 4799315,
+  "duration": 1638,
+  "src_size": 3329661
+ },
+ "https://t.me/h_haddadi7/949": {
+  "url": "https://media.h-haddadi.com/audio/7b0025a4d775f522.m4a",
+  "key": "audio/7b0025a4d775f522.m4a",
+  "sha256": "7b0025a4d775f522af75b86b4efd7fdc432b8cfd7f0c8e2cca4763328e0e729a",
+  "size": 11557152,
+  "duration": 1859,
+  "src_size": 30065728
+ },
+ "https://t.me/h_haddadi7/954": {
+  "url": "https://media.h-haddadi.com/audio/46872d5b31f1b591.m4a",
+  "key": "audio/46872d5b31f1b591.m4a",
+  "sha256": "46872d5b31f1b5916e3f3071e43e032e34bd235fea090a97a8577d840fc8e60c",
+  "size": 14981336,
+  "duration": 2412,
+  "src_size": 68215621
+ },
+ "https://t.me/h_haddadi7/955": {
+  "url": "https://media.h-haddadi.com/audio/f2090f7d0172261d.m4a",
+  "key": "audio/f2090f7d0172261d.m4a",
+  "sha256": "f2090f7d0172261dcff9623eb898af949a7feca6c06f44bc9369a8ad08436644",
+  "size": 1623180,
+  "duration": 261,
+  "src_size": 2221562
+ },
+ "https://t.me/h_haddadi7/958": {
+  "url": "https://media.h-haddadi.com/audio/06eb87b479af1c5e.m4a",
+  "key": "audio/06eb87b479af1c5e.m4a",
+  "sha256": "06eb87b479af1c5e69207309234c22a05a08754099db3c75f725d522a3f6b9db",
+  "size": 14790830,
+  "duration": 2379,
+  "src_size": 38478590
+ },
+ "https://t.me/h_haddadi7/967": {
+  "url": "https://media.h-haddadi.com/audio/4349b42229e80b36.m4a",
+  "key": "audio/4349b42229e80b36.m4a",
+  "sha256": "4349b42229e80b36b269fa953c32b73241f22717bac3b81706d1e63bcf860818",
+  "size": 3772271,
+  "duration": 607,
+  "src_size": 9896452
+ },
+ "https://t.me/h_haddadi7/968": {
+  "url": "https://media.h-haddadi.com/audio/8a733fa104283336.m4a",
+  "key": "audio/8a733fa104283336.m4a",
+  "sha256": "8a733fa104283336f210c83c22c2420ee3a088af00ab65cd2f6f8120be2d2c08",
+  "size": 7270222,
+  "duration": 2341,
+  "src_size": 5391582
+ },
+ "https://t.me/h_haddadi7/975": {
+  "url": "https://media.h-haddadi.com/audio/6c33a1097d54b00c.m4a",
+  "key": "audio/6c33a1097d54b00c.m4a",
+  "sha256": "6c33a1097d54b00c4840ae0c6329efaedb12ea3ce6a5a00b859691e54c0b03e8",
+  "size": 5857343,
+  "duration": 1999,
+  "src_size": 3959865
+ },
+ "https://t.me/h_haddadi7/978": {
+  "url": "https://media.h-haddadi.com/audio/72d3e528db49e899.m4a",
+  "key": "audio/72d3e528db49e899.m4a",
+  "sha256": "72d3e528db49e899f5ecd1d0244ca9a6b4942bdf5e7087577d6c0ab592e85b03",
+  "size": 9383383,
+  "duration": 1509,
+  "src_size": 24412265
+ },
+ "https://t.me/h_haddadi7/981": {
+  "url": "https://media.h-haddadi.com/audio/3245bbe5775d910e.m4a",
+  "key": "audio/3245bbe5775d910e.m4a",
+  "sha256": "3245bbe5775d910e66bfa23980ba3f0fbd952a9959fd31787cf46f75326f256b",
+  "size": 11491112,
+  "duration": 1882,
+  "src_size": 52468830
+ },
+ "https://t.me/h_haddadi7/985": {
+  "url": "https://media.h-haddadi.com/audio/f2edc5f95a729060.m4a",
+  "key": "audio/f2edc5f95a729060.m4a",
+  "sha256": "f2edc5f95a729060dd8c1fc3ce6df429f1e5a097048616980d18f9d99cd61ae6",
+  "size": 4964161,
+  "duration": 798,
+  "src_size": 13020007
+ },
+ "https://t.me/h_haddadi7/986": {
+  "url": "https://media.h-haddadi.com/audio/d5f38cbbb4e6219c.m4a",
+  "key": "audio/d5f38cbbb4e6219c.m4a",
+  "sha256": "d5f38cbbb4e6219c4592c06baf5df7efd22ccd54eec10c56132d6b47bb6b94e3",
+  "size": 7420197,
+  "duration": 2394,
+  "src_size": 5455928
+ },
+ "https://t.me/h_haddadi7/987": {
+  "url": "https://media.h-haddadi.com/audio/fdafcc4daf7b4e87.m4a",
+  "key": "audio/fdafcc4daf7b4e87.m4a",
+  "sha256": "fdafcc4daf7b4e872033be285139a1ae9e071cc005cd462a71ac39cb8d4a9ca3",
+  "size": 12955751,
+  "duration": 2082,
+  "src_size": 33667369
+ },
+ "https://t.me/h_haddadi7/994": {
+  "url": "https://media.h-haddadi.com/audio/4074a45b4eeb812a.m4a",
+  "key": "audio/4074a45b4eeb812a.m4a",
+  "sha256": "4074a45b4eeb812a9a189a2d30832c6e5570082337d7fb124aa23d0f183ea24e",
+  "size": 4818309,
+  "duration": 1650,
+  "src_size": 3742572
+ },
+ "https://t.me/h_haddadi7/999": {
+  "url": "https://media.h-haddadi.com/audio/3ed31f5eb8c4daed.m4a",
+  "key": "audio/3ed31f5eb8c4daed.m4a",
+  "sha256": "3ed31f5eb8c4daed716885b73b02a84f80ea6cde08f77e503569955416e26740",
+  "size": 12372432,
+  "duration": 1988,
+  "src_size": 32144458
  }
 }
