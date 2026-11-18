@@ -18,7 +18,7 @@ export const LINKS = [
   { t: "قناة الشيخ على تيليجرام", s: "تيليجرام", b: "telegram", h: TG_CHANNEL }, { t: "مجموعة الشيخ على واتساب", s: "واتساب", b: "whatsapp", h: WA_GROUP },
 ];
 /* «تواصل معنا»: the address the footer button and the drawer link write to. Empty = the button is not shown. */
-export const CONTACT_EMAIL = "info@h-haddadi.com";   // Cloudflare Email Routing forwards it (owner 2026-11-18)
+export const CONTACT_EMAIL = "";   // owner 2026-11-18: a contact form on /contact/ (phase B1) instead of mailto
 
 /* ───────── Site structure ─────────  Every series belongs to one section (series.sec). Books are their own collection. */
 export const SECTIONS = [
