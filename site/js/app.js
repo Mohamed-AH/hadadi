@@ -1,6 +1,6 @@
 /* Browser app. Pages arrive pre-rendered (scripts/build.mjs); this script wires them up and handles client-side navigation. */
 import { init, setAnnouncements, todayRiyadh, state, byId, seriesById, secById, ic, safeYt, safeUrl, cleanQuery, oneOf, hashToPath, href, dur, fullTitle, esc, NAME, PAGE, SECTIONS, count as countAr, itemKind } from "./core.js";
-import { resolve, searchResults, seriesInfo, seriesList, listenOrder, moreBtn, SERIES_PAGE, ogTitle, coverColor, speedLabel, SPEEDS } from "./views.js";
+import { resolve, searchResults, seriesInfo, seriesList, listenOrder, moreBtn, SERIES_PAGE, ogTitle, coverColor, speedLabel, SPEEDS, CONTACT_MSG } from "./views.js";
 
 const $ = s => document.querySelector(s);
 const app = $("#app"), live = $("#sr-live");
@@ -73,6 +73,44 @@ function wire(p, byNavigation) {
   else if (w.t === "series") wireSeries(w.id);
   else if (w.t === "search") wireSearch();
   else if (w.t === "lesson") wireLesson(w, byNavigation);
+  else if (w.t === "contact") wireContact();
+}
+
+/* «تواصل معنا»: Turnstile (Cloudflare's script, loaded only on this page) + a fetch post to /api/contact (worker/contact.js). */
+const TS_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+let tsLoad = null;
+const loadTurnstile = () => tsLoad || (tsLoad = new Promise((ok, no) => {
+  const s = document.createElement("script"); s.src = TS_SRC; s.async = true; s.onload = () => ok(window.turnstile); s.onerror = () => { tsLoad = null; no(new Error("turnstile")); };
+  document.head.appendChild(s);
+}));
+function wireContact() {
+  const f = app.querySelector("#cform"), box = app.querySelector("#cf-ts"), st = app.querySelector("#cform-st"), go = app.querySelector("#cform-go");
+  if (!f || !box) return;
+  const say = (t, ok) => { st.textContent = t; st.className = "cform-st " + (ok ? "ok" : "err"); };
+  const back = new URLSearchParams(location.search).get("s");   // result of a form post without JavaScript (worker/contact.js redirects here)
+  if (back && Object.hasOwn(CONTACT_MSG, back)) say(CONTACT_MSG[back], back === "sent");
+  let wid = null, token = "";
+  const dark = document.documentElement.dataset.theme === "dark" || (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+  loadTurnstile().then(ts => {
+    if (!box.isConnected) return;
+    wid = ts.render(box, { sitekey: box.dataset.sitekey, language: "ar", theme: dark ? "dark" : "light", callback: t => { token = t; }, "expired-callback": () => { token = ""; }, "error-callback": () => { token = ""; } });
+  }).catch(() => say("تعذّر تحميل التحقق. أعد تحميل الصفحة أو حاول لاحقًا.", false));
+  f.addEventListener("submit", async e => {
+    e.preventDefault();
+    const body = f.body.value.trim();
+    if (body.length < 5) { say(CONTACT_MSG.body, false); f.body.focus(); return; }
+    if (!token) { say("أكمل التحقق أولًا (المربع فوق زر الإرسال).", false); return; }
+    go.disabled = true; say("جارٍ الإرسال…", true);
+    try {
+      const r = await fetch("/api/contact", { method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ name: f.name.value, reply: f.reply.value, body, website: f.website.value, "cf-turnstile-response": token }) });
+      const j = await r.json().catch(() => ({}));
+      if (j.ok) { f.reset(); say(CONTACT_MSG.sent, true); }
+      else say(CONTACT_MSG[j.error] || CONTACT_MSG.bad, false);
+    } catch (err) { say(CONTACT_MSG.down, false); }
+    go.disabled = false; token = "";
+    try { if (wid !== null) window.turnstile.reset(wid); } catch (err) {}
+  });
 }
 
 function wireHome() {

@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { init, setAnnouncements, applyMedia, mergeLibraries, state, SITE, byId, seriesById, SECTIONS, secById, isFlat, href, SCHEDULE } from "../site/js/core.js";
+import { init, setAnnouncements, applyMedia, mergeLibraries, state, SITE, byId, seriesById, SECTIONS, secById, isFlat, href, SCHEDULE, hasContact } from "../site/js/core.js";
 import { resolve, notFoundPage, chromeTop, chromeBottom, footer, headHtml, hasDocs } from "../site/js/views.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -27,6 +27,10 @@ setAnnouncements(readJSON("data/announcements.json", true));   // posters whose 
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.cpSync(SRC, OUT, { recursive: true, filter: s => !/[\\/]shell\.html$/.test(s) && !/[\\/]data[\\/]media\.json$/.test(s) && !/[\\/]data[\\/]makkah\.json$/.test(s) });   // the manifest stays out of dist: the merged library below carries the mirrored links
+if (process.env.TURNSTILE_SITEKEY) {   // tests only: bake Cloudflare's test site key into the browser copy too, so client-side navigation knows /contact/
+  const f = path.join(OUT, "js", "core.js");
+  fs.writeFileSync(f, fs.readFileSync(f, "utf8").replace('export const TURNSTILE_SITEKEY = "";', `export const TURNSTILE_SITEKEY = ${JSON.stringify(process.env.TURNSTILE_SITEKEY)};`));
+}
 
 const shell = fs.readFileSync(path.join(SRC, "shell.html"), "utf8");
 const fill = (tpl, map) => tpl.replace(/\{\{(\w+)\}\}/g, (_, k) => map[k]);   // single pass: page content is never re-scanned for placeholders
@@ -46,6 +50,7 @@ if (state.bio) routes.push("/about/");
 routes.push("/announcements/");
 if (hasDocs()) routes.push("/tazkiyat/");
 if (SCHEDULE.items.length) routes.push("/schedule/");
+if (hasContact()) routes.push("/contact/");
 for (const s of SECTIONS) if (s.id !== "books" && !isFlat(s.id) && DB.series.some(x => x.sec === s.id)) routes.push(`/section/${s.id}/`);
 for (const s of DB.series) routes.push(href.series(s.id));
 for (const l of DB.lessons) routes.push(href.lesson(l.id));

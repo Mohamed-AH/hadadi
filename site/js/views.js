@@ -1,8 +1,8 @@
 /* Pure page renderers: every page is a function returning { html, title, description, path, jsonld, ... }.
    Used by scripts/build.mjs (pre-rendering to real static HTML) and by js/app.js (client-side navigation). */
 import {
-  SITE, NAME, NAME_FULL, OFFICIAL_PRE, FULL_NAME, ROLE, OFFICIAL_NAME, YT_CHANNEL, TG_CHANNEL, LINKS, SECTIONS, COVER, COVER_PALETTE, PAGE, MAXQ, ROSHAN,
-  state, byId, seriesById, secById, ic, esc, fmtNum, count, itemKind, fmtYear, ldate, dur, isoDur, hours, dg, cleanQuery, oneOf, safeUrl, safeYt, safeLang, safeDecode, jsonLd,
+  SITE, NAME, NAME_FULL, OFFICIAL_PRE, FULL_NAME, ROLE, OFFICIAL_NAME, YT_CHANNEL, TG_CHANNEL, LINKS, CONTACT_EMAIL, tsKey, hasContact, SECTIONS, COVER, COVER_PALETTE, PAGE, MAXQ, ROSHAN,
+  state, byId, seriesById, secById, ic, brand, esc, fmtNum, count, itemKind, fmtYear, ldate, dur, isoDur, hours, dg, cleanQuery, oneOf, safeUrl, safeYt, safeLang, safeDecode, jsonLd,
   DOCS, SCHEDULE, todayRiyadh, kindIcon, useLabel, label, mainTitle, fullTitle, secOfSeries, secOfLesson, seriesOrder, lang, thumb, STAR, match, sectionCount, visible, isFlat, seriesIn, href, fmtDate,
 } from "./core.js";
 
@@ -92,7 +92,7 @@ export const ogTitle = p => p.title.endsWith(SITE_SUFFIX) ? p.title.slice(0, -SI
 function home() {
   const DB = state.DB, vis = visible();
   const top = DB.series.slice().sort((a, b) => b.count - a.count).slice(0, 8);
-  const latest = DB.lessons.filter(l => l.date).slice(0, 8), f = latest[0], fs = f && seriesById[f.series];
+  const recent = DB.lessons.filter(l => l.date).slice(0, 9), f = recent[0], latest = recent.slice(1), fs = f && seriesById[f.series];
   const bio = state.bio;
   const hours_ = Math.floor(DB.lessons.reduce((a, l) => a + (l.duration || 0), 0) / 36e4) * 100;
   const feat = f ? `<a class="feat" href="${href.lesson(f.id)}">${art(fs)}<span class="feat-b"><span class="k">أحدث درس${ldate(f) ? "، " + ldate(f) : ""}</span>
@@ -349,6 +349,29 @@ function announcementsPage() {
   });
 }
 
+/* «تواصل معنا» (owner 2026-11-18): an anonymous form, no mail app. worker/contact.js checks Turnstile, saves it in D1 and emails
+   info@h-haddadi.com. Works without JavaScript as a plain form post (the Worker redirects back with ?s=<result>); app.js sends it with fetch. */
+export const CONTACT_MSG = { sent: "وصلت رسالتك، جزاك الله خيرًا. سنرد عليك إن تركت وسيلة للتواصل.", body: "اكتب رسالتك أولًا (خمسة أحرف على الأقل).",
+  captcha: "لم يكتمل التحقق من أنك لست برنامجًا آليًا. أعد المحاولة.", down: "تعذّر إرسال الرسالة الآن. حاول مرة أخرى بعد قليل.", bad: "تعذّر إرسال الرسالة. حاول مرة أخرى." };
+function contactPage(params) {
+  const c = crumbs([{ t: "تواصل معنا" }]), s = params.get("s"), msg = CONTACT_MSG[s] ? CONTACT_MSG[s] : "";
+  return mkPage({
+    nav: "contact", path: href.contact(),
+    band: pageBand(c, `<span class="sec-ic" aria-hidden="true">${ic("mail", 34)}</span>`, "تواصل معنا", "اكتب رسالتك إلى القائمين على الموقع. لا يلزمك ذكر اسمك ولا بريدك، ولا نحفظ عنك شيئًا سوى ما تكتبه."),
+    html: `<form class="cform" id="cform" method="post" action="/api/contact" novalidate>
+      <p class="cform-st${s === "sent" ? " ok" : msg ? " err" : ""}" id="cform-st" role="status" aria-live="polite">${esc(msg)}</p>
+      <div class="fld"><label for="cf-name">الاسم <small>(اختياري)</small></label><input id="cf-name" name="name" type="text" maxlength="80" autocomplete="name"></div>
+      <div class="fld"><label for="cf-reply">البريد أو رقم الجوال <small>(اختياري، إن أردت أن نرد عليك)</small></label><input id="cf-reply" name="reply" type="text" maxlength="120" dir="auto" inputmode="email" autocomplete="email"></div>
+      <div class="fld"><label for="cf-body">الرسالة</label><textarea id="cf-body" name="body" rows="7" maxlength="4000" required aria-required="true" aria-describedby="cf-body-h"></textarea><small id="cf-body-h" class="hint">من خمسة أحرف إلى ٤٬٠٠٠ حرف.</small></div>
+      <div class="hp" aria-hidden="true"><label for="cf-web">اترك هذا الحقل فارغًا</label><input id="cf-web" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+      <div class="cf-ts" id="cf-ts" data-sitekey="${esc(tsKey())}"></div>
+      <noscript><p class="hint">يحتاج التحقق من أنك لست برنامجًا آليًا إلى تفعيل JavaScript.</p></noscript>
+      <button type="submit" class="btn cform-go" id="cform-go">${ic("send", 19)}<span>إرسال الرسالة</span></button>
+    </form>`,
+    title: withSite("تواصل معنا"), description: `راسل القائمين على موقع ${NAME_FULL}، دون الحاجة إلى بريد إلكتروني.`, jsonld: [c.ld], wire: { t: "contact" },
+  });
+}
+
 /* The weekly schedule (SCHEDULE in core.js): the book links to its series, the number to the latest lesson given at that mosque.
    «جديد» marks a series whose latest lesson is under NEW_DAYS days old; app.js hides it once that date passes (pages are pre-rendered). */
 const NEW_DAYS = 7;
@@ -466,6 +489,7 @@ export function resolve(pathname, params = new URLSearchParams()) {
   else if (segs.length === 1 && a === "schedule" && SCHEDULE.items.length) p = schedulePage();
   else if (segs.length === 1 && a === "tazkiyat" && hasDocs()) p = documentsPage();
   else if (segs.length === 1 && a === "search") p = searchPage(params);
+  else if (segs.length === 1 && a === "contact" && hasContact()) p = contactPage(params);
   else if (segs.length === 2 && a === "section") p = sectionPage(b);
   else if (segs.length === 2 && a === "series") p = seriesPage(b);
   else if (segs.length === 2 && a === "lesson") p = lessonPage(b);
@@ -496,7 +520,7 @@ export function chromeTop(nav) {
   <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="القائمة الرئيسية" aria-hidden="true">
     <div class="drawer-h"><span>القائمة</span><button type="button" class="icon-btn" id="drawer-x" aria-label="إغلاق">${ic("x", 21)}</button></div>
     <nav class="drawer-nav" id="drawer-nav" aria-label="القائمة">${drawerItems.map(x => `<a href="${x.h}" data-nav="${x.id}"${cur(nav, x.id)}>${ic(x.i, 21)}<span>${x.t}</span>${x.n ? `<small>${fmtNum(x.n)}</small>` : ""}</a>`).join("")}</nav>
-    <div class="drawer-f">${newTab(LINKS.slice(0, 3).map(x => `<a href="${x.h}" target="_blank" rel="noopener">${ic("external-link", 17)} ${x.t}</a>`).join(""))}</div>
+    <div class="drawer-f">${newTab(LINKS.map(x => `<a href="${x.h}" target="_blank" rel="noopener">${brand(x.b, 18)} ${x.t}</a>`).join(""))}${hasContact() ? `<a href="${href.contact()}">${ic("mail", 18)} تواصل معنا</a>` : ""}</div>
   </aside>`;
 }
 /* The docked player: one <audio> for the whole visit, so listening carries on while the visitor browses. Filled by app.js. */
@@ -516,11 +540,24 @@ export function chromeBottom(nav) {
   return `${dock()}<nav class="bottom" id="bottom" aria-label="التنقل السريع">${items.map(x => `<a class="bn${x.mid ? " mid" : ""}" href="${x.h}" data-nav="${x.id}"${nav === x.id ? ' aria-current="page"' : ""}><span class="bn-i">${ic(x.i, x.mid ? 24 : 22)}</span><span>${x.t}</span></a>`).join("")}
     <a class="bn" href="#" role="button" data-nav="more" id="bn-more"><span class="bn-i">${ic("menu", 22)}</span><span>المزيد</span></a></nav>`;
 }
-export const footer = () => `<footer class="foot"><div class="wrap">
-  <p class="foot-official"><span class="mark" aria-hidden="true">${STAR}</span><strong>${esc(OFFICIAL_NAME)} حفظه الله ورعاه</strong>${state.bio ? `، <a href="${href.about()}">عن الشيخ</a>` : ""}${SCHEDULE.items.length ? `، <a href="${href.schedule()}">جدول الدروس</a>` : ""}${state.ann.length ? `، <a href="${href.announcements()}">إعلانات الدروس</a>` : ""}${hasDocs() ? `، <a href="${href.documents()}">التزكيات والوصايا</a>` : ""}</p>
-  <p>المواد الصوتية مأخوذة من <a href="${TG_CHANNEL}" target="_blank" rel="noopener">قناة الشيخ على تيليجرام</a>.</p>
-  <p class="foot-links">${newTab(LINKS.map(x => `<a href="${x.h}" target="_blank" rel="noopener">${x.t}</a>`).join(""))}</p>
-  <p class="foot-up">آخر تحديث للفهرس: ${fmtDate(state.DB.updated)}</p></div></footer>`;
+/* Social links as icon buttons: the official Telegram and WhatsApp marks (owner 2026-11-18). Contact is the «تواصل معنا» button beside them. */
+export const socials = () => `<ul class="soc" role="list">${LINKS.map(x => `<li><a class="soc-${x.b}" href="${x.h}" target="_blank" rel="noopener" title="${esc(x.t)}" aria-label="${esc(x.t)} (يفتح في نافذة جديدة)">${brand(x.b, 22)}</a></li>`).join("")}</ul>`;
+export function footer() {
+  return `<footer class="foot"><div class="wrap foot-in">
+  <div class="foot-brand">
+    <a class="foot-id" href="/"><span class="mark" aria-hidden="true">${STAR}</span><span><small>${esc(OFFICIAL_PRE)}</small><strong>${esc(FULL_NAME)}</strong><span class="hd">حفظه الله ورعاه</span></span></a>
+    <p class="foot-tag">دروس ومحاضرات وخطب الشيخ في جدة، مرتبة في سلاسل يسهل الاستماع إليها ومتابعتها.</p>
+  </div>
+  <div class="foot-reach">
+    ${socials()}
+    ${hasContact() ? `<a class="foot-cta" href="${href.contact()}">${ic("mail", 19)}<span>تواصل معنا</span></a>` : ""}
+  </div>
+  </div>
+  <div class="foot-bar"><div class="wrap foot-bar-in">
+    <p>التسجيلات من قناة الشيخ على تيليجرام · آخر تحديث للفهرس: ${fmtDate(state.DB.updated)}</p>
+    <a class="foot-top" href="#app">${ic("arrow-up", 17)}<span>أعلى الصفحة</span></a>
+  </div></div></footer>`;
+}
 
 export function headHtml(p) {
   const url = SITE + p.path;
