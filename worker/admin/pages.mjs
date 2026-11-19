@@ -1,6 +1,7 @@
-/* Admin pages (phase B2): dashboard, contact messages, series (read-only, from the published library), users, audit log. */
+/* Admin pages: dashboard, contact messages, series list, users, audit log (the content pages of phase B3 are in content_pages.mjs). */
 import { esc, layout, num, stamp, hijriOf } from "./html.mjs";
 import { ROLE_AR, can, manageable } from "./roles.mjs";
+import { pending } from "./publish.mjs";
 
 const all = (db, sql, ...a) => db.prepare(sql).bind(...a).all().then(r => r.results);
 const one = (db, sql, ...a) => db.prepare(sql).bind(...a).first();
@@ -26,12 +27,17 @@ export async function dashboard(env, user) {
   const hosted = lib.lessons.filter(l => l.src).length;
   const msgs = can(user.role, "messages.view") ? await one(db, "SELECT SUM(status='new') n, COUNT(*) c FROM messages") : null;
   const recent = can(user.role, "audit.view") ? await all(db, "SELECT at, actor, action, entity, entity_id FROM audit_log ORDER BY id DESC LIMIT 8") : [];
+  const since = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
+  const plays = await one(db, "SELECT COALESCE(SUM(n),0) n FROM stats_daily WHERE event='play' AND day >= ?", since).catch(() => null);
+  const waiting = can(user.role, "content.publish") ? await pending(db).catch(() => null) : null;
   const cards = [
     msgs && [msgs.n || 0, "رسالة جديدة", "/messages?status=new"],
+    waiting && waiting.count && [waiting.count, "تغيير ينتظر النشر", "/publish"],
+    plays && [plays.n, "استماع في آخر ٣٠ يومًا", "/series"],
     [lib.lessons.length, "درس منشور", "/series"], [hosted, "درس بصوت على الموقع", "/series"], [lib.series.length, "سلسلة", "/series"],
   ].filter(Boolean).map(([n, l, h]) => `<a class="card" href="/admin${h}"><b>${num(n)}</b><span>${l}</span></a>`).join("");
   return layout({ title: "الرئيسية", user, path: "/", body: `<div class="cards">${cards}</div>${recent.length ? `<h2>آخر العمليات</h2>${auditTable(recent)}` : ""}
-<p class="muted">آخر تحديث للفهرس: ${esc(hijriOf("", String(lib.updated || "").slice(0, 10)))}. رفع الدروس وتعديلها يأتي في المراحل التالية.</p>` });
+<p class="muted">آخر تحديث للفهرس: ${esc(hijriOf("", String(lib.updated || "").slice(0, 10)))}. لرفع صوت درس أو إضافة درس افتح السلسلة من «السلاسل».</p>` });
 }
 
 /* ---- contact messages ---- */
@@ -86,8 +92,8 @@ export async function seriesList(env, user) {
   for (const l of lib.lessons) { const b = by[l.series] || (by[l.series] = { n: 0, h: 0, last: "" }); b.n++; if (l.src) b.h++; if ((l.date || "") > b.last) b.last = l.date || ""; }
   const rows = lib.series.map(s => ({ ...s, ...(by[s.id] || { n: 0, h: 0, last: "" }) })).sort((a, b) => b.n - a.n);
   return layout({ title: "السلاسل", user, path: "/series", body: region("السلاسل", `<table><thead><tr><th>السلسلة</th><th>الدروس</th><th>بصوت على الموقع</th><th>آخر درس</th></tr></thead><tbody>${
-    rows.map(s => `<tr><td><a href="https://h-haddadi.com/series/${encodeURIComponent(s.id)}/">${esc(s.title)}</a></td><td>${num(s.n)}</td><td>${num(s.h)}</td><td>${s.last ? esc(hijriOf("", s.last)) : "—"}</td></tr>`).join("")}</tbody></table>`) +
-    `<p class="muted">عرض فقط في هذه المرحلة. تعديل العناوين والإخفاء والترتيب ورفع الدروس يأتي في المراحل التالية.</p>` });
+    rows.map(s => `<tr><td><a href="/admin/series/${encodeURIComponent(s.id)}">${esc(s.title)}</a></td><td>${num(s.n)}</td><td>${num(s.h)}</td><td>${s.last ? esc(hijriOf("", s.last)) : "—"}</td></tr>`).join("")}</tbody></table>`) +
+    `<p class="muted">افتح سلسلة لرفع صوت دروسها أو إضافة درس. تعديل العناوين والإخفاء والترتيب يأتي في المرحلة التالية.</p>` });
 }
 
 /* ---- users ---- */

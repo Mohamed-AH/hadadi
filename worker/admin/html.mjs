@@ -21,6 +21,7 @@ const NAV = [
   ["/", "الرئيسية", "view"],
   ["/messages", "الرسائل", "messages.view"],
   ["/series", "السلاسل", "view"],
+  ["/publish", "النشر", "content.publish"],
   ["/users", "المستخدمون", "users.editors"],
   ["/audit", "السجل", "audit.view"],
 ];
@@ -30,14 +31,18 @@ export const FLASH = {
   invalid: "البيانات غير صحيحة.", exists: "هذا البريد مسجّل من قبل.", last_super: "لا يمكن ترك اللوحة بلا مدير عام فعّال.", unknown: "غير موجود.",
   not_yours: "لا تملك صلاحية تعديل هذا المستخدم.", self: "لا يمكنك تغيير دورك أو إيقاف نفسك من هنا.",
   status_saved: "تم تغيير حالة الرسالة.", deleted: "تم حذف الرسالة.",
+  audio_added: "تم رفع الصوت. يظهر في الموقع بعد النشر.", lesson_added: "تمت إضافة الدرس. يظهر في الموقع بعد النشر.",
+  audio_removed: "أُلغي الصوت المرفوع. يُطبَّق في الموقع بعد النشر.", lesson_removed: "حُذف الدرس. يُطبَّق في الموقع بعد النشر.",
+  published: "بدأ النشر. يظهر التغيير في الموقع بعد دقيقتين إلى ثلاث.", nothing: "لا توجد تغييرات للنشر.",
+  no_hook: "لم يُضبط رابط النشر (DEPLOY_HOOK) بعد.", hook_failed: "لم يقبل Cloudflare طلب النشر. لم يتغيّر شيء؛ حاول بعد قليل.",
 };
 
-export function layout({ title, user, path, body, flash }) {
+export function layout({ title, user, path, body, flash, scripts }) {
   const nav = NAV.filter(([, , perm]) => can(user.role, perm))
     .map(([href, label]) => `<a href="/admin${href === "/" ? "/" : href}"${(href === "/" ? path === "/" : path.startsWith(href)) ? ' aria-current="page"' : ""}>${label}</a>`).join("");
   const f = flash && FLASH[flash.code] ? `<p class="flash ${flash.kind === "ok" ? "ok" : "err"}" role="status">${esc(FLASH[flash.code])}</p>` : "";
   return `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><title>${esc(title)} — لوحة التحرير</title><link rel="icon" href="https://h-haddadi.com/favicon.svg"><link rel="stylesheet" href="/admin/admin.css"></head><body>
+<meta name="robots" content="noindex,nofollow"><title>${esc(title)} — لوحة التحرير</title><link rel="icon" href="https://h-haddadi.com/favicon.svg"><link rel="stylesheet" href="/admin/admin.css">${scripts ? '<script src="/admin/admin.js" defer></script>' : ""}</head><body>
 <a class="skip" href="#main">تخطَّ إلى المحتوى</a>
 <header class="top"><div class="brand">لوحة التحرير <small>موقع الشيخ حسن بن علي حدادي</small></div>
 <nav aria-label="التنقل">${nav}</nav>
@@ -77,5 +82,8 @@ button.danger{background:var(--card);color:var(--bad);border-color:var(--bad)}
 .meta{display:grid;grid-template-columns:max-content 1fr;gap:.2rem 1rem;margin:0 0 1rem}.meta dt{color:var(--mute)}.meta dd{margin:0;overflow-wrap:anywhere}
 .filters{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1rem}.filters a{padding:.2rem .8rem;border:1px solid var(--line);border-radius:6px;text-decoration:none;background:var(--card)}.filters a[aria-current]{border-color:var(--clay);color:var(--clay);font-weight:700}
 .muted{color:var(--mute)}.pager{display:flex;gap:1rem;margin:1rem 0}code,.ltr{direction:ltr;unicode-bidi:embed}label{display:inline-block;margin:.2rem .6rem .2rem 0}
+.tag-wait{color:var(--bad);border-color:var(--bad)}a.btnlink{display:inline-block;padding:.35rem .9rem;border-radius:6px;background:var(--night);color:var(--brass);text-decoration:none}
+input.wide{width:min(100%,38rem)}input.num{width:5rem}input.num.md{width:6.5rem}fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 1rem;padding:.4rem .9rem .7rem}
+#prog{font-weight:700}input[type=file]{max-width:100%}.scroll{position:relative}form.inline button{padding:.15rem .6rem;font-size:.9rem}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 `;

@@ -15,7 +15,7 @@
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page",
     "binding": "ASSETS",
-    "run_worker_first": ["/dl/*", "/health", "/bot", "/api/contact", "/admin", "/admin/*", "/"]
+    "run_worker_first": ["/dl/*", "/health", "/bot", "/api/contact", "/api/event", "/api/published", "/admin", "/admin/*", "/"]
   },
   // Workers Logs (free plan: 200,000 log lines a day, kept 3 days): the bot's and the timer's errors show under Observability.
   "observability": { "enabled": true },
@@ -25,6 +25,8 @@
   // Email Workers: worker/contact.js mails each message. It can only reach a VERIFIED destination address of Email Routing,
   // so it sends to the variable MAIL_TO (the team inbox, set in the dashboard, not committed) and falls back to info@h-haddadi.com.
   "send_email": [{ "name": "MAIL" }],
+  // Publish (worker/admin/publish.mjs): the secret DEPLOY_HOOK = this Worker's Workers Builds deploy hook URL (Settings > Builds >
+  // Deploy Hooks, branch main). Set it with «Add variable > Secret» in the dashboard; never commit it.
   // Admin portal on admin.h-haddadi.com (custom domain on this Worker; worker/admin/). Cloudflare Access application «hadadi-admin»:
   // the team domain and its AUD tag are not secrets; the portal checks both on every request.
   "vars": {

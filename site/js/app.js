@@ -45,6 +45,19 @@ function route(initial) {
   }
 }
 addEventListener("popstate", () => route(false));
+/* Anonymous counters (worker/stats.js): a «play» after 30 s of real listening, once per lesson per page visit, and a download click.
+   No identifier of any kind is sent: only the lesson id and the event. */
+function track(id, e) {
+  try {
+    const body = JSON.stringify({ id, e });
+    if (navigator.sendBeacon && navigator.sendBeacon("/api/event", new Blob([body], { type: "application/json" }))) return;
+    fetch("/api/event", { method: "POST", headers: { "content-type": "application/json" }, body, keepalive: true }).catch(() => {});
+  } catch {}
+}
+document.addEventListener("click", e => {
+  const d = e.target.closest("a[download]"), lp = document.getElementById("lp");
+  if (d && lp && lp.dataset.id) track(lp.dataset.id, "download");
+}, true);
 document.addEventListener("click", e => {
   const a = e.target.closest("a[href]");
   if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -313,7 +326,16 @@ function paint() {
   lp.querySelectorAll(".speeds button").forEach(b => { const on = +b.dataset.v === P.rate; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
 }
 let lastSave = 0;
-aud.addEventListener("timeupdate", () => { paint(); if (Date.now() - lastSave > 5000) { lastSave = Date.now(); remember(); } });
+const heard = { id: "", s: 0, at: 0 }, counted = new Set();
+function listened() {   // seconds really played (seeking does not count), per lesson; 30 s = one «play»
+  if (!P.l || aud.paused) return;
+  const t = aud.currentTime || 0;
+  if (heard.id !== P.l.id) { heard.id = P.l.id; heard.s = 0; heard.at = t; return; }
+  const d = t - heard.at; heard.at = t;
+  if (d > 0 && d < 3) heard.s += d;
+  if (heard.s >= 30 && !counted.has(P.l.id)) { counted.add(P.l.id); track(P.l.id, "play"); }
+}
+aud.addEventListener("timeupdate", () => { paint(); listened(); if (Date.now() - lastSave > 5000) { lastSave = Date.now(); remember(); } });
 ["play", "pause", "loadedmetadata", "ratechange"].forEach(ev => aud.addEventListener(ev, paint));
 aud.addEventListener("pause", () => remember(true));
 aud.addEventListener("ended", () => {

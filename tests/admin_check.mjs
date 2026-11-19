@@ -11,7 +11,7 @@ const ok = (c, m) => { if (c) pass++; else { fail++; console.log("FAIL", m); } }
 
 /* ---- D1 on SQLite ---- */
 const sql = new DatabaseSync(":memory:");
-for (const f of ["0001_messages.sql", "0002_admin.sql"]) sql.exec(fs.readFileSync(new URL(`../db/migrations/${f}`, import.meta.url), "utf8"));
+for (const f of ["0001_messages.sql", "0002_admin.sql", "0003_content.sql"]) sql.exec(fs.readFileSync(new URL(`../db/migrations/${f}`, import.meta.url), "utf8"));
 const stmt = (q, a = []) => ({ bind: (...b) => stmt(q, b), first: async () => sql.prepare(q).get(...a) ?? null, all: async () => ({ results: sql.prepare(q).all(...a) }),
   run: async () => { const r = sql.prepare(q).run(...a); return { meta: { last_row_id: Number(r.lastInsertRowid), changes: r.changes } }; }, _run() { return sql.prepare(q).run(...a); } });
 const DB = { prepare: q => stmt(q), batch: async list => { sql.exec("BEGIN"); try { for (const s of list) s._run(); sql.exec("COMMIT"); } catch (e) { sql.exec("ROLLBACK"); throw e; } return []; } };
@@ -90,7 +90,7 @@ async function post(path, email, form, { origin = H } = {}) {
 { const { loc } = await post("/admin/messages/delete", "boss@x.org", { id: "2", confirm: "1" }); ok(loc.includes("ok=deleted") && sql.prepare("SELECT COUNT(*) c FROM messages").get().c === 1, "super deletes with confirmation"); }
 { const { t } = await get("/admin/messages?status=answered", "adm@x.org"); ok(t.includes("عبدالله") && t.includes('aria-current="true"'), "filter by status"); }
 // series (read-only, from the published library)
-{ const { t } = await get("/admin/series", "ed@x.org"); ok(t.includes("خطب الجمعة والعيدين") && t.includes("https://h-haddadi.com/series/khutab/"), "series list from library.json"); }
+{ const { t } = await get("/admin/series", "ed@x.org"); ok(t.includes("خطب الجمعة والعيدين") && t.includes(`href="/admin/series/khutab"`), "series list from library.json"); }
 // users: super manages all, admin only editors, last super guarded, no self-change
 { const { loc } = await post("/admin/users/add", "adm@x.org", { email: "new-admin@x.org", role: "admin" }); ok(loc.includes("err=not_yours"), "admin cannot add an admin"); }
 { const { loc } = await post("/admin/users/add", "adm@x.org", { email: "New-Ed@x.org", role: "editor", name: "محرر" }); ok(loc.includes("ok=added") && sql.prepare("SELECT role FROM users WHERE email='new-ed@x.org'").get()?.role === "editor", "admin adds an editor (lower-cased)"); }
