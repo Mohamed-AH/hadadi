@@ -1,5 +1,5 @@
 /* Admin portal HTML: server-rendered Arabic RTL, no inline script or style (strict CSP), the site's Roshan colours. */
-import { ROLE_AR, can } from "./roles.mjs";
+import { can } from "./roles.mjs";
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const AR = s => String(s).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
@@ -41,7 +41,7 @@ export function layout({ title, user, path, body, flash }) {
 <a class="skip" href="#main">تخطَّ إلى المحتوى</a>
 <header class="top"><div class="brand">لوحة التحرير <small>موقع الشيخ حسن بن علي حدادي</small></div>
 <nav aria-label="التنقل">${nav}</nav>
-<div class="who"><span dir="ltr">${esc(user.email)}</span> · ${esc(ROLE_AR[user.role] || user.role)} · <a href="https://h-haddadi.com/">الموقع</a> · <a href="/cdn-cgi/access/logout">خروج</a></div></header>
+<div class="who"><span dir="ltr">${esc(user.email)}</span> · <a href="https://h-haddadi.com/">الموقع</a> · <a href="/cdn-cgi/access/logout">خروج</a></div></header>
 <main id="main" tabindex="-1"><h1>${esc(title)}</h1>${f}${body}</main></body></html>`;
 }
 
