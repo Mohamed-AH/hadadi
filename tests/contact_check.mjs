@@ -30,6 +30,9 @@ const good = { name: "عبدالله", reply: "0500000000", body: "السلام 
   const raw = sent[0].raw; ok(/Content-Transfer-Encoding: base64/.test(raw) && /charset=UTF-8/.test(raw), "MIME headers");
   const b = raw.split("\r\n\r\n")[1].replace(/\r\n/g, ""); const text = new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0)));
   ok(text.includes(good.body) && text.includes("0500000000") && text.includes("رقم الرسالة: 1"), "email body has the message"); }
+// MAIL_TO (the verified team inbox) wins over info@
+{ const { env, sent } = fakeEnv(); env.MAIL_TO = "team@example.org"; await contact(req(good), env, { fetcher: ts(true), Email });
+  ok(sent[0].to === "team@example.org" && /^To: <team@example.org>/m.test(sent[0].raw), "MAIL_TO used"); }
 // no IP or user agent stored
 { const { env, rows } = fakeEnv(); await contact(req(good), env, { fetcher: ts(true), Email }); ok(Object.keys(rows[0]).join() === "id,at,name,reply,body,mailed", "only typed fields stored"); }
 // anonymous: only the message

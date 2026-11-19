@@ -20,6 +20,11 @@
   // Workers Logs (free plan: 200,000 log lines a day, kept 3 days): the bot's and the timer's errors show under Observability.
   "observability": { "enabled": true },
   "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "hadadi-media" }],
+  // D1 (owner created 2026-11-19): «تواصل معنا» messages now, the admin portal later. The id is not a secret.
+  "d1_databases": [{ "binding": "DB", "database_name": "hadadi", "database_id": "dc0c99fe-4f8b-4c06-ade6-87b3af72a170", "migrations_dir": "db/migrations" }],
+  // Email Workers: worker/contact.js mails each message. It can only reach a VERIFIED destination address of Email Routing,
+  // so it sends to the variable MAIL_TO (the team inbox, set in the dashboard, not committed) and falls back to info@h-haddadi.com.
+  "send_email": [{ "name": "MAIL" }],
   // Timer: none yet. Keep in step with JOBS in worker/index.js (the Jabri site uses it for its announcements bot and YouTube sync).
   "triggers": { "crons": [] },
   // Branch previews (Workers Builds runs `npx wrangler preview` for non-production branches); empty = same settings as production.

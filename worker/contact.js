@@ -27,10 +27,10 @@ export async function verifyTurnstile(token, env, fetcher = fetch) {
 
 const b64 = s => { const b = new TextEncoder().encode(s); let t = ""; for (const x of b) t += String.fromCharCode(x); return btoa(t).replace(/.{76}/g, "$&\r\n"); };
 const encWord = s => `=?UTF-8?B?${b64(s).replace(/\r\n/g, "")}?=`;
-export function mime(m, id, now = new Date()) {
+export function mime(m, id, now = new Date(), to = TO) {
   const text = [`رسالة جديدة من نموذج «تواصل معنا» في h-haddadi.com`, ``, `الاسم: ${m.name || "—"}`, `للرد: ${m.reply || "— (لم يترك وسيلة للرد)"}`, ``, m.body, ``,
     `—`, `رقم الرسالة: ${id || "—"}`].join("\n");
-  return [`From: ${encWord("موقع الشيخ حسن حدادي")} <${FROM}>`, `To: <${TO}>`, `Subject: ${encWord("رسالة من الموقع" + (m.name ? ": " + m.name : ""))}`,
+  return [`From: ${encWord("موقع الشيخ حسن حدادي")} <${FROM}>`, `To: <${to}>`, `Subject: ${encWord("رسالة من الموقع" + (m.name ? ": " + m.name : ""))}`,
     `Date: ${now.toUTCString()}`, `Message-ID: <contact-${id || now.getTime()}-${Math.random().toString(36).slice(2)}@h-haddadi.com>`,
     `MIME-Version: 1.0`, `Content-Type: text/plain; charset=UTF-8`, `Content-Transfer-Encoding: base64`, ``, b64(text)].join("\r\n");
 }
@@ -61,7 +61,8 @@ export async function contact(req, env, { fetcher = fetch, Email = null } = {}) 
   if (env.MAIL) {
     try {
       const EM = Email || (await import("cloudflare:email")).EmailMessage;
-      await env.MAIL.send(new EM(FROM, TO, mime(m, id)));
+      const to = env.MAIL_TO || TO;
+      await env.MAIL.send(new EM(FROM, to, mime(m, id, new Date(), to)));
       mailed = true;
       if (saved && id) await env.DB.prepare("UPDATE messages SET mailed = 1 WHERE id = ?").bind(id).run().catch(() => {});
     } catch (e) { console.log("contact: email failed: " + e.message); }
