@@ -4,6 +4,8 @@
 import { webhook } from "./bot.js";
 import { contact } from "./contact.js";
 import { admin, ADMIN_HOST } from "./admin/index.mjs";
+import { published } from "./admin/publish.mjs";
+import { event } from "./stats.js";
 
 const KEY = /^\/dl\/([0-9a-f]{16})$/;
 const BAD = /[\u0000-\u001f\u007f‎‏‪-‮⁦-⁩/\\:*?"<>|]/g;
@@ -60,6 +62,8 @@ export default {
     if (url.pathname === "/" || url.pathname.startsWith("/admin")) return env.ASSETS.fetch(req);   // the public site: / is only here for the redirect above
     if (url.pathname === "/health") return health(env);
     if (url.pathname === "/api/contact") return contact(req, env);   // the «تواصل معنا» form (worker/contact.js)
+    if (url.pathname === "/api/event") return event(req, env);       // anonymous listening counters (worker/stats.js)
+    if (url.pathname === "/api/published") return published(env);   // the portal's last Publish, read by the Cloudflare build (scripts/portal.mjs)
     if (url.pathname === "/bot") return webhook(req, env, { dispatch });   // the announcements bot (Telegram webhook, worker/bot.js)
     if (!m) return env.ASSETS.fetch(req);
     if (req.method !== "GET" && req.method !== "HEAD") return new Response(null, { status: 405, headers: { allow: "GET, HEAD" } });

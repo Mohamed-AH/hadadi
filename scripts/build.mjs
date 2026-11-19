@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { init, setAnnouncements, applyMedia, mergeLibraries, state, SITE, byId, seriesById, SECTIONS, secById, isFlat, href, SCHEDULE, hasContact } from "../site/js/core.js";
+import { loadPortal, mergePortal } from "./portal.mjs";
 import { resolve, notFoundPage, chromeTop, chromeBottom, footer, headHtml, hasDocs } from "../site/js/views.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -13,8 +14,10 @@ const readJSON = (f, optional = false) => { try { return JSON.parse(fs.readFileS
 
 const t0 = Date.now();
 /* MEDIA_JSON=<file>: build with another media manifest (tests/player_check.mjs uses tests/fixtures/media.json) */
-const MEDIA = process.env.MEDIA_JSON ? JSON.parse(fs.readFileSync(path.resolve(process.env.MEDIA_JSON), "utf8")) : readJSON("data/media.json", true);
-const ALL = mergeLibraries(readJSON("data/library.json", true), readJSON("data/makkah.json", true));   // library.json + lessons imported from makkahscholars.org
+const MEDIA0 = process.env.MEDIA_JSON ? JSON.parse(fs.readFileSync(path.resolve(process.env.MEDIA_JSON), "utf8")) : readJSON("data/media.json", true);
+const ALL0 = mergeLibraries(readJSON("data/library.json", true), readJSON("data/makkah.json", true));   // library.json + lessons imported from makkahscholars.org
+/* the admin portal's published uploads and added lessons (scripts/portal.mjs: on Cloudflare's build, from /api/published) */
+const { lib: ALL, media: MEDIA } = mergePortal(ALL0, MEDIA0, await loadPortal());
 /* Lessons without hosted audio stay published (hadadi owner 2026-11-17: keep every lesson while the audio is uploaded; a hosted
    lesson gets the player, the rest keep their Telegram button). HIDE_UNHOSTED=1 switches to the Jabri rule: only lessons whose
    audio we host are published, and a series with none hosted waits. MEDIA_JSON test builds always keep every lesson. */

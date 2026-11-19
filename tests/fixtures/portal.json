@@ -1,0 +1,27 @@
+{
+ "v": 1,
+ "id": 7,
+ "at": "2026-11-19 10:00:00",
+ "media": {
+  "https://t.me/h_haddadi7/14": {
+   "url": "https://media.h-haddadi.com/audio/0123456789abcdef.m4a",
+   "key": "audio/0123456789abcdef.m4a",
+   "size": 100,
+   "duration": 1234,
+   "lesson": "h_haddadi7-14"
+  }
+ },
+ "lessons": [
+  {
+   "id": "p-00aa11bb22",
+   "title": "درس مضاف من اللوحة",
+   "series": "lectures",
+   "kind": "audio",
+   "src": "https://media.h-haddadi.com/audio/fedcba9876543210.m4a",
+   "tg": "",
+   "date": "2026-11-19",
+   "hd": "1448-5-28",
+   "duration": 600
+  }
+ ]
+}

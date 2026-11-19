@@ -7,10 +7,14 @@ import { can, ROLES, manageable } from "./roles.mjs";
 import { CSS, message, page } from "./html.mjs";
 import { audit, auditStmt } from "./audit.mjs";
 import * as P from "./pages.mjs";
+import * as C from "./content_pages.mjs";
+import { JS } from "./client.mjs";
+import { handleUpload, attachAudio, addLesson, removeAudio, removeLesson, json } from "./upload.mjs";
+import { publish } from "./publish.mjs";
 
 export const ADMIN_HOST = /^admin\./;
 const HEADERS = {
-  "content-security-policy": "default-src 'none'; style-src 'self'; img-src 'self' https://h-haddadi.com data:; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
+  "content-security-policy": "default-src 'none'; script-src 'self'; connect-src 'self'; media-src blob:; style-src 'self'; img-src 'self' https://h-haddadi.com data:; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
   "x-content-type-options": "nosniff", "referrer-policy": "no-referrer", "cache-control": "no-store", "x-robots-tag": "noindex, nofollow",
   "cross-origin-opener-policy": "same-origin", "x-frame-options": "DENY", "strict-transport-security": "max-age=15552000",
 };
@@ -37,6 +41,16 @@ async function post(request, env, user, path) {
     if (!before) return redirect("/messages", "unknown", "err");
     await db.batch([db.prepare("DELETE FROM messages WHERE id=?").bind(id), auditStmt(db, user.email, "message.delete", "message", String(id), before, null)]);
     return redirect("/messages", "deleted", "ok");
+  }
+  if ((path === "/audio/remove" || path === "/lessons/remove") && can(user.role, "content.edit")) {
+    const id = clean(f.get("id"), 80), series = clean(f.get("series"), 80);
+    const back = series ? `/series/${encodeURIComponent(series)}` : "/series";
+    const okd = path === "/audio/remove" ? await removeAudio(db, user, id) : await removeLesson(db, user, id);
+    return okd ? redirect(back, path === "/audio/remove" ? "audio_removed" : "lesson_removed", "ok") : redirect(back, "unknown", "err");
+  }
+  if (path === "/publish" && can(user.role, "content.publish")) {
+    const r = await publish(env, user);
+    return redirect("/publish", r, r === "published" || r === "nothing" ? "ok" : "err");
   }
   const allowed = manageable(user.role);
   if (!allowed.length) return null;
@@ -66,6 +80,7 @@ export async function admin(request, env) {
   try {
     const url = new URL(request.url), path = url.pathname.replace(/^\/admin(?=\/|$)/, "").replace(/\/+$/, "") || "/";
     if (path === "/admin.css") return done(new Response(CSS, { headers: { "content-type": "text/css; charset=utf-8" } }));
+    if (path === "/admin.js") return done(new Response(JS, { headers: { "content-type": "text/javascript; charset=utf-8" } }));
     if (!env.DB) return done(message("غير مُهيّأ", "قاعدة البيانات غير مربوطة.", 503));
     let who;
     try { who = await identify(request, env); }
@@ -77,11 +92,20 @@ export async function admin(request, env) {
     if (!row || !row.active) return done(message("لا تملك صلاحية", "هذا البريد غير مسجّل في لوحة التحرير. تواصل مع المدير العام.", 403));
     const user = { email: row.email, role: row.role, name: row.name };
 
-    if (request.method === "POST") {                       // same-origin forms only
+    if (request.method === "POST" || request.method === "PUT") {   // same-origin forms and upload calls only
       const site = request.headers.get("sec-fetch-site"), origin = request.headers.get("origin");
       let same = site === "same-origin";
       if (!same && origin) { try { same = new URL(origin).host === url.host; } catch { /* refuse */ } }
       if (!same) return done(message("مرفوض", "طلب من مصدر غير مسموح.", 403));
+      if (path.startsWith("/api/")) {                        // JSON: the upload forms (client.mjs)
+        if (!can(user.role, "content.edit")) return done(json({ error: "لا تملك صلاحية الرفع" }, 403));
+        const u = await handleUpload(request, env, user, path, url);
+        if (u) return done(u);
+        if (request.method === "POST" && path === "/api/audio") return done(await attachAudio(request, env, user, await P.library(env)));
+        if (request.method === "POST" && path === "/api/lessons") return done(await addLesson(request, env, user, await P.library(env)));
+        return done(json({ error: "غير موجود" }, 404));
+      }
+      if (request.method === "PUT") return done(new Response("Method not allowed", { status: 405 }));
       const r = await post(request, env, user, path);
       return r || done(message("غير متاح", "لا تملك صلاحية هذه العملية.", 403));
     }
@@ -93,6 +117,10 @@ export async function admin(request, env) {
     else if (path === "/messages" && can(user.role, "messages.view")) html = await P.messagesList(env.DB, user, url.searchParams, flash);
     else if ((m = /^\/messages\/(\d{1,9})$/.exec(path)) && can(user.role, "messages.view")) html = await P.messageDetail(env.DB, user, +m[1], flash);
     else if (path === "/series") html = await P.seriesList(env, user);
+    else if ((m = /^\/series\/([\w-]{1,80})$/.exec(path))) html = await C.seriesDetail(env, user, m[1], flash);
+    else if ((m = /^\/series\/([\w-]{1,80})\/new$/.exec(path)) && can(user.role, "content.edit")) html = await C.newLessonPage(env, user, m[1]);
+    else if ((m = /^\/lessons\/([\w-]{1,80})\/audio$/.exec(path)) && can(user.role, "content.edit")) html = await C.audioPage(env, user, m[1]);
+    else if (path === "/publish" && can(user.role, "content.publish")) html = await C.publishPage(env, user, flash);
     else if (path === "/users" && manageable(user.role).length) html = await P.usersPage(env.DB, user, flash);
     else if (path === "/audit" && can(user.role, "audit.view")) html = await P.auditPage(env.DB, user);
     if (!html) return done(message("غير موجود", "الصفحة المطلوبة غير موجودة أو لا تملك صلاحيتها.", 404));
