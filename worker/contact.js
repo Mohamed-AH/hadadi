@@ -27,12 +27,27 @@ export async function verifyTurnstile(token, env, fetcher = fetch) {
 
 const b64 = s => { const b = new TextEncoder().encode(s); let t = ""; for (const x of b) t += String.fromCharCode(x); return btoa(t).replace(/.{76}/g, "$&\r\n"); };
 const encWord = s => `=?UTF-8?B?${b64(s).replace(/\r\n/g, "")}?=`;
+const h = v => String(v).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const EMAIL = /^[^\s@<>"(),;:]+@[^\s@<>"(),;:]+\.[a-z]{2,}$/i;
+/* Plain text + an RTL HTML part (Gmail shows plain Arabic text left-aligned with the punctuation flipped). Reply-To = the visitor's
+   email when they left one, so «رد» in the mail app answers them directly. Every visitor value is escaped (HTML) or base64-encoded. */
 export function mime(m, id, now = new Date(), to = TO) {
-  const text = [`رسالة جديدة من نموذج «تواصل معنا» في h-haddadi.com`, ``, `الاسم: ${m.name || "—"}`, `للرد: ${m.reply || "— (لم يترك وسيلة للرد)"}`, ``, m.body, ``,
+  const reply = m.reply || "— (لم يترك وسيلة للرد)";
+  const text = [`رسالة جديدة من نموذج «تواصل معنا» في h-haddadi.com`, ``, `الاسم: ${m.name || "—"}`, `للرد: ${reply}`, ``, m.body, ``,
     `—`, `رقم الرسالة: ${id || "—"}`].join("\n");
-  return [`From: ${encWord("موقع الشيخ حسن حدادي")} <${FROM}>`, `To: <${to}>`, `Subject: ${encWord("رسالة من الموقع" + (m.name ? ": " + m.name : ""))}`,
+  const row = (k, v) => `<tr><td style="padding:4px 0 4px 16px;color:#6b5846;white-space:nowrap;vertical-align:top">${k}</td><td style="padding:4px 0">${h(v)}</td></tr>`;
+  const html = `<!doctype html><html lang="ar" dir="rtl"><body style="margin:0;padding:24px;background:#f3ece1"><div dir="rtl" style="max-width:640px;margin:0 auto;background:#fffaf2;border:1px solid #e3d5c0;border-radius:8px;padding:24px;font:16px/1.8 Tahoma,Arial,sans-serif;color:#2b2119;text-align:right">
+<p style="margin:0 0 16px;font-weight:bold">رسالة جديدة من نموذج «تواصل معنا» في h-haddadi.com</p>
+<table dir="rtl" style="border-collapse:collapse;margin-bottom:16px">${row("الاسم", m.name || "—")}${row("للرد", reply)}</table>
+<div style="white-space:pre-wrap;border-top:1px solid #e3d5c0;padding-top:16px">${h(m.body)}</div>
+<p style="margin:16px 0 0;color:#6b5846;font-size:13px">رقم الرسالة: ${h(id || "—")}</p></div></body></html>`;
+  const B = "b-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+  return [`From: ${encWord("موقع الشيخ حسن حدادي")} <${FROM}>`, `To: <${to}>`, ...(EMAIL.test(m.reply) ? [`Reply-To: <${m.reply}>`] : []),
+    `Subject: ${encWord("رسالة من الموقع" + (m.name ? ": " + m.name : ""))}`,
     `Date: ${now.toUTCString()}`, `Message-ID: <contact-${id || now.getTime()}-${Math.random().toString(36).slice(2)}@h-haddadi.com>`,
-    `MIME-Version: 1.0`, `Content-Type: text/plain; charset=UTF-8`, `Content-Transfer-Encoding: base64`, ``, b64(text)].join("\r\n");
+    `MIME-Version: 1.0`, `Content-Type: multipart/alternative; boundary="${B}"`, ``,
+    `--${B}`, `Content-Type: text/plain; charset=UTF-8`, `Content-Transfer-Encoding: base64`, ``, b64(text),
+    `--${B}`, `Content-Type: text/html; charset=UTF-8`, `Content-Transfer-Encoding: base64`, ``, b64(html), `--${B}--`, ``].join("\r\n");
 }
 
 const json = (o, status = 200) => new Response(JSON.stringify(o), { status, headers: { "content-type": "application/json", "cache-control": "no-store", "x-content-type-options": "nosniff" } });

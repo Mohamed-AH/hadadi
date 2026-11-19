@@ -16,6 +16,8 @@ function fakeEnv({ db = true, mail = true, secret = "s3cret", dbFails = false, m
   if (mail) env.MAIL = { send: async m => { if (mailFails) throw new Error("mail down"); sent.push(m); } };
   return { env, rows, sent };
 }
+const dec = b => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\r\n/g, "")), c => c.charCodeAt(0)));
+const parts = raw => raw.split(/--b-[^\r\n]*\r\n/).slice(1).map(p => p.split("\r\n\r\n")[1]).filter(Boolean).map(b => dec(b.replace(/\r\n--b-.*$/s, "").trim()));
 class Email { constructor(from, to, raw) { Object.assign(this, { from, to, raw }); } }
 const ts = good => async (url, init) => { ok(url.includes("siteverify"), "turnstile URL"); ok(init.body.get("secret") === "s3cret", "secret sent"); return new Response(JSON.stringify({ success: good && init.body.get("response") === "tok" })); };
 const req = (body, { json = true, origin = "https://h-haddadi.com", method = "POST" } = {}) => new Request("https://h-haddadi.com/api/contact", { method,
@@ -28,7 +30,8 @@ const good = { name: "عبدالله", reply: "0500000000", body: "السلام 
   const j = await r.json(); ok(r.status === 200 && j.ok, "happy path ok"); ok(rows.length === 1 && rows[0].body === good.body && rows[0].mailed === 1, "saved and marked mailed");
   ok(sent.length === 1 && sent[0].to === "info@h-haddadi.com" && sent[0].from === "noreply@h-haddadi.com", "mailed to info@");
   const raw = sent[0].raw; ok(/Content-Transfer-Encoding: base64/.test(raw) && /charset=UTF-8/.test(raw), "MIME headers");
-  const b = raw.split("\r\n\r\n")[1].replace(/\r\n/g, ""); const text = new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0)));
+  const [text, html] = parts(raw);
+  ok(/multipart\/alternative/.test(raw) && html.includes('dir="rtl"') && html.includes(good.body), "RTL HTML part");
   ok(text.includes(good.body) && text.includes("0500000000") && text.includes("رقم الرسالة: 1"), "email body has the message"); }
 // MAIL_TO (the verified team inbox) wins over info@
 { const { env, sent } = fakeEnv(); env.MAIL_TO = "team@example.org"; await contact(req(good), env, { fetcher: ts(true), Email });
@@ -63,6 +66,12 @@ const good = { name: "عبدالله", reply: "0500000000", body: "السلام 
   ok(r.status === 303 && r.headers.get("location") === "https://h-haddadi.com/contact/?s=sent", "form post redirects"); }
 { const { env } = fakeEnv(); const r = await contact(req({ ...good, body: "" }, { json: false }), env, { fetcher: ts(true), Email });
   ok(r.status === 303 && r.headers.get("location").endsWith("?s=body"), "form post error redirects"); }
+// HTML escaping + Reply-To only for a real email address
+{ const raw = mime({ name: "<b>x</b>", reply: "a@b.co", body: "<script>alert(1)</script> & co" }, 4); const [, html] = parts(raw);
+  ok(!html.includes("<script>") && html.includes("&lt;script&gt;") && html.includes("&lt;b&gt;") && html.includes("&amp; co"), "visitor text escaped in HTML");
+  ok(/^Reply-To: <a@b.co>$/m.test(raw), "Reply-To set for an email"); }
+{ ok(!/^Reply-To:/m.test(mime({ name: "", reply: "0500000000", body: "hello there" }, 5)), "no Reply-To for a phone number");
+  ok(!/^Reply-To:/m.test(mime({ name: "", reply: "a@b.co\r\nBcc: x@y.z", body: "hello there" }, 6)), "no Reply-To injection"); }
 // header injection: name with CR/LF cannot add headers
 { const raw = mime({ name: "x\r\nBcc: a@b.c", reply: "", body: "hello there" }, 3); ok(!/^Bcc:/m.test(raw), "no header injection"); }
 
