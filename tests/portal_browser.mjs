@@ -1,5 +1,5 @@
 /* The upload forms in a real browser (Chromium): admin.h-haddadi.com is answered by the real Worker entry through page.route, with
-   SQLite for D1 and an in-memory R2. Checks the client script end to end: hash, 2-part upload, attach, add a lesson with a Hijri
+   SQLite for D1 and an in-memory R2. Checks the client script end to end: the weight limit, hash, 2-part upload, attach, add a lesson with a Hijri
    date, the redirect and flash, no console errors, axe on the forms.   node --no-warnings tests/portal_browser.mjs */
 import { chromium } from "playwright";
 import { DatabaseSync } from "node:sqlite";
@@ -49,6 +49,8 @@ execFileSync("ffmpeg", ["-v", "error", "-f", "lavfi", "-i", "sine=frequency=440:
 const pad = 9 * 1048576, raw = fs.readFileSync(`${dir}/a.m4a`), free = Buffer.alloc(pad); free.writeUInt32BE(pad, 0); free.write("free", 4, "latin1");
 fs.writeFileSync(`${dir}/big.m4a`, Buffer.concat([raw, free]));
 fs.copyFileSync(`${dir}/a.m4a`, `${dir}/small.m4a`);
+/* an optimised long lesson: 26 min mono 48 kbps, about 9 MB, so the upload takes two 8 MiB parts */
+execFileSync("ffmpeg", ["-v", "error", "-f", "lavfi", "-i", "anoisesrc=d=1560:c=pink:a=0.2", "-ac", "1", "-ar", "44100", "-c:a", "aac", "-b:a", "48k", "-movflags", "+faststart", `${dir}/long.m4a`]);
 
 const browser = await chromium.launch();
 for (const scheme of ["light", "dark"]) {
@@ -65,13 +67,21 @@ for (const scheme of ["light", "dark"]) {
   });
   if (scheme === "light") {
     await page.goto("https://admin.h-haddadi.com/admin/lessons/h_haddadi7-1/audio");
+    /* a heavy file (9 MB for 65 s) is refused before anything is sent */
     await page.setInputFiles("#file", `${dir}/big.m4a`);
     await page.waitForFunction(() => /دقيقة/.test(document.getElementById("note").textContent), null, { timeout: 10000 });
     ok(/١ دقيقة/.test(await page.textContent("#note")), "duration read in the browser");
-    await Promise.all([page.waitForURL(/\/admin\/series\/khutab\?ok=audio_added/, { timeout: 30000 }), page.click("#go")]);
+    ok(!(await page.isHidden("#msg")) && /أداة تحسين الصوت/.test(await page.textContent("#msg")), "heavy file flagged as soon as it is chosen");
+    await page.click("#go"); await page.waitForTimeout(500);
+    ok(objects.size === 0 && !sql.prepare("SELECT 1 FROM audio").get() && page.url().endsWith("/audio"), "heavy file not uploaded");
+    /* an optimised 26-minute lesson goes up in two parts */
+    await page.setInputFiles("#file", `${dir}/long.m4a`);
+    await page.waitForFunction(() => /٢٦ دقيقة/.test(document.getElementById("note").textContent), null, { timeout: 10000 });
+    ok(await page.isHidden("#msg"), "light file: no warning");
+    await Promise.all([page.waitForURL(/\/admin\/series\/khutab\?ok=audio_added/, { timeout: 60000 }), page.click("#go")]);
     ok((await page.textContent(".flash.ok")).includes("تم رفع الصوت"), "redirected with the success message");
     const row = sql.prepare("SELECT * FROM audio").get();
-    ok(row && objects.get(row.key)?.equals(fs.readFileSync(`${dir}/big.m4a`)) && row.duration === 65, "file stored byte for byte, duration saved");
+    ok(row && objects.get(row.key)?.equals(fs.readFileSync(`${dir}/long.m4a`)) && Math.abs(row.duration - 1560) <= 1, "file stored byte for byte, duration saved");
     await page.goto("https://admin.h-haddadi.com/admin/series/khutab/new");
     await page.click("#go");
     ok(!(await page.isHidden("#msg")) || (await page.evaluate(() => !document.getElementById("title").validity.valid)), "empty form refused");

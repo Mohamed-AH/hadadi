@@ -70,6 +70,12 @@ export async function handleUpload(request, env, user, path, url) {
 }
 
 const duration = d => Number.isInteger(d) && d > 0 && d < 86400 ? d : 0;
+/* owner 2026-11-19: no heavy files. Admins optimise audio on their PC first with the owner's own script (mono, about 48 kbps, like
+   tools/fetch_audio.py); the page refuses anything above 64 kbps and this check backs it up (72 kbps leaves room for container
+   overhead and a rounded duration). */
+export const MAX_KBPS = 72;
+const tooHeavy = (size, secs) => !secs || size * 8 / secs > MAX_KBPS * 1000;
+const HEAVY = "الملف أثقل من المسموح أو مدته غير معروفة. حسّنه أولًا بأداة تحسين الصوت ثم ارفعه";
 async function stored(env, key) {                                   // the file must really be in R2
   const o = KEY.test(key) && env.MEDIA ? await env.MEDIA.head(key) : null;
   return o ? o.size : 0;
@@ -92,6 +98,7 @@ export async function attachAudio(request, env, user, lib) {
   if (!l || !/^https:\/\/t\.me\//.test(l.tg || "")) return fail(400, "الدرس غير موجود");
   const size = await stored(env, key);
   if (!size) return fail(400, "لم يكتمل رفع الملف");
+  if (tooHeavy(size, duration(b.duration))) return fail(400, HEAVY);
   const db = env.DB, before = await db.prepare("SELECT key, size, duration FROM audio WHERE lesson_id = ?").bind(id).first();
   const row = { key, size, duration: duration(b.duration) };
   await db.batch([
@@ -113,6 +120,7 @@ export async function addLesson(request, env, user, lib) {
   if (!d) return fail(400, "التاريخ الهجري غير صالح");
   const size = await stored(env, key);
   if (!size) return fail(400, "لم يكتمل رفع الملف");
+  if (tooHeavy(size, duration(b.duration))) return fail(400, HEAVY);
   const db = env.DB, id = "p-" + [...crypto.getRandomValues(new Uint8Array(5))].map(x => x.toString(16).padStart(2, "0")).join("");
   const row = { series, title, ...d, key, size, duration: duration(b.duration) };
   await db.batch([

@@ -117,6 +117,8 @@ ok(up.r.status === 200 && /^audio\/[0-9a-f]{16}\.m4a$/.test(up.key) && objects.g
   ok(sql.prepare("SELECT COUNT(*) c FROM audit_log WHERE action='audio.add'").get().c === 1, "attach audited"); }
 { const r = await call("POST", "/admin/api/audio", "ed@x.org", { lesson: "h_haddadi7-1", key: "audio/0000000000000000.m4a" }); ok(r.r.status === 400, "attach needs a stored file"); }
 { const r = await call("POST", "/admin/api/audio", "ed@x.org", { lesson: "nope", key: up.key }); ok(r.r.status === 400, "attach needs a real lesson"); }
+{ const r = await call("POST", "/admin/api/audio", "ed@x.org", { lesson: "h_haddadi7-1", key: up.key, duration: 60 }); ok(r.r.status === 400 && /أثقل/.test(r.j.error), "heavy file refused (9 MB for 1 minute)"); }
+{ const r = await call("POST", "/admin/api/audio", "ed@x.org", { lesson: "h_haddadi7-1", key: up.key }); ok(r.r.status === 400, "unknown duration refused"); }
 { const { t } = await get("/admin/series/khutab", "ed@x.org"); ok(t.includes("صوت مرفوع في اللوحة") && t.includes("ينتظر النشر"), "series page shows the pending upload"); }
 
 // add a new lesson
