@@ -3,6 +3,7 @@
    «تحميل» button saves the file under the lesson's title instead of opening it in a new tab (cross-origin `download` is ignored). */
 import { webhook } from "./bot.js";
 import { contact } from "./contact.js";
+import { admin, ADMIN_HOST } from "./admin/index.mjs";
 
 const KEY = /^\/dl\/([0-9a-f]{16})$/;
 const BAD = /[\u0000-\u001f\u007f‎‏‪-‮⁦-⁩/\\:*?"<>|]/g;
@@ -52,6 +53,11 @@ export default {
 
   async fetch(req, env) {
     const url = new URL(req.url), m = KEY.exec(url.pathname);
+    if (ADMIN_HOST.test(url.hostname)) {   // admin.h-haddadi.com: the portal (worker/admin/), behind Cloudflare Access
+      if (url.pathname === "/") return Response.redirect(url.origin + "/admin/", 302);
+      if (/^\/admin(\/|$)/.test(url.pathname)) return admin(req, env);
+    }
+    if (url.pathname === "/" || url.pathname.startsWith("/admin")) return env.ASSETS.fetch(req);   // the public site: / is only here for the redirect above
     if (url.pathname === "/health") return health(env);
     if (url.pathname === "/api/contact") return contact(req, env);   // the «تواصل معنا» form (worker/contact.js)
     if (url.pathname === "/bot") return webhook(req, env, { dispatch });   // the announcements bot (Telegram webhook, worker/bot.js)

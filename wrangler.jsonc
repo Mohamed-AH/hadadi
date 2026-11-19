@@ -15,7 +15,7 @@
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page",
     "binding": "ASSETS",
-    "run_worker_first": ["/dl/*", "/health", "/bot", "/api/contact"]
+    "run_worker_first": ["/dl/*", "/health", "/bot", "/api/contact", "/admin", "/admin/*", "/"]
   },
   // Workers Logs (free plan: 200,000 log lines a day, kept 3 days): the bot's and the timer's errors show under Observability.
   "observability": { "enabled": true },
@@ -25,6 +25,12 @@
   // Email Workers: worker/contact.js mails each message. It can only reach a VERIFIED destination address of Email Routing,
   // so it sends to the variable MAIL_TO (the team inbox, set in the dashboard, not committed) and falls back to info@h-haddadi.com.
   "send_email": [{ "name": "MAIL" }],
+  // Admin portal on admin.h-haddadi.com (custom domain on this Worker; worker/admin/). Cloudflare Access application «hadadi-admin»:
+  // the team domain and its AUD tag are not secrets; the portal checks both on every request.
+  "vars": {
+    "ACCESS_TEAM_DOMAIN": "mojed.cloudflareaccess.com",
+    "ACCESS_AUD": "34547c77501d7ab864819a11a76bba6d6be833e80c43039835ef2bf0781c33be"
+  },
   // Timer: none yet. Keep in step with JOBS in worker/index.js (the Jabri site uses it for its announcements bot and YouTube sync).
   "triggers": { "crons": [] },
   // Branch previews (Workers Builds runs `npx wrangler preview` for non-production branches); empty = same settings as production.
