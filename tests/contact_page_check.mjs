@@ -1,6 +1,6 @@
 /* The /contact/ page in a browser. Turnstile's script and /api/contact are stubbed (the cloud session can't reach Cloudflare's
    challenge host, and the local static server can't take POSTs). Build with a site key first:
-   TURNSTILE_SITEKEY=1x00000000000000000000AA node scripts/build.mjs, serve dist/ on :8000, then node tests/contact_page_check.mjs */
+   node scripts/build.mjs, serve dist/ on :8000, then node tests/contact_page_check.mjs */
 import { chromium } from "playwright";
 const BASE = (process.argv[2] || "http://localhost:8000").replace(/\/$/, "");
 let pass = 0, fail = 0;
@@ -22,7 +22,7 @@ for (const w of [1280, 375]) {
   await page.waitForURL("**/contact/");
   ok(await page.locator("h1").textContent() === "تواصل معنا", "client-side navigation renders the page");
   await page.waitForFunction(() => window.__ts);
-  ok((await page.evaluate(() => window.__ts.sitekey)) === "1x00000000000000000000AA" && (await page.evaluate(() => window.__ts.language)) === "ar", "widget rendered with key + Arabic");
+  ok((await page.evaluate(() => window.__ts.sitekey)).startsWith("0x") && (await page.evaluate(() => window.__ts.language)) === "ar", "widget rendered with the site key + Arabic");
   await page.click("#cform-go");
   ok((await page.textContent("#cform-st")).includes("اكتب رسالتك"), "empty message refused in the browser");
   ok(posts.length === 0, "nothing posted for an empty message");

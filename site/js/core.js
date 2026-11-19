@@ -20,7 +20,7 @@ export const LINKS = [
 /* «تواصل معنا»: the address the footer button and the drawer link write to. Empty = the button is not shown. */
 export const CONTACT_EMAIL = "";   // owner 2026-11-18: no mailto; visitors write through the form on /contact/ instead
 /* Cloudflare Turnstile site key (public) for the /contact/ form (worker/contact.js). Empty = no contact page or links yet. */
-export const TURNSTILE_SITEKEY = "";   // tests: build with the env var TURNSTILE_SITEKEY (Cloudflare's always-pass test key)
+export const TURNSTILE_SITEKEY = "0x4AAAAAAGIObwODanmL1yD1";   // tests: build with the env var TURNSTILE_SITEKEY (Cloudflare's always-pass test key)
 const TS_TEST = typeof process !== "undefined" && process.env && process.env.TURNSTILE_SITEKEY;
 export const hasContact = () => !!(TURNSTILE_SITEKEY || TS_TEST);
 export const tsKey = () => TURNSTILE_SITEKEY || TS_TEST || "";
