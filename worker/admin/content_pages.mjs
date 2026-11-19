@@ -75,7 +75,7 @@ export async function audioPage(env, user, id) {
 <dt>التاريخ</dt><dd>${esc(hijriOf(l.hd, l.date))}</dd><dt>الآن</dt><dd>${l.src ? "له صوت على الموقع؛ الملف الجديد يحلّ محله بعد النشر" : "على تيليجرام فقط"}</dd>
 <dt>المنشور</dt><dd><a href="${esc(l.tg)}" class="ltr">${esc(l.tg)}</a></dd></dl>
 <form id="up" data-mode="audio" data-lesson="${esc(l.id)}" data-series="${esc(l.series)}">${fileField}</form>
-<p class="muted">يُحفظ الملف كما هو. الأفضل m4a أحادي بمعدل ٤٨ كب/ث كبقية دروس الموقع.</p>` });
+<p class="muted">يُرفع الملف كما هو، فحسّنه قبل الرفع بأداة تحسين الصوت (m4a أحادي بمعدل ٤٨ كب/ث كبقية دروس الموقع). يُرفض الملف الأثقل من ٦٤ كب/ث.</p>` });
 }
 
 export async function newLessonPage(env, user, sid) {
@@ -87,7 +87,7 @@ export async function newLessonPage(env, user, sid) {
 <fieldset class="hdate"><legend>التاريخ الهجري (اختياري)</legend>
 <label>اليوم <input type="number" id="hd-d" min="1" max="30" class="num"></label> <label>الشهر <input type="number" id="hd-m" min="1" max="12" class="num"></label> <label>السنة <input type="number" id="hd-y" min="1300" max="1600" class="num md"></label></fieldset>
 ${fileField}</form>
-<p class="muted">يُستعمل هذا للدروس التي ليست في قناتَي تيليجرام. يظهر الدرس في الموقع بعد النشر.</p>` });
+<p class="muted">يُستعمل هذا للدروس التي ليست في قناتَي تيليجرام. حسّن الملف قبل الرفع بأداة تحسين الصوت. يظهر الدرس في الموقع بعد النشر.</p>` });
 }
 
 /* ---- Publish ---- */

@@ -4,11 +4,12 @@ export const JS = String.raw`(() => {
 "use strict";
 const form = document.getElementById("up");
 if (!form) return;
-const PART = 8 * 1024 * 1024, MAX_MB = 200;
+const PART = 8 * 1024 * 1024, MAX_MB = 200, MAX_KBPS = 64;   // owner 2026-11-19: files are optimised on the PC first
 const $ = id => document.getElementById(id);
 const AR = n => String(n).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
 const file = $("file"), note = $("note"), prog = $("prog"), msg = $("msg"), go = $("go");
 let busy = false, seconds = 0;
+const heavy = f => "هذا الملف ثقيل (" + AR(Math.round(f.size * 8 / seconds / 1000)) + " كب/ث، والحد " + AR(MAX_KBPS) + "). حسّنه أولًا بأداة تحسين الصوت (يصير m4a أحاديًا بمعدل ٤٨ كب/ث) ثم ارفع الملف الناتج.";
 const say = t => { msg.textContent = t; msg.hidden = !t; };
 addEventListener("beforeunload", e => { if (busy) { e.preventDefault(); e.returnValue = ""; } });
 
@@ -35,7 +36,8 @@ file.addEventListener("change", () => {                   // duration and a size
   a.onloadedmetadata = () => {
     seconds = isFinite(a.duration) ? Math.round(a.duration) : 0;
     const kbps = seconds ? Math.round(f.size * 8 / seconds / 1000) : 0;
-    note.textContent = AR((f.size / 1048576).toFixed(1)) + " ميغابايت" + (seconds ? " · " + AR(Math.round(seconds / 60)) + " دقيقة" : "") + (kbps ? " · " + AR(kbps) + " كب/ث" : "") + (kbps > 80 ? " (أكبر من المعتاد ٤٨ كب/ث، لكنه يُقبل)" : "");
+    note.textContent = AR((f.size / 1048576).toFixed(1)) + " ميغابايت" + (seconds ? " · " + AR(Math.round(seconds / 60)) + " دقيقة" : "") + (kbps ? " · " + AR(kbps) + " كب/ث" : "");
+    if (kbps > MAX_KBPS) say(heavy(f));
     URL.revokeObjectURL(url);
   };
   a.onerror = () => { note.textContent = "تعذّرت قراءة مدة الملف (سيُرفع كما هو)."; URL.revokeObjectURL(url); };
@@ -104,6 +106,8 @@ form.addEventListener("submit", async e => {
       if (!extra.date) { say("هذا التاريخ الهجري غير موجود في تقويم أم القرى."); return; }
     }
   } else extra = { lesson: form.dataset.lesson };
+  if (!seconds) { say("تعذّرت قراءة مدة الملف. حسّنه بأداة تحسين الصوت ثم أعد اختياره."); return; }
+  if (f.size * 8 / seconds > MAX_KBPS * 1000) { say(heavy(f)); return; }
   busy = true; go.disabled = true;
   try {
     const key = await upload(f);
