@@ -1,7 +1,8 @@
 /* Browser code of the upload forms (served as /admin/admin.js; the CSP allows script-src 'self' only, no inline scripts).
    Ported from Mohamed-AH/drwasiullah admin/src/client.mjs, cut down to one file per form. Text goes in with textContent only. */
-export const JS = String.raw`(() => {
-"use strict";
+import { COMPRESS_JS } from "./compress.mjs";
+
+const BODY = String.raw`
 const form = document.getElementById("up");
 if (!form) return;
 const PART = 8 * 1024 * 1024, MAX_MB = 200;
@@ -106,7 +107,19 @@ form.addEventListener("submit", async e => {
   } else extra = { lesson: form.dataset.lesson };
   busy = true; go.disabled = true;
   try {
-    const key = await upload(f);
+    let up = f, secs = seconds;
+    prog.textContent = "جارٍ ضغط الملف…";
+    const c = await compress(f, x => { prog.textContent = "جارٍ ضغط الملف… " + AR(Math.round(x * 100)) + "٪"; }).catch(e => { console.warn(e); return null; });
+    if (c && c.blob.size < f.size * 0.9) {                   // keep the original when compressing would not save much
+      up = new File([c.blob], f.name.replace(/\.[^.]+$/, "") + ".m4a", { type: "audio/mp4" }); secs = c.seconds || seconds;
+      note.textContent = "بعد الضغط: " + AR((up.size / 1048576).toFixed(1)) + " ميغابايت (" + AR(c.kbps) + " كب/ث، أحادي) بدل " + AR((f.size / 1048576).toFixed(1)) + ".";
+    } else if (c || (seconds && f.size * 8 / seconds <= 64000)) note.textContent = "الملف خفيف أصلًا، سيُرفع كما هو.";
+    else {                                                   // owner 2026-11-19: no heavy files on the site
+      throw new Error(seconds ? "لم يتمكن هذا المتصفح من ضغط الملف، والملف أثقل من المسموح (" + AR(Math.round(f.size * 8 / seconds / 1000)) + " كب/ث). افتح اللوحة في Chrome أو Edge على الحاسوب وأعد المحاولة"
+                              : "لم يتمكن هذا المتصفح من قراءة الملف أو ضغطه. افتح اللوحة في Chrome أو Edge على الحاسوب وأعد المحاولة");
+    }
+    const key = await upload(up);
+    seconds = secs;
     prog.textContent = "جارٍ الحفظ…";
     await post(mode === "new" ? "lessons" : "audio", { ...extra, key, duration: seconds });
     busy = false;
@@ -116,4 +129,6 @@ form.addEventListener("submit", async e => {
     say("لم يكتمل: " + err.message + ". حاول مرة أخرى (ما رُفع لن يُعاد رفعه).");
   }
 });
-})();`;
+`;
+/* one script: the compressor (compress.mjs, with the m4a writer) and the form code, inside one function scope */
+export const JS = "(() => {\n\"use strict\";\n" + COMPRESS_JS + "\n(() => {" + BODY + "})();\n})();\n";

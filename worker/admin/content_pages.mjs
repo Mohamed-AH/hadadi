@@ -35,15 +35,16 @@ export async function seriesDetail(env, user, id, flash) {
   const rows = [...pub, ...extra].sort((a, b) => (b.date || "").localeCompare(a.date || ""));
   const tr = rows.map(l => {
     const mine = st.audio.get(l.id), added = st.added.find(a => a.id === l.id), stat = st.stats.get(l.id);
+    const raw = (r => r && (!r.duration || r.size * 8 / r.duration > 64000) ? " " + tag("tag-archived", "غير مضغوط") : "")(added || mine);
     let state, act = "";
     if (added) {
-      state = tag("tag-new", "أُضيف في اللوحة") + (st.wasLessons.has(l.id) ? "" : " " + tag("tag-wait", "ينتظر النشر"));
+      state = tag("tag-new", "أُضيف في اللوحة") + raw + (st.wasLessons.has(l.id) ? "" : " " + tag("tag-wait", "ينتظر النشر"));
       if (edit) act = `<form class="inline" method="post" action="/admin/lessons/remove"><input type="hidden" name="id" value="${esc(l.id)}"><input type="hidden" name="series" value="${esc(id)}"><button class="danger">حذف الدرس</button></form>`;
     } else if (/^p-/.test(l.id)) {
       state = tag("tag-wait", "حُذف، ينتظر النشر");
     } else if (mine) {
       const live = st.wasMedia.get(l.id);
-      state = tag("tag-answered", "صوت مرفوع في اللوحة") + (live && live.key === mine.key ? "" : " " + tag("tag-wait", "ينتظر النشر"));
+      state = tag("tag-answered", "صوت مرفوع في اللوحة") + raw + (live && live.key === mine.key ? "" : " " + tag("tag-wait", "ينتظر النشر"));
       if (edit) act = `<a href="/admin/lessons/${encodeURIComponent(l.id)}/audio">استبدال</a> <form class="inline" method="post" action="/admin/audio/remove"><input type="hidden" name="id" value="${esc(l.id)}"><input type="hidden" name="series" value="${esc(id)}"><button class="danger">إلغاء الرفع</button></form>`;
     } else if (l.src) {
       state = tag("tag-answered", "على الموقع");
@@ -75,7 +76,7 @@ export async function audioPage(env, user, id) {
 <dt>التاريخ</dt><dd>${esc(hijriOf(l.hd, l.date))}</dd><dt>الآن</dt><dd>${l.src ? "له صوت على الموقع؛ الملف الجديد يحلّ محله بعد النشر" : "على تيليجرام فقط"}</dd>
 <dt>المنشور</dt><dd><a href="${esc(l.tg)}" class="ltr">${esc(l.tg)}</a></dd></dl>
 <form id="up" data-mode="audio" data-lesson="${esc(l.id)}" data-series="${esc(l.series)}">${fileField}</form>
-<p class="muted">يُحفظ الملف كما هو. الأفضل m4a أحادي بمعدل ٤٨ كب/ث كبقية دروس الموقع.</p>` });
+<p class="muted">يُضغط الملف في متصفحك قبل الرفع إلى m4a أحادي بمعدل ٤٨ كب/ث كبقية دروس الموقع (Chrome أو Edge على الحاسوب، وChrome على أندرويد). إن لم يستطع المتصفح ذلك يُرفع الملف كما هو ويُعلَّم «غير مضغوط».</p>` });
 }
 
 export async function newLessonPage(env, user, sid) {
@@ -87,7 +88,7 @@ export async function newLessonPage(env, user, sid) {
 <fieldset class="hdate"><legend>التاريخ الهجري (اختياري)</legend>
 <label>اليوم <input type="number" id="hd-d" min="1" max="30" class="num"></label> <label>الشهر <input type="number" id="hd-m" min="1" max="12" class="num"></label> <label>السنة <input type="number" id="hd-y" min="1300" max="1600" class="num md"></label></fieldset>
 ${fileField}</form>
-<p class="muted">يُستعمل هذا للدروس التي ليست في قناتَي تيليجرام. يظهر الدرس في الموقع بعد النشر.</p>` });
+<p class="muted">يُستعمل هذا للدروس التي ليست في قناتَي تيليجرام. يُضغط الملف في المتصفح قبل الرفع كما في رفع الصوت. يظهر الدرس في الموقع بعد النشر.</p>` });
 }
 
 /* ---- Publish ---- */

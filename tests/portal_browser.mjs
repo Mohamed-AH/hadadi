@@ -1,5 +1,5 @@
 /* The upload forms in a real browser (Chromium): admin.h-haddadi.com is answered by the real Worker entry through page.route, with
-   SQLite for D1 and an in-memory R2. Checks the client script end to end: hash, 2-part upload, attach, add a lesson with a Hijri
+   SQLite for D1 and an in-memory R2. Checks the client script end to end: in-browser compression (mp3 -> mono AAC m4a), the heavy-file refusal, attach, add a lesson with a Hijri
    date, the redirect and flash, no console errors, axe on the forms.   node --no-warnings tests/portal_browser.mjs */
 import { chromium } from "playwright";
 import { DatabaseSync } from "node:sqlite";
@@ -45,10 +45,27 @@ const env = { DB, ASSETS, MEDIA, ACCESS_TEAM_DOMAIN: TEAM, ACCESS_AUD: AUD, DEPL
 /* a short real m4a (ffmpeg) padded past 8 MiB with a trailing free box, so the upload takes two parts and the browser reads a duration */
 const dir = fs.mkdtempSync("/tmp/claude-portal-");
 const { execFileSync } = await import("node:child_process");
-execFileSync("ffmpeg", ["-v", "error", "-f", "lavfi", "-i", "sine=frequency=440:duration=65", "-ac", "1", "-b:a", "48k", "-movflags", "+faststart", `${dir}/a.m4a`]);
-const pad = 9 * 1048576, raw = fs.readFileSync(`${dir}/a.m4a`), free = Buffer.alloc(pad); free.writeUInt32BE(pad, 0); free.write("free", 4, "latin1");
-fs.writeFileSync(`${dir}/big.m4a`, Buffer.concat([raw, free]));
-fs.copyFileSync(`${dir}/a.m4a`, `${dir}/small.m4a`);
+execFileSync("ffmpeg", ["-v", "error", "-f", "lavfi", "-i", "sine=frequency=440:duration=65", "-ac", "1", "-b:a", "48k", "-movflags", "+faststart", `${dir}/small.m4a`]);
+/* a heavy source: 65 s stereo mp3 at 128 kbps, with an ID3 tag, as Telegram files often are */
+execFileSync("ffmpeg", ["-v", "error", "-f", "lavfi", "-i", "sine=frequency=330:duration=65", "-ac", "2", "-ar", "44100", "-c:a", "libmp3lame", "-b:a", "128k", "-id3v2_version", "3", "-metadata", "title=t", `${dir}/talk.mp3`]);
+/* a heavy m4a at 48 kHz stereo 192 kbps: exercises the MP4 demuxer and the resampler */
+execFileSync("ffmpeg", ["-v", "error", "-f", "lavfi", "-i", "sine=frequency=500:duration=40", "-ac", "2", "-ar", "48000", "-c:a", "aac", "-b:a", "192k", `${dir}/heavy.m4a`]);
+/* real AAC-LC frames (mono 44.1 kHz 48 kbps) for a stand-in AudioEncoder: this Chromium decodes mp3 but has no AAC encoder */
+execFileSync("ffmpeg", ["-v", "error", "-f", "lavfi", "-i", "sine=frequency=330:duration=70", "-ac", "1", "-ar", "44100", "-c:a", "aac", "-b:a", "48k", "-f", "adts", `${dir}/f.aac`]);
+const adts = fs.readFileSync(`${dir}/f.aac`), AAC = [];
+for (let i = 0; i + 7 <= adts.length;) { const len = ((adts[i + 3] & 3) << 11) | (adts[i + 4] << 3) | (adts[i + 5] >> 5), hdr = adts[i + 1] & 1 ? 7 : 9; AAC.push(adts.subarray(i + hdr, i + len).toString("base64")); i += len; }
+const FAKE_ENCODER = frames => {
+  const FR = frames.map(b => Uint8Array.from(atob(b), c => c.charCodeAt(0)));
+  window.AudioEncoder = class {
+    constructor({ output }) { this.o = output; this.n = 0; this.e = 0; this.encodeQueueSize = 0; }
+    static async isConfigSupported(c) { return { supported: c.codec === "mp4a.40.2" && c.numberOfChannels === 1 && c.bitrate === 48000, config: c }; }
+    configure(c) { this.c = c; }
+    emit() { const f = FR[this.e % FR.length]; this.e++; this.o({ byteLength: f.length, copyTo: d => d.set(f) }, this.e === 1 ? { decoderConfig: { description: Uint8Array.from([0x12, 0x08]) } } : undefined); }
+    encode(ad) { if (ad.sampleRate !== 44100 || ad.numberOfChannels !== 1) throw new Error("expected mono 44.1 kHz, got " + ad.sampleRate + "/" + ad.numberOfChannels); this.n += ad.numberOfFrames; while (this.e < Math.floor(this.n / 1024)) this.emit(); }
+    async flush() { if (this.n % 1024) this.emit(); }
+    close() {}
+  };
+};
 
 const browser = await chromium.launch();
 for (const scheme of ["light", "dark"]) {
@@ -56,25 +73,34 @@ for (const scheme of ["light", "dark"]) {
   const page = await ctx.newPage(), errors = [];
   page.on("console", m => { if (m.type() === "error") errors.push(m.text()); });
   page.on("pageerror", e => errors.push(String(e)));
-  await page.route("https://admin.h-haddadi.com/**", async route => {
+  const handler = async route => {
     const rq = route.request(), headers = { ...rq.headers(), "cf-access-jwt-assertion": JWT };
     const body = ["POST", "PUT"].includes(rq.method()) ? rq.postDataBuffer() : undefined;
     if (body) headers["content-length"] = String(body.length);
     const r = await worker.fetch(new Request(rq.url(), { method: rq.method(), headers, body, redirect: "manual" }), env);
     await route.fulfill({ status: r.status, headers: Object.fromEntries(r.headers), body: Buffer.from(await r.arrayBuffer()) });
-  });
+  };
+  await page.route("https://admin.h-haddadi.com/**", handler);
   if (scheme === "light") {
+    const flash = () => page.textContent(".flash.ok");
+    /* 1. heavy mp3, browser without an AAC encoder: refused, nothing stored */
     await page.goto("https://admin.h-haddadi.com/admin/lessons/h_haddadi7-1/audio");
-    await page.setInputFiles("#file", `${dir}/big.m4a`);
+    await page.setInputFiles("#file", `${dir}/talk.mp3`);
     await page.waitForFunction(() => /دقيقة/.test(document.getElementById("note").textContent), null, { timeout: 10000 });
-    ok(/١ دقيقة/.test(await page.textContent("#note")), "duration read in the browser");
+    await page.click("#go");
+    await page.waitForFunction(() => !document.getElementById("msg").hidden, null, { timeout: 20000 });
+    ok(/Chrome أو Edge/.test(await page.textContent("#msg")) && objects.size === 0 && !sql.prepare("SELECT 1 FROM audio").get(), "heavy file refused when the browser cannot compress");
+    /* 2. a light m4a: uploaded as is */
+    await page.setInputFiles("#file", `${dir}/small.m4a`);
+    await page.waitForFunction(() => /دقيقة/.test(document.getElementById("note").textContent));
     await Promise.all([page.waitForURL(/\/admin\/series\/khutab\?ok=audio_added/, { timeout: 30000 }), page.click("#go")]);
-    ok((await page.textContent(".flash.ok")).includes("تم رفع الصوت"), "redirected with the success message");
-    const row = sql.prepare("SELECT * FROM audio").get();
-    ok(row && objects.get(row.key)?.equals(fs.readFileSync(`${dir}/big.m4a`)) && row.duration === 65, "file stored byte for byte, duration saved");
+    ok((await flash()).includes("تم رفع الصوت"), "light file uploaded as is");
+    let row = sql.prepare("SELECT * FROM audio").get();
+    ok(row && objects.get(row.key)?.equals(fs.readFileSync(`${dir}/small.m4a`)) && row.duration === 65, "stored byte for byte, duration saved");
+    /* 3. new lesson form, light file */
     await page.goto("https://admin.h-haddadi.com/admin/series/khutab/new");
     await page.click("#go");
-    ok(!(await page.isHidden("#msg")) || (await page.evaluate(() => !document.getElementById("title").validity.valid)), "empty form refused");
+    ok(await page.evaluate(() => !document.getElementById("title").validity.valid), "empty form refused");
     await page.fill("#title", "محاضرة مضافة");
     await page.fill("#hd-d", "28"); await page.fill("#hd-m", "5"); await page.fill("#hd-y", "1448");
     await page.setInputFiles("#file", `${dir}/small.m4a`);
@@ -84,6 +110,34 @@ for (const scheme of ["light", "dark"]) {
     ok(l && l.title === "محاضرة مضافة" && l.hd === "1448-5-28" && /^\d{4}-\d{2}-\d{2}$/.test(l.date) && l.duration === 65, "lesson added with Hijri and Gregorian dates");
     ok(l && new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { day: "numeric", timeZone: "Asia/Riyadh" }).format(new Date(l.date + "T12:00:00+03:00")) === "28", "Gregorian day matches the Hijri day");
     ok((await page.content()).includes("محاضرة مضافة"), "new lesson listed on the series page");
+    /* 4. heavy mp3 with an AAC encoder: decoded, mixed to mono, encoded, written as m4a, uploaded */
+    const c2 = await browser.newContext(), p2 = await c2.newPage(), errs2 = [];
+    p2.on("pageerror", e => errs2.push(String(e)));
+    await c2.addInitScript(FAKE_ENCODER, AAC);
+    await p2.route("https://admin.h-haddadi.com/**", handler);
+    await p2.goto("https://admin.h-haddadi.com/admin/lessons/h_haddadi7-1/audio");
+    await p2.setInputFiles("#file", `${dir}/talk.mp3`);
+    await p2.waitForFunction(() => /دقيقة/.test(document.getElementById("note").textContent), null, { timeout: 10000 });
+    await Promise.all([p2.waitForURL(/ok=audio_added/, { timeout: 60000 }), p2.click("#go")]);
+    row = sql.prepare("SELECT * FROM audio").get();
+    const mp3 = fs.statSync(`${dir}/talk.mp3`).size, got = objects.get(row.key);
+    ok(row.key.endsWith(".m4a") && got && got.length < mp3 * 0.5, `compressed: ${mp3} -> ${got && got.length} bytes`);
+    fs.writeFileSync(`${dir}/got.m4a`, got);
+    const info = JSON.parse(execFileSync("ffprobe", ["-v", "error", "-show_streams", "-show_format", "-of", "json", `${dir}/got.m4a`], { encoding: "utf8" }));
+    ok(info.streams[0].codec_name === "aac" && info.streams[0].channels === 1 && Math.abs(parseFloat(info.format.duration) - 65) < 1.5, "result is mono AAC, about 65 s: " + info.format.duration);
+    ok(Math.abs(row.duration - 65) <= 1 && row.size * 8 / row.duration <= 72000, "duration and bitrate saved: " + row.duration + " s");
+    /* 5. heavy m4a (48 kHz stereo) as a new lesson: demuxed, resampled to 44.1 kHz mono */
+    await p2.goto("https://admin.h-haddadi.com/admin/series/khutab/new");
+    await p2.fill("#title", "درس من ملف m4a ثقيل");
+    await p2.setInputFiles("#file", `${dir}/heavy.m4a`);
+    await p2.waitForFunction(() => /دقيقة/.test(document.getElementById("note").textContent), null, { timeout: 10000 });
+    await Promise.all([p2.waitForURL(/ok=lesson_added/, { timeout: 60000 }), p2.click("#go")]);
+    const l2 = sql.prepare("SELECT * FROM lessons_new WHERE title = 'درس من ملف m4a ثقيل'").get();
+    fs.writeFileSync(`${dir}/got2.m4a`, objects.get(l2.key));
+    const i2 = JSON.parse(execFileSync("ffprobe", ["-v", "error", "-show_streams", "-show_format", "-of", "json", `${dir}/got2.m4a`], { encoding: "utf8" }));
+    ok(l2 && i2.streams[0].channels === 1 && i2.streams[0].sample_rate === "44100" && Math.abs(parseFloat(i2.format.duration) - 40) < 1.5 && l2.size < fs.statSync(`${dir}/heavy.m4a`).size * 0.4, "m4a source compressed and resampled: " + i2.format.duration + " s, " + l2.size + " bytes");
+    ok(!errs2.length, "no page errors while compressing: " + errs2.join(" | "));
+    await c2.close();
   }
   /* axe on the forms and the series page */
   const axe = fs.readFileSync(new URL("../node_modules/axe-core/axe.min.js", import.meta.url), "utf8");
