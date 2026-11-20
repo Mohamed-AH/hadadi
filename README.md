@@ -2,7 +2,7 @@
 
 An Arabic (right-to-left) static website that organises the lessons, khutab and lectures of الشيخ حسن بن علي حدادي حفظه الله (Jeddah). It runs on the engine of [yahyaaljabri](https://github.com/Mohamed-AH/yahyaaljabri) (same pipeline, player, hosting and tests) with its own design, "Roshan", after the carved wooden windows of old Jeddah.
 
-The material comes from two Telegram channels, [t.me/h_haddadi7](https://t.me/h_haddadi7) (main) and [t.me/masothrbj47](https://t.me/masothrbj47) («دروس الشيخ … رقم 2»). Today the site holds 516 recordings (≈247 hours) in 27 series, merged from both channels and de-duplicated.
+The material comes from two Telegram channels, [t.me/h_haddadi7](https://t.me/h_haddadi7) (main) and [t.me/Aqar8](https://t.me/Aqar8) («دروس الشيخ … رقم 2»; its export folder and lesson ids keep the older name `masothrbj47`). Today the site holds 516 recordings (≈247 hours) in 27 series, merged from both channels and de-duplicated.
 
 ## How it works
 

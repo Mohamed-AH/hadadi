@@ -7,7 +7,12 @@ import json, os, re, collections, unicodedata
 from datetime import datetime
 
 ROOT = os.environ.get('TELEGRAM_EXPORTS', 'telegram')   # folder with h_haddadi7/result.json and masothrbj47/result.json
-CHANNELS = ['h_haddadi7', 'masothrbj47']   # the main channel wins when a file is in both (folder names = t.me usernames)
+CHANNELS = ['h_haddadi7', 'masothrbj47']   # the main channel wins when a file is in both (folder names; also the lesson-id prefix)
+# the second channel's real public username is Aqar8 (owner's check 2026-11-20); the folder name and ids stay masothrbj47
+PUBLIC = {'masothrbj47': 'Aqar8'}
+def tme(post):                               # "folder/id" -> its public t.me link
+    ch, _, n = post.partition('/')
+    return f"https://t.me/{PUBLIC.get(ch, ch)}/{n}"
 QA_CHANNEL = None                         # no question-and-answer channel (yet)
 SHEIKH_CHANNELS = {'قناة الشيخ حسن بن علي حدادي', 'دروس الشيخ حسن بن علي حدادي ( رقم 2 ) ✍ 🎤'}
 OTHER_SCHOLARS = ['الفوزان', 'ابن باز', 'بن باز', 'العثيمين', 'ابن عثيمين', 'الألباني', 'المدخلي',
@@ -520,8 +525,8 @@ def main():
             'size_mb': round(size / 1e6, 1) if size else None,
             'kind': main_post.get('media_type') or ('link' if main_post.get('_link') else 'audio_file'),
             'file_name': main_post.get('file_name') or '',
-            'posts': [f"https://t.me/{x['_ch']}/{x['id']}" for x in g],
-            'description_post': f"https://t.me/{good_ann[0]}" if good_ann else '',
+            'posts': [tme(f"{x['_ch']}/{x['id']}") for x in g],
+            'description_post': tme(good_ann[0]) if good_ann else '',
             'have_file': not str(main_post.get('file', '')).startswith('('),
             'flags': flags,
             'caption': caps[0][:300] if caps else (good_ann[1][:300] if good_ann else ''),

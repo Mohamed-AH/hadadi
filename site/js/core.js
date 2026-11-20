@@ -12,7 +12,7 @@ export const ROLE = "";
 export const OFFICIAL_NAME = `${OFFICIAL_PRE} ${FULL_NAME}`;
 export const YT_CHANNEL = "";
 export const TG_CHANNEL = "https://t.me/h_haddadi7";
-export const TG_CHANNEL_2 = "https://t.me/masothrbj47";   // lessons are still imported from it; not linked (owner 2026-11-17)
+export const TG_CHANNEL_2 = "https://t.me/Aqar8";   // lessons are still imported from it; not linked (owner 2026-11-17)
 export const WA_GROUP = "https://chat.whatsapp.com/BupKFX5G3236scpMYX05L1";
 export const LINKS = [
   { t: "قناة الشيخ على تيليجرام", s: "تيليجرام", b: "telegram", h: TG_CHANNEL }, { t: "مجموعة الشيخ على واتساب", s: "واتساب", b: "whatsapp", h: WA_GROUP },

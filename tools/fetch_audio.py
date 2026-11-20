@@ -132,7 +132,7 @@ class FileSource:
         return os.path.getsize(dst)
 
 
-CHANNEL_IDS = {"h_haddadi7": "1186686748", "masothrbj47": "1456637338"}   # @name -> the numeric id Telegram Desktop writes in result.json
+CHANNEL_IDS = {"h_haddadi7": "1186686748", "Aqar8": "1456637338"}   # @name -> the numeric id Telegram Desktop writes in result.json
 
 
 class TelegramSource:
