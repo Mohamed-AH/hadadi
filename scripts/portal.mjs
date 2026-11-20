@@ -11,8 +11,10 @@ const MEDIA_URL = /^https:\/\/media\.h-haddadi\.com\/audio\/[0-9a-f]{16}\.(m4a|m
 export function checkSnapshot(s) {
   if (!s || typeof s !== "object" || s.v !== 1 || typeof s.media !== "object" || !s.media || !Array.isArray(s.lessons)) throw new Error("portal snapshot: unexpected shape");
   const media = {}, lessons = [];
-  for (const [tg, m] of Object.entries(s.media))
+  for (const [tg0, m] of Object.entries(s.media)) {
+    const tg = tg0.replace("https://t.me/masothrbj47/", "https://t.me/Aqar8/");   // the second channel's real username (2026-11-20)
     if (/^https:\/\/t\.me\/[\w]+\/\d+$/.test(tg) && m && MEDIA_URL.test(m.url)) media[tg] = { url: m.url, key: m.key, size: m.size, duration: Number.isInteger(m.duration) ? m.duration : 0 };
+  }
   for (const l of s.lessons) {
     if (!l || !/^p-[0-9a-f]{10}$/.test(l.id) || typeof l.title !== "string" || !l.title || typeof l.series !== "string" || !MEDIA_URL.test(l.src)) continue;
     const x = { id: l.id, title: l.title.slice(0, 200), series: l.series, kind: "audio", src: l.src, tg: "", date: /^\d{4}-\d{2}-\d{2}$/.test(l.date) ? l.date : "",
