@@ -1,3 +1,4 @@
+import re
 """lessons.json (from tools/telegram_lessons.py) -> site/data/library.json.
 
 Lessons that still carry a review flag (no title, another speaker, ...) are left out until a person fixes them;
@@ -20,12 +21,30 @@ meta = {sid: (title, sec) for sid, title, sec, _ in SERIES}
 meta['misc'] = ('دروس ومحاضرات متفرقة', 'lectures')
 MERGE = {'misc': 'lectures'}     # 2026-10-06 (owner): the one-off talks and «محاضرات وكلمات» are one series
 
+def tidy(t):
+    """Typography only (2026-11-22 audit): «باب : X» / «:-» / «موضوع :» from the posts' captions, a detached «و», repeated ?!,
+    hashtags, the speaker's name at the end, and Arabic-Indic digits like the rest of the site. Words are never changed here."""
+    t = t.replace('#', ' ')
+    t = re.sub(r'\s*:\s*-\s*', ': ', t)
+    t = re.sub(r'\s+:', ':', t)
+    t = re.sub(r':(?=[^\s\d])', ': ', t)
+    t = re.sub(r'(?<=: )(?:الموضوع|موضوع|العنوان|بعنوان):\s*', '', t)
+    t = re.sub(r'(?<!\S)باب:\s*', 'باب ', t)
+    t = re.sub(r'(?<=\s)و\s+(?=\S)', 'و', t)
+    t = re.sub(r'\s*[!؟?]*[؟?][!؟?]*', '؟', t)
+    t = re.sub(r'\s*!+', '!', t)
+    t = re.sub(r'\s*(?:للشيخ|الشيخ)\s+حسن(?:\s+بن)?\s+علي.*$|\s+الشيخ\s+حسن\s+حدادي$', '', t)
+    t = re.sub(r'\d', lambda m: '٠١٢٣٤٥٦٧٨٩'[int(m.group())], t)
+    return re.sub(r'\s{2,}', ' ', t).strip()
+
+
 out_lessons, skipped = [], collections.Counter()
 for l in lessons:
     o = overrides.get(l['id'], {})
     if not o.get('title') and spelling.get(l['id']): l['title'] = spelling[l['id']]
     if o.get('title'): l['title'], l['flags'] = o['title'], [f for f in l['flags'] if f not in ('no title', 'no series')]
     if o.get('series'): l['series'], l['flags'] = o['series'], [f for f in l['flags'] if f != 'no series']
+    l['title'] = tidy(l['title'])
     publish = o.get('publish', not l['flags'])
     if not publish or l['series'] not in meta:
         skipped['flagged' if l['flags'] else 'excluded'] += 1

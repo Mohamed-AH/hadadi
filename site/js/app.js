@@ -104,15 +104,15 @@ function wireContact() {
   if (back && Object.hasOwn(CONTACT_MSG, back)) say(CONTACT_MSG[back], back === "sent");
   let wid = null, token = "";
   const dark = document.documentElement.dataset.theme === "dark" || (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
-  loadTurnstile().then(ts => {
+  loadTurnstile().then(ts => {   // the box shows only when Cloudflare needs a click (appearance: interaction-only)
     if (!box.isConnected) return;
-    wid = ts.render(box, { sitekey: box.dataset.sitekey, language: "ar", theme: dark ? "dark" : "light", callback: t => { token = t; }, "expired-callback": () => { token = ""; }, "error-callback": () => { token = ""; } });
+    wid = ts.render(box, { sitekey: box.dataset.sitekey, language: "ar", theme: dark ? "dark" : "light", appearance: "interaction-only", size: "flexible", callback: t => { token = t; }, "expired-callback": () => { token = ""; }, "error-callback": () => { token = ""; } });
   }).catch(() => say("تعذّر تحميل التحقق. أعد تحميل الصفحة أو حاول لاحقًا.", false));
   f.addEventListener("submit", async e => {
     e.preventDefault();
     const body = f.body.value.trim();
     if (body.length < 5) { say(CONTACT_MSG.body, false); f.body.focus(); return; }
-    if (!token) { say("أكمل التحقق أولًا (المربع فوق زر الإرسال).", false); return; }
+    if (!token) { say("لحظة، يجري التحقق من أنك لست برنامجًا آليًا. أعد الضغط بعد ثوانٍ، أو أكمل المربع إن ظهر فوق زر الإرسال.", false); return; }
     go.disabled = true; say("جارٍ الإرسال…", true);
     try {
       const r = await fetch("/api/contact", { method: "POST", headers: { "content-type": "application/json" },
@@ -236,7 +236,7 @@ const store = { m: new Map(),
   get(k, d) { if (this.m.has(k)) return this.m.get(k) ?? d; let v = null; try { v = JSON.parse(localStorage.getItem(k)); } catch {} this.m.set(k, v); return v ?? d; },
   set(k, v) { this.m.set(k, v); try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
 addEventListener("storage", e => store.m.delete(e.key));   // another tab changed it
-const tfmt = s => dur(Math.floor(s || 0)) || "0:00";
+const tfmt = s => dur(Math.floor(s || 0)) || "٠:٠٠";
 const saved = id => { const t = store.get("pos", {})[id]; return typeof t === "number" && t > 0 ? t : 0; };
 /* this browser's progress on a lesson: { done, p (0..1 heard) } or undefined */
 function progress(id) {

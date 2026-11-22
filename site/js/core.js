@@ -75,7 +75,9 @@ export function init(cat, lib = {}, bio = null, media = null) {
     books: lib.books || [], updated: cat.updated || lib.updated || "",
   };
   DB.series.forEach(s => seriesById[s.id] = s);
-  DB.lessons = DB.lessons.filter(l => seriesById[l.series]).sort((a, b) => b.date.localeCompare(a.date) || a.o - b.o);   // dated newest-first, undated last
+  DB.lessons = DB.lessons.filter(l => seriesById[l.series]);
+  const when = new Map(DB.lessons.map(l => [l, (l.hd && l.date && hdDay(l.hd, l.date)) || l.date]));   // the day the page shows (the post's own Hijri date wins)
+  DB.lessons.sort((a, b) => when.get(b).localeCompare(when.get(a)) || b.date.localeCompare(a.date) || a.o - b.o);   // dated newest-first, undated last
   DB.lessons.forEach(l => byId[l.id] = l);
   DB.series.forEach(s => {   // uniform per-series stats, whatever the source
     const ls = DB.lessons.filter(l => l.series === s.id), ds = ls.map(l => l.date).filter(Boolean).sort();
@@ -99,6 +101,18 @@ export const norm = s => String(s || "").toLowerCase()
 const nf = new Intl.NumberFormat("ar-EG", { useGrouping: false });
 export const fmtNum = n => nf.format(n);
 // Dates are shown in the Hijri (Umm al-Qura) calendar only. Input: YYYY-MM-DD.
+/* a Hijri y-m-d (Umm al-Qura) -> the Gregorian YYYY-MM-DD near the posting day; "" if none within two months */
+const HPARTS = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { day: "numeric", month: "numeric", year: "numeric", timeZone: "UTC" });
+function hdDay(hd, near) {
+  const [y, m, d] = String(hd).split("-").map(Number), t0 = Date.parse(near + "T12:00:00Z");
+  if (!d || isNaN(t0)) return "";
+  for (let k = 0; k <= 60; k++) for (const sg of k ? [-1, 1] : [1]) {
+    const t = new Date(t0 + sg * k * 864e5), p = {};
+    for (const x of HPARTS.formatToParts(t)) if (x.type === "year" || x.type === "month" || x.type === "day") p[x.type] = parseInt(x.value, 10);
+    if (p.year === y && p.month === m && p.day === d) return t.toISOString().slice(0, 10);
+  }
+  return "";
+}
 const HIJRI = "ar-SA-u-ca-islamic-umalqura-nu-arab";
 const hijriFull = new Intl.DateTimeFormat(HIJRI, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 const hijriYear = new Intl.DateTimeFormat(HIJRI, { year: "numeric", timeZone: "UTC" });
@@ -110,7 +124,7 @@ const fmtHijri = hd => { const [y, m, d] = hd.split("-").map(Number); return [d 
 export const ldate = l => l.hd ? fmtHijri(l.hd) : l.date ? fmtDate(l.date) : "";
 export const fmtYear = d => d ? hijriYear.format(at(d)).replace(/\s*هـ$/, "") : "";
 export const dur = s => { if (!s) return ""; const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
-  return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0"); };
+  return dg((h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0")); };   // Arabic-Indic digits like every other number on the site
 export const isoDur = s => s ? `PT${Math.floor(s / 3600)}H${Math.floor(s % 3600 / 60)}M${s % 60}S` : "";
 /* Arabic number agreement: ١ درس واحد، ٢ درسان، ٣–١٠ دروس، ١١–٩٩ درسًا، ١٠٠ درس، ١٠٣ دروس، ١١١ درسًا … */
 export const NOUNS = { lesson: ["درس", "درسان", "دروس", "درسًا", "درس واحد"], series: ["سلسلة", "سلسلتان", "سلاسل", "سلسلة", "سلسلة واحدة"],
@@ -191,7 +205,7 @@ export const SCHEDULE = {
   items: [
     { book: "كتاب التوحيد", series: "tawhid", day: 1, when: "الأحد", time: "من أذان العشاء إلى بعد الصلاة", mosque: "جامع عبدالله بن عمار", area: "الأندلس" },
     { book: "فضل الإسلام", series: "fadl-islam", day: 2, when: "الاثنين", time: "بعد العشاء", mosque: "مسجد الشيخ محمد بن عثيمين", area: "الربوة" },
-    { book: "مختصر سيرة الرسول ﷺ", series: "sira", day: 3, when: "الثلاثاء", time: "بعد العشاء", mosque: "جامع الملك فهد", area: "الشرفية" },
+    { book: "مختصر سيرة الرسول صلى الله عليه وسلم", series: "sira", day: 3, when: "الثلاثاء", time: "بعد العشاء", mosque: "جامع الملك فهد", area: "الشرفية" },
     { book: "كتاب الكبائر للإمام محمد بن عبدالوهاب", series: "kabair", day: 4, when: "الأربعاء", time: "بعد المغرب", mosque: "جامع أسامة بن زيد", area: "الوزيرية" },
     { book: "سلم الوصول إلى علم الأصول", series: "sullam", day: 4, when: "الأربعاء", time: "بعد العشاء", mosque: "جامع طيبة", area: "الوزيرية" },
     { book: "الوابل الصيب لابن القيم", series: "wabil", day: 5, when: "الخميس", time: "بعد المغرب", mosque: "جامع البيان", area: "الصفا" },
