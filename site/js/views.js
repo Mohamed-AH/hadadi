@@ -55,7 +55,7 @@ export function row(l, opts = {}) {
   const sub = (opts.showSeries ? `${esc(s.title)}` : "") + (opts.showSeries && ldate(l) ? "، " : "") + (ldate(l) ? `<span class="nw">${ldate(l)}</span>` : "");
   const pg = opts.prog;   // this browser's listening progress {done, p} (series lists in the browser only)
   return `<a class="row${opts.now ? " now" : ""}${pg?.done ? " done" : ""}" href="${href.lesson(l.id)}" style="--i:${Math.min(opts.i || 0, 24)}"${opts.now ? ' aria-current="page"' : ""}${lang(l)}>
-    <span class="no">${l.n != null ? fmtNum(l.n) : ic(opts.now ? "headphones" : kindIcon(l) === "video" ? "video" : "play", 17)}</span>
+    <span class="no">${l.n != null ? fmtNum(l.n) : ic(kindIcon(l) === "video" ? "video" : opts.now ? "headphones" : "play", 17)}</span>
     <span class="tt"><span class="t">${esc(opts.inSeries ? shortTitle(l, s, !opts.noSection) : mainTitle(l, !opts.noSection))}</span><span class="s">${sub}${pg?.done ? `<span class="mk">${ic("circle-check", 14)} تم الاستماع</span>` : ""}</span></span>
     ${l.duration ? `<span class="d">${dur(l.duration)}</span>` : ""}${pg && !pg.done && pg.p > 0 ? `<span class="pgb" style="--p:${Math.round(Math.min(1, pg.p) * 100)}%" title="استمعت إلى جزء منه"></span>` : ""}</a>`;
 }
@@ -91,10 +91,12 @@ export const ogTitle = p => p.title.endsWith(SITE_SUFFIX) ? p.title.slice(0, -SI
 /* ───────── Pages ───────── */
 function home() {
   const DB = state.DB, vis = visible();
-  const top = DB.series.slice().sort((a, b) => b.count - a.count).slice(0, 8);
-  const recent = DB.lessons.filter(l => l.date).slice(0, 9), f = recent[0], latest = recent.slice(1), fs = f && seriesById[f.series];
+  /* the videos have their own section (owner 2026-11-22: «المرئيات»), so the home lists, tiles and counts are the audio library */
+  const aud = DB.lessons.filter(l => l.kind !== "video"), audSeries = DB.series.filter(s => s.sec !== "duroos");
+  const top = audSeries.slice().sort((a, b) => b.count - a.count).slice(0, 8);
+  const recent = aud.filter(l => l.date).slice(0, 9), f = recent[0], latest = recent.slice(1), fs = f && seriesById[f.series];
   const bio = state.bio;
-  const hours_ = Math.floor(DB.lessons.reduce((a, l) => a + (l.duration || 0), 0) / 36e4) * 100;
+  const hours_ = Math.floor(aud.reduce((a, l) => a + (l.duration || 0), 0) / 36e4) * 100;
   const feat = f ? `<a class="feat" href="${href.lesson(f.id)}">${art(fs)}<span class="feat-b"><span class="k">أحدث درس${ldate(f) ? "، " + ldate(f) : ""}</span>
       <span class="ft">${esc(fullTitle(f))}</span>${f.duration ? `<span class="m">${ic("clock", 14)} ${dur(f.duration)}</span>` : ""}<span class="go">${ic("play", 17)} استمع الآن</span></span></a>` : "";
   const bandHtml = band(`<div class="beams" aria-hidden="true"></div><div class="roshan" aria-hidden="true">${ROSHAN}</div><div class="hero-t">
@@ -102,7 +104,7 @@ function home() {
       ${ROLE ? `<p class="role">${ROLE}</p>` : ""}
       <p class="hero-p">دروس الشيخ في التفسير والحديث والعقيدة، وخطبه ومحاضراته، مرتّبة في سلاسل للاستماع والتحميل.</p>
       ${searchBox("ابحث عن درس أو كتاب أو باب…", "", "q", true)}
-      <ul class="stats"><li><b>${fmtNum(DB.lessons.length)}</b>مادة صوتية</li><li><b>${fmtNum(DB.series.length)}</b>سلسلة علمية</li>${hours_ ? `<li><b>${fmtNum(hours_)}</b>ساعة وأكثر</li>` : ""}${DB.books.length ? `<li><b>${fmtNum(DB.books.length)}</b>كتابًا</li>` : ""}</ul></div>
+      <ul class="stats"><li><b>${fmtNum(aud.length)}</b>مادة صوتية</li><li><b>${fmtNum(audSeries.length)}</b>سلسلة علمية</li>${hours_ ? `<li><b>${fmtNum(hours_)}</b>ساعة وأكثر</li>` : ""}${DB.books.length ? `<li><b>${fmtNum(DB.books.length)}</b>كتابًا</li>` : ""}</ul></div>
     ${feat}`, "hero");
   const html = `
     <nav class="chips" aria-label="أقسام المكتبة">${vis.map((s, i) => chip(s, sectionCount(s.id), i)).join("")}</nav>
@@ -208,7 +210,7 @@ export function seriesList(info, st) {
 }
 export const moreBtn = left => `<button type="button" class="more" id="more">عرض المزيد (${fmtNum(left)})</button>`;
 
-const NEWEST_FIRST = new Set(["khutab", "lectures", "tilawa", "fatawa", "tafsir"]);   // collections, not books: newest first
+const NEWEST_FIRST = new Set(["khutab", "lectures", "tilawa", "fatawa", "tafsir", "v-khutab", "v-lectures"]);   // collections, not books: newest first
 function seriesPage(id) {
   const info = seriesInfo(id); if (!info) return null;
   const { s, sec, flat, ordered, sections } = info;
@@ -269,7 +271,7 @@ function lessonPage(id) {
   const c = crumbs(flat ? [{ t: sec.title, h: href.series(s.id) }, { t: title }] : [{ t: sec.title, h: href.section(sec) }, { t: s.title, h: href.series(s.id) }, { t: title }]);
   const bandHtml = band(`<a class="lart" href="${href.series(s.id)}" aria-label="${esc(s.title)}">${art(s, "big")}</a><div class="pb-t">${c.html}
       <h1 class="w-title"${lang(l)}>${esc(title)}</h1>
-      <div class="w-meta">${l.section ? `<span>${esc(l.section)}</span>` : ""}${ldate(l) ? `<span>${ic("calendar", 15)}${ldate(l)}</span>` : ""}${l.duration ? `<span>${ic("clock", 15)}${dur(l.duration)}</span>` : ""}<span>${ic("list-music", 15)}${s.id === "khutab" ? "الخطبة" : "الدرس"} ${fmtNum(i + 1)} من ${fmtNum(sib.length)}</span></div>
+      <div class="w-meta">${l.section ? `<span>${esc(l.section)}</span>` : ""}${ldate(l) ? `<span>${ic("calendar", 15)}${ldate(l)}</span>` : ""}${l.duration ? `<span>${ic("clock", 15)}${dur(l.duration)}</span>` : ""}<span>${ic("list-music", 15)}${itemKind(s.id) === "khutba" ? "الخطبة" : itemKind(s.id) === "lesson" ? "الدرس" : "المادة"} ${fmtNum(i + 1)} من ${fmtNum(sib.length)}</span></div>
       ${useLabel(l) ? `<p class="orig">${esc(l.title)}</p>` : ""}${player}</div>`, "lesson-band");
   const html = `<div class="btns">
         ${next ? `<a class="btn pri" id="next" rel="next" href="${href.lesson(next.id)}">التالي ${ic("chevron-left", 17)}</a>` : `<span class="btn pri" aria-disabled="true">التالي ${ic("chevron-left", 17)}</span>`}
