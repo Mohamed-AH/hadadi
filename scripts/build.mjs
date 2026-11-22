@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { init, setAnnouncements, applyMedia, mergeLibraries, state, SITE, byId, seriesById, SECTIONS, secById, isFlat, href, SCHEDULE, hasContact } from "../site/js/core.js";
 import { loadPortal, mergePortal } from "./portal.mjs";
+import { loadPosters } from "./posters.mjs";
 import { resolve, notFoundPage, chromeTop, chromeBottom, footer, headHtml, hasDocs } from "../site/js/views.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -26,10 +27,14 @@ const LIB = hosted ? (ls => ({ ...ALL, lessons: ls, series: (ALL.series || []).f
 if (hosted) console.log(`${(ALL.lessons || []).length - LIB.lessons.length} lessons wait for hosted audio (HIDE_UNHOSTED is set)`);
 init(readJSON("catalogue.json"), LIB, readJSON("data/bio.json", true), MEDIA);
 const DB = state.DB;
-setAnnouncements(readJSON("data/announcements.json", true));   // posters whose end date has passed are left out
+/* the posters (scripts/posters.mjs: on Cloudflare's build, from the bot's list in D1); expired ones and drafts are left out */
+const POSTERS = await loadPosters(path.join(SRC, "data", "announcements.json"));
+setAnnouncements(POSTERS);
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.cpSync(SRC, OUT, { recursive: true, filter: s => !/[\\/]shell\.html$/.test(s) && !/[\\/]data[\\/]media\.json$/.test(s) && !/[\\/]data[\\/]makkah\.json$/.test(s) });   // the manifest stays out of dist: the merged library below carries the mirrored links
+fs.mkdirSync(path.join(OUT, "data"), { recursive: true });
+fs.writeFileSync(path.join(OUT, "data", "announcements.json"), JSON.stringify(state.ann) + "\n");   // the browser's copy = what the pages show
 if (process.env.TURNSTILE_SITEKEY) {   // tests only: bake Cloudflare's test site key into the browser copy too, so client-side navigation knows /contact/
   const f = path.join(OUT, "js", "core.js");
   fs.writeFileSync(f, fs.readFileSync(f, "utf8").replace('export const TURNSTILE_SITEKEY = "";', `export const TURNSTILE_SITEKEY = ${JSON.stringify(process.env.TURNSTILE_SITEKEY)};`));
