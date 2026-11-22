@@ -1,6 +1,6 @@
 {
   "channel": "https://www.youtube.com/channel/UCVY9jqheVfH7OlrBYiLyQVQ",
-  "note": "The Sheikh's videos on «تسجيلات دروس جدة» (the recordings channel of جامع الشيخ ابن عثيمين، الربوة). Titles come from each video's own title; hd = the Hijri date written in it. tools/import_youtube.mjs -> site/catalogue.json (section «المرئيات»).",
+  "note": "The Sheikh's videos on «تسجيلات دروس جدة» (the recordings channel of جامع الشيخ ابن عثيمين، الربوة). Titles come from each video's own title; hd = the Hijri date written in it. tools/import_youtube.mjs -> site/catalogue.json (section «المرئيات»). Also the Sheikh's official channel «قناة فوائد ودروس الشيخ حسن الحدادي أبو عمار» (channel_fawaid, run by a student under his supervision; owner 2026-11-22): its titles carry no date, so \"posted\" = the YouTube upload day (shown as «نُشر …»; empty when YouTube didn't give it), \"skip\" lists its videos left out (other scholars, poems, stories) and \"hold\" the unclear ones waiting for the team's check (the sync reports them each run).",
   "series": [
     {
       "id": "v-daa-dawa",
@@ -23,6 +23,11 @@
       "subject": "السيرة"
     },
     {
+      "id": "v-fawaid",
+      "title": "فوائد ومقاطع",
+      "subject": "فوائد"
+    },
+    {
       "id": "v-khutab",
       "title": "خطب الجمعة",
       "subject": "الخطب"
@@ -32,6 +37,37 @@
       "title": "محاضرات وندوات ودروس",
       "subject": "محاضرات"
     }
+  ],
+  "channel_fawaid": "https://www.youtube.com/channel/UCiXQI1paZlPXOMco8mwvGZQ",
+  "skip": [
+    "dNARASBCafk",
+    "HLlofTKlpFQ",
+    "CmGqjgdU5Jo",
+    "RjpzSllbkC8",
+    "Dqy_ZF73OSo",
+    "QM2qm9DdAIc",
+    "d6Jj13gX3Hs",
+    "y56xg1triAk",
+    "ypA5CsLX3ao",
+    "uaLXMJ4QqzQ",
+    "j63BSIzNOg0",
+    "ULEM9vVM44k",
+    "mFz-Epaa5Jc",
+    "2SQ7FBjHseY",
+    "1xPvY-JOXVw",
+    "Dl2Hy-iFCKU"
+  ],
+  "hold": [
+    "LM4Pr3jOdyQ",
+    "xX9RZcVh1IU",
+    "9Mm_2xTbg4U",
+    "VpiSPgujKY0",
+    "iO6Lzka2HXE",
+    "yMiBD3OYKgI",
+    "wE4EJuqcTHQ",
+    "EGf4cyZXWJw",
+    "oYuhBDI1fUQ",
+    "EKNJVS3r_gI"
   ],
   "videos": [
     {"id": "Da4yamkpPEk", "series": "v-daa-dawa", "n": 1, "hd": "1448-3-15", "duration": 3452},
@@ -79,6 +115,43 @@
     {"id": "t-I8KEEJgTA", "series": "v-lectures", "title": "محاضرة: خطر جماعة الحوثي الإرهابية", "hd": "1448-5-23", "duration": 2119},
     {"id": "HjAuNgBpm3A", "series": "v-lectures", "title": "محاضرة بعنوان: الجذور العقدية لإجرام الحوثيين", "hd": "1448-5-24", "duration": 3918},
     {"id": "M9D-KfX8AQE", "series": "v-lectures", "title": "محاضرة بعنوان: المرابطون على ثغورنا وما ينبغي علينا", "hd": "1448-6-5", "duration": 1524},
-    {"id": "N22eQM6fKGg", "series": "v-lectures", "title": "محاضرة: خطورة تعظيم القبور والأموات", "hd": "1448-6-10", "duration": 2510}
+    {"id": "N22eQM6fKGg", "series": "v-lectures", "title": "محاضرة: خطورة تعظيم القبور والأموات", "hd": "1448-6-10", "duration": 2510},
+    {"id": "yg6KdWJ0jGQ", "series": "v-fawaid", "title": "فضل أبي بكر الصديق رضي الله عنه على الأمة", "posted": "2025-03-03", "duration": 94},
+    {"id": "wuFDq_Pwjlw", "series": "v-fawaid", "title": "ثمرة الإحسان في رمضان وغيره", "posted": "2025-03-02", "duration": 95},
+    {"id": "G3cMIW05onA", "series": "v-fawaid", "title": "رمضان شهر القرآن: كيف كان حال السلف الصالح فيه", "posted": "2025-03-01", "duration": 202},
+    {"id": "QVfck-rIgQ0", "series": "v-fawaid", "title": "فضل الإسلام على الشرائع", "posted": "2024-07-26", "duration": 77},
+    {"id": "SUSaBCbyZ0Q", "series": "v-fawaid", "title": "يسّروا الزواج على الشباب", "posted": "2024-07-26", "duration": 315},
+    {"id": "6GuqNOhYNC8", "series": "v-fawaid", "title": "أكمل الله لنا الدين", "posted": "2024-07-26", "duration": 138},
+    {"id": "drOertE0HRw", "series": "v-fawaid", "title": "ما أساس الإسلام الذي تُبنى عليه الأعمال؟", "posted": "2024-06-26", "duration": 350},
+    {"id": "58Qcd6T-pmA", "series": "v-fawaid", "title": "الدين مبني على أصلين عظيمين", "posted": "2024-06-26", "duration": 161},
+    {"id": "eeuabL_hSA8", "series": "v-fawaid", "title": "النية: أقسامها وأنواعها وأثرها في قبول الأعمال", "posted": "2024-06-11", "duration": 171},
+    {"id": "GpybcfhFc5Q", "series": "v-fawaid", "title": "سفر المرأة بغير محرم: كلام العلماء فيه بالتفصيل", "posted": "", "duration": 583},
+    {"id": "ZnLJ0JtCUok", "series": "v-fawaid", "title": "سر النجاح وأساس الفلاح", "posted": "", "duration": 91},
+    {"id": "iz1djYw_vQ4", "series": "v-fawaid", "title": "كفر النعم من أعظم أسباب زوال الأمن", "posted": "", "duration": 181},
+    {"id": "SMMl3WvYqoc", "series": "v-fawaid", "title": "حال المسلمين بعضهم مع بعض", "posted": "", "duration": 191},
+    {"id": "7PyBBv0Iy8o", "series": "v-fawaid", "title": "أبواب جهنم: عددها ووصفها", "posted": "", "duration": 121},
+    {"id": "64AnH6ZlPlU", "series": "v-fawaid", "title": "محبطات الأعمال التي يستخف بها كثير من الناس", "posted": "", "duration": 257},
+    {"id": "X1Y6-J_4KJw", "series": "v-fawaid", "title": "عظمة الإسلام في فرض الزكاة وعقوبة مانعيها", "posted": "", "duration": 65},
+    {"id": "t44D03ChZRU", "series": "v-fawaid", "title": "سبب نزول ﴿إن شانئك هو الأبتر﴾ ومن الذي شتم رسول الله ﷺ", "posted": "", "duration": 239},
+    {"id": "4zNFOY0E5ZA", "series": "v-fawaid", "title": "حال المرأة في الجاهلية وإكرام الإسلام لها", "posted": "", "duration": 329},
+    {"id": "_tS7QSqTgg0", "series": "v-fawaid", "title": "الجنة ونعيم أهلها", "posted": "", "duration": 331},
+    {"id": "oGgUUrJAPdM", "series": "v-fawaid", "title": "وصف أم معبد للرسول ﷺ", "posted": "", "duration": 581},
+    {"id": "D3wyuBdtOhs", "series": "v-fawaid", "title": "ما الذي يتمناه الكافر بعد الموت؟", "posted": "", "duration": 119},
+    {"id": "LaOA1wfg4EQ", "series": "v-fawaid", "title": "هل حياتك كلها مشاكل؟ اسمع الحل", "posted": "", "duration": 184},
+    {"id": "5B5JZk83zwY", "series": "v-fawaid", "title": "الصدقة بعد المعصية والذنب لها أثر عظيم", "posted": "", "duration": 55},
+    {"id": "wYCuwPFuy2o", "series": "v-fawaid", "title": "مكة قضيتنا ومكة دين: رد على كل حاقد على البلد الأمين", "posted": "", "duration": 124},
+    {"id": "ieExwTO_lcY", "series": "v-fawaid", "title": "الدعاوى الكيدية بين الزوجين وزملاء العمل", "posted": "", "duration": 632},
+    {"id": "RFXQwds9JlI", "series": "v-fawaid", "title": "كيف نستفيد من باقي النعمة", "posted": "", "duration": 219},
+    {"id": "mLEFY2M080g", "series": "v-fawaid", "title": "التعليق الوجيز على كتاب التوحيد: باب من الشرك لبس الحلقة والخيط (١)", "posted": "", "duration": 690},
+    {"id": "stA7hQ6pX4k", "series": "v-fawaid", "title": "متى يذهب الناس إلى علمائهم فيجدونهم قردة وخنازير؟", "posted": "", "duration": 218},
+    {"id": "aZyeCSbgoTY", "series": "v-fawaid", "title": "معنى الوسطية الحق والرد على المتساهلين والغلاة", "posted": "", "duration": 149},
+    {"id": "hSxk05hGRng", "series": "v-lectures", "title": "ما هو العلم وما حقيقته (المركز الإسلامي بملتون كينز، بريطانيا)", "posted": "", "duration": 4610},
+    {"id": "ZE2IAccZBW0", "series": "v-lectures", "title": "أحكام شرعية وآداب مرعية في فصل الشتاء", "posted": "", "duration": 2548},
+    {"id": "WT0nDclxC8U", "series": "v-lectures", "title": "فضل العلم والعلماء وواجبات المعلمين والمعلمات", "posted": "", "duration": 2503},
+    {"id": "55WbZicAZ04", "series": "v-lectures", "title": "فصل الشتاء من آيات الله، يحبه المؤمنون للقيام والصيام", "posted": "", "duration": 1783},
+    {"id": "CIUun4B-_cA", "series": "v-lectures", "title": "أحكام الاستئذان: كيف يستأذن الأب والإخوة والأبناء على محارمهم", "posted": "", "duration": 1570},
+    {"id": "qoHKIw29sPg", "series": "v-lectures", "title": "ما يُشرع من القرآن دبر الصلاة", "posted": "", "duration": 1123},
+    {"id": "EOeqlu9lkFE", "series": "v-lectures", "title": "رمضان مدرسة الأخلاق (جامع الرحمة بجدة)", "posted": "", "duration": 1036},
+    {"id": "H3y30bipNvo", "series": "v-khutab", "title": "خطبة الجمعة: الفرق بين العدل والمساواة في الإسلام", "posted": "", "duration": 1323}
   ]
 }

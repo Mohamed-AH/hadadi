@@ -10,12 +10,13 @@ export const OFFICIAL_PRE = "الموقع الرسمي لفضيلة الشيخ";
 export const FULL_NAME = "حسن بن علي بن حسن حدادي";
 export const ROLE = "";
 export const OFFICIAL_NAME = `${OFFICIAL_PRE} ${FULL_NAME}`;
-export const YT_CHANNEL = "";
+export const YT_CHANNEL = "https://www.youtube.com/channel/UCiXQI1paZlPXOMco8mwvGZQ";   // «قناة فوائد ودروس الشيخ حسن الحدادي أبو عمار», run by a student under his supervision (owner 2026-11-22)
 export const TG_CHANNEL = "https://t.me/h_haddadi7";
 export const TG_CHANNEL_2 = "https://t.me/Aqar8";   // lessons are still imported from it; not linked (owner 2026-11-17)
 export const WA_GROUP = "https://chat.whatsapp.com/BupKFX5G3236scpMYX05L1";
 export const LINKS = [
   { t: "قناة الشيخ على تيليجرام", s: "تيليجرام", b: "telegram", h: TG_CHANNEL }, { t: "مجموعة الشيخ على واتساب", s: "واتساب", b: "whatsapp", h: WA_GROUP },
+  { t: "قناة الشيخ على يوتيوب", s: "يوتيوب", b: "youtube", h: YT_CHANNEL },
 ];
 /* «تواصل معنا»: the address the footer button and the drawer link write to. Empty = the button is not shown. */
 export const CONTACT_EMAIL = "";   // owner 2026-11-18: no mailto; visitors write through the form on /contact/ instead
@@ -35,7 +36,7 @@ export const SECTIONS = [
   { id: "khutab",   title: "الخطب",            icon: "scroll-text",  desc: "خطب الجمعة والعيدين بجامع عبدالله بن عمار بجدة وغيره." },
   { id: "lectures", title: "المحاضرات",        icon: "mic-vocal",    desc: "محاضرات وكلمات وندوات." },
   { id: "tilawa",   title: "التلاوات",         icon: "headphones",   desc: "تلاوات من الصلوات." },
-  { id: "duroos",   title: "المرئيات",         icon: "video",        desc: "دروس الشيخ وخطبه ومحاضراته المرئية، من قناة «تسجيلات دروس جدة» على يوتيوب." },
+  { id: "duroos",   title: "المرئيات",         icon: "video",        desc: "دروس الشيخ وخطبه ومحاضراته المرئية، من قناة الشيخ على يوتيوب «فوائد ودروس الشيخ حسن الحدادي» وقناة «تسجيلات دروس جدة»." },
   { id: "books",    title: "الكتب",            icon: "book-open",    desc: "مؤلفات الشيخ للقراءة والتحميل." },
 ];
 const UNIT = {};   // numbered-lesson label per series
@@ -121,7 +122,9 @@ export const fmtDate = d => d ? hijriFull.format(at(d)) : "";
 const HM = ["محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"];
 // `hd` = Hijri date taken from the source ("1433-3-2", "1427-3" or just "1426"); otherwise convert the Gregorian `date`.
 const fmtHijri = hd => { const [y, m, d] = hd.split("-").map(Number); return [d ? fmtNum(d) : "", m ? HM[m - 1] : "", fmtNum(y), "هـ"].filter(Boolean).join(" "); };
-export const ldate = l => l.hd ? fmtHijri(l.hd) : l.date ? fmtDate(l.date) : "";
+export const rawDate = l => l.hd ? fmtHijri(l.hd) : l.date ? fmtDate(l.date) : "";
+// a video from the Sheikh's own YouTube channel has no date in its title: its date is the upload day, so it says so
+export const ldate = l => { const d = rawDate(l); return d && l.posted ? "نُشر " + d : d; };
 export const fmtYear = d => d ? hijriYear.format(at(d)).replace(/\s*هـ$/, "") : "";
 export const dur = s => { if (!s) return ""; const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
   return dg((h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0")); };   // Arabic-Indic digits like every other number on the site
@@ -133,7 +136,7 @@ export const NOUNS = { lesson: ["درس", "درسان", "دروس", "درسًا"
   khutba: ["خطبة", "خطبتان", "خطب", "خطبة", "خطبة واحدة"], lecture: ["محاضرة", "محاضرتان", "محاضرات", "محاضرة", "محاضرة واحدة"],
   tilawa: ["تلاوة", "تلاوتان", "تلاوات", "تلاوة", "تلاوة واحدة"] };
 /* what a series' items are called when counted (owner 2026-11-17: «١٧٤ خطبة», «٧٣ محاضرة», not «درسًا») */
-const ITEM = { khutab: "khutba", lectures: "lecture", tilawa: "tilawa", "v-khutab": "khutba", "v-lectures": "item" };
+const ITEM = { khutab: "khutba", lectures: "lecture", tilawa: "tilawa", "v-khutab": "khutba", "v-lectures": "item", "v-fawaid": "item" };
 export const itemKind = sid => ITEM[sid] || "lesson";
 export const count = (n, kind) => {
   const [one, two, few, many, single] = NOUNS[kind], r = n % 100;
