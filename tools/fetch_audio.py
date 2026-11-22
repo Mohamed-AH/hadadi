@@ -141,9 +141,15 @@ class TelegramSource:
         need = [k for k in ("TG_API_ID", "TG_API_HASH") if not os.environ.get(k)]
         if need: sys.exit("missing " + ", ".join(need) + " (create them once at https://my.telegram.org -> API development tools)")
         from telethon.sync import TelegramClient
-        self.client = TelegramClient(str(SESSION), int(os.environ["TG_API_ID"]), os.environ["TG_API_HASH"],
+        from telethon.sessions import StringSession
+        sess = StringSession(os.environ["TG_SESSION"]) if os.environ.get("TG_SESSION") else str(SESSION)   # the sync job passes its login as TG_SESSION
+        self.client = TelegramClient(sess, int(os.environ["TG_API_ID"]), os.environ["TG_API_HASH"],
                                      flood_sleep_threshold=24 * 3600)   # always wait out FloodWait instead of failing
-        self.client.start()            # first run: asks for your phone number and the login code Telegram sends you
+        if os.environ.get("TG_SESSION"):
+            self.client.connect()
+            if not self.client.is_user_authorized(): sys.exit("TELEGRAM_LOGIN_EXPIRED: the saved Telegram login no longer works")
+        else:
+            self.client.start()        # first run: asks for your phone number and the login code Telegram sends you
         self.pause, self.last = pause, 0.0
 
     def fetch(self, channel, msg_id, dst):

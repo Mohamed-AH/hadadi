@@ -25,8 +25,8 @@ export async function verifyTurnstile(token, env, fetcher = fetch) {
   return j.success === true;
 }
 
-const b64 = s => { const b = new TextEncoder().encode(s); let t = ""; for (const x of b) t += String.fromCharCode(x); return btoa(t).replace(/.{76}/g, "$&\r\n"); };
-const encWord = s => `=?UTF-8?B?${b64(s).replace(/\r\n/g, "")}?=`;
+export const b64 = s => { const b = new TextEncoder().encode(s); let t = ""; for (const x of b) t += String.fromCharCode(x); return btoa(t).replace(/.{76}/g, "$&\r\n"); };
+export const encWord = s => `=?UTF-8?B?${b64(s).replace(/\r\n/g, "")}?=`;
 const h = v => String(v).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const EMAIL = /^[^\s@<>"(),;:]+@[^\s@<>"(),;:]+\.[a-z]{2,}$/i;
 /* Plain text + an RTL HTML part (Gmail shows plain Arabic text left-aligned with the punctuation flipped). Reply-To = the visitor's
