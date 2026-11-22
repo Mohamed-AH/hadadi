@@ -39,7 +39,7 @@ export function lessonCard(l, i = 0) {
   const s = seriesById[l.series];
   const heading = useLabel(l) ? `${s.title} — ${label(l)}${l.section ? "، " + l.section : ""}` : fullTitle(l);
   return `<a class="ep" href="${href.lesson(l.id)}" style="--i:${i}"${lang(l)}>${art(s, "mini")}
-    <span class="tt"><span class="t">${esc(heading)}</span><span class="s">${esc(s.title)}${ldate(l) ? "، " + ldate(l) : ""}</span></span>
+    <span class="tt"><span class="t">${esc(heading)}</span><span class="s">${esc(s.title)}${ldate(l) ? `، <span class="nw">${ldate(l)}</span>` : ""}</span></span>
     ${l.duration ? `<span class="d">${dur(l.duration)}</span>` : ""}<span class="pb" aria-hidden="true">${ic(kindIcon(l) === "video" ? "video" : "play", 18)}</span></a>`;
 }
 export const eps = list => `<div class="eps">${list.map(lessonCard).join("")}</div>`;
@@ -52,7 +52,7 @@ const shortTitle = (l, s, withBook) => {
 };
 export function row(l, opts = {}) {
   const s = seriesById[l.series];
-  const sub = (opts.showSeries ? `${esc(s.title)}` : "") + (opts.showSeries && ldate(l) ? "، " : "") + ldate(l);
+  const sub = (opts.showSeries ? `${esc(s.title)}` : "") + (opts.showSeries && ldate(l) ? "، " : "") + (ldate(l) ? `<span class="nw">${ldate(l)}</span>` : "");
   const pg = opts.prog;   // this browser's listening progress {done, p} (series lists in the browser only)
   return `<a class="row${opts.now ? " now" : ""}${pg?.done ? " done" : ""}" href="${href.lesson(l.id)}" style="--i:${Math.min(opts.i || 0, 24)}"${opts.now ? ' aria-current="page"' : ""}${lang(l)}>
     <span class="no">${l.n != null ? fmtNum(l.n) : ic(opts.now ? "headphones" : kindIcon(l) === "video" ? "video" : "play", 17)}</span>
@@ -245,7 +245,7 @@ export const SPEEDS = [1, 1.25, 1.5, 2];
 export const speedLabel = v => fmtNum(v).replace("٫", ".") + "×";
 function lessonPage(id) {
   const l = byId[id]; if (!l) return null;
-  const info = seriesInfo(l.series), { s, sec, flat, sib } = info;
+  const info = seriesInfo(l.series), { s, sec, flat } = info, sib = listenOrder(info);   // previous/next and «الدرس ٣ من ٤٢» follow the order the series is listened in
   const i = sib.findIndex(x => x.id === l.id), prev = sib[i - 1], next = sib[i + 1];
   const W = 12, win = sib.slice(Math.max(0, i - W), i + W + 1), title = fullTitle(l);
   const tg = l.tg ? safeUrl(l.tg) : "";
@@ -257,7 +257,7 @@ function lessonPage(id) {
     ? `<div class="lp" id="lp" data-id="${esc(l.id)}">
          <audio id="aud" class="native" controls preload="none" src="${esc(safeUrl(l.src))}"${l.src_alt ? ` data-alt="${esc(safeUrl(l.src_alt))}"` : ""} aria-label="${esc(title)}"></audio>
          <div class="lp-ui"><input type="range" class="seek" id="lp-seek" min="0" max="${l.duration || 0}" value="0" step="1" aria-label="موضع التشغيل">
-           <div class="times"><span id="lp-cur">0:00</span><span id="lp-dur">${dur(l.duration) || ""}</span></div>
+           <div class="times"><span id="lp-cur">٠:٠٠</span><span id="lp-dur">${dur(l.duration) || ""}</span></div>
            <div class="ctl">${cbtn("lp-fwd", "rotate-cw", "تقديم ١٥ ثانية")}${cbtn("lp-play", "play", "تشغيل", 28, "cb play")}${cbtn("lp-back", "rotate-ccw", "رجوع ١٥ ثانية")}
              <div class="speeds" role="group" aria-label="سرعة التشغيل">${SPEEDS.map(v => `<button type="button" data-v="${v}" class="${v === 1 ? "on" : ""}" aria-pressed="${v === 1}">${speedLabel(v)}</button>`).join("")}</div></div></div></div>`
     : `<div class="frame"><div class="player lite" data-yt="${safeYt(l.id)}"><img src="https://i.ytimg.com/vi/${safeYt(l.id)}/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="lite-play" aria-label="تشغيل الفيديو: ${esc(title)}"><i>${ic("play", 30)}</i></button></div></div>`;
@@ -269,7 +269,7 @@ function lessonPage(id) {
   const c = crumbs(flat ? [{ t: sec.title, h: href.series(s.id) }, { t: title }] : [{ t: sec.title, h: href.section(sec) }, { t: s.title, h: href.series(s.id) }, { t: title }]);
   const bandHtml = band(`<a class="lart" href="${href.series(s.id)}" aria-label="${esc(s.title)}">${art(s, "big")}</a><div class="pb-t">${c.html}
       <h1 class="w-title"${lang(l)}>${esc(title)}</h1>
-      <div class="w-meta">${l.section ? `<span>${esc(l.section)}</span>` : ""}${ldate(l) ? `<span>${ic("calendar", 15)}${ldate(l)}</span>` : ""}${l.duration ? `<span>${ic("clock", 15)}${dur(l.duration)}</span>` : ""}<span>${ic("list-music", 15)}الدرس ${fmtNum(i + 1)} من ${fmtNum(sib.length)}</span></div>
+      <div class="w-meta">${l.section ? `<span>${esc(l.section)}</span>` : ""}${ldate(l) ? `<span>${ic("calendar", 15)}${ldate(l)}</span>` : ""}${l.duration ? `<span>${ic("clock", 15)}${dur(l.duration)}</span>` : ""}<span>${ic("list-music", 15)}${s.id === "khutab" ? "الخطبة" : "الدرس"} ${fmtNum(i + 1)} من ${fmtNum(sib.length)}</span></div>
       ${useLabel(l) ? `<p class="orig">${esc(l.title)}</p>` : ""}${player}</div>`, "lesson-band");
   const html = `<div class="btns">
         ${next ? `<a class="btn pri" id="next" rel="next" href="${href.lesson(next.id)}">التالي ${ic("chevron-left", 17)}</a>` : `<span class="btn pri" aria-disabled="true">التالي ${ic("chevron-left", 17)}</span>`}
@@ -358,7 +358,7 @@ function contactPage(params) {
   return mkPage({
     nav: "contact", path: href.contact(),
     band: pageBand(c, `<span class="sec-ic" aria-hidden="true">${ic("mail", 34)}</span>`, "تواصل معنا", "اكتب رسالتك إلى القائمين على الموقع. لا يلزمك ذكر اسمك ولا بريدك، ولا نحفظ عنك شيئًا سوى ما تكتبه."),
-    html: `<form class="cform" id="cform" method="post" action="/api/contact" novalidate>
+    html: `<div class="contact"><form class="cform" id="cform" method="post" action="/api/contact" novalidate>
       <p class="cform-st${s === "sent" ? " ok" : msg ? " err" : ""}" id="cform-st" role="status" aria-live="polite">${esc(msg)}</p>
       <div class="fld"><label for="cf-name">الاسم <small>(اختياري)</small></label><input id="cf-name" name="name" type="text" maxlength="80" autocomplete="name"></div>
       <div class="fld"><label for="cf-reply">البريد أو رقم الجوال <small>(اختياري، إن أردت أن نرد عليك)</small></label><input id="cf-reply" name="reply" type="text" maxlength="120" dir="auto" inputmode="email" autocomplete="email"></div>
@@ -367,7 +367,10 @@ function contactPage(params) {
       <div class="cf-ts" id="cf-ts" data-sitekey="${esc(tsKey())}"></div>
       <noscript><p class="hint">يحتاج التحقق من أنك لست برنامجًا آليًا إلى تفعيل JavaScript.</p></noscript>
       <button type="submit" class="btn cform-go" id="cform-go">${ic("send", 19)}<span>إرسال الرسالة</span></button>
-    </form>`,
+    </form>
+    <aside class="c-side" aria-labelledby="c-side-h"><h2 id="c-side-h">قنوات الشيخ</h2><p>تُنشر الدروس والإعلانات أولًا بأول في:</p>
+      <ul class="c-links" role="list">${LINKS.map(x => `<li><a class="c-${x.b}" href="${x.h}" target="_blank" rel="noopener" aria-label="${esc(x.t)} (يفتح في نافذة جديدة)">${brand(x.b, 22)}<span>${x.b === "telegram" ? "قناة تيليجرام" : "مجموعة واتساب"}</span>${ic("external-link", 15)}</a></li>`).join("")}</ul>
+      <p class="c-note">${ic("shield-check", 17)} رسالتك تصل إلى القائمين على الموقع وحدهم، ولا نعرضها لأحد.</p></aside></div>`,
     title: withSite("تواصل معنا"), description: `راسل القائمين على موقع ${NAME_FULL}، دون الحاجة إلى بريد إلكتروني.`, jsonld: [c.ld], wire: { t: "contact" },
   });
 }
@@ -389,22 +392,23 @@ export function scheduleTable(cls = "") {
     const until = got && /^\d{4}-\d\d-\d\d$/.test(got.last.date || "") ? addDays(got.last.date, NEW_DAYS) : "";
     const fresh = until && until >= today ? `<span class="sc-new" data-until="${until}">جديد</span>` : "";
     const book = s ? `<a href="${href.series(s.id)}">${esc(x.book)}</a>${fresh}` : `<span>${esc(x.book)}</span>`;
-    const last = got ? `<a class="sc-n" href="${href.lesson(got.last.id)}" title="${x.series === "khutab" ? "آخر خطبة" : "آخر درس"}: ${esc(fullTitle(got.last))}" aria-label="${x.series === "khutab" ? "آخر خطبة" : "آخر درس"}، ${count(got.n, itemKind(x.series))}: ${esc(fullTitle(got.last))}">${fmtNum(got.n)}</a>`
+    const lastT = x.series === "khutab" ? "آخر خطبة" : "آخر درس";
+    const last = got ? `<a class="sc-n" href="${href.lesson(got.last.id)}" title="${lastT}: ${esc(fullTitle(got.last))}" aria-label="${lastT}: ${esc(fullTitle(got.last))}">${ic("play", 14)}${lastT}</a>`
       : `<span class="sc-n none" title="لم تُنشر دروس منه بعد" aria-label="لم تُنشر دروس منه بعد">—</span>`;
     return `<tr><td class="sc-day">${esc(x.when)}</td><td class="sc-time">${esc(x.time)}</td>
-      <td class="sc-book">${book}<span class="sc-place">${ic("map-pin", 14)} ${esc(x.mosque)}، ${esc(x.area)}</span></td><td class="sc-last">${last}</td></tr>`;
+      <td class="sc-book">${book}<span class="sc-place">${ic("map-pin", 14)} ${esc(x.mosque)}، ${esc(x.area)}${got ? `<span class="sc-count">${ic("list-music", 14)} ${count(got.n, itemKind(x.series))}</span>` : ""}</span></td><td class="sc-last">${last}</td></tr>`;
   }).join("");
   const tog = (v, i, t, on) => `<button type="button" data-sv="${v}" aria-pressed="${on}">${ic(i, 16)} ${t}</button>`;
   return `<div class="sv" role="group" aria-label="طريقة عرض الجدول">${tog("cards", "layout-list", "بطاقات", true)}${tog("table", "table-2", "جدول", false)}</div>
     <div class="sched-w${cls ? " " + cls : ""}"><table class="sched"><caption class="sr-only">${esc(SCHEDULE.title)} ${esc(SCHEDULE.year)}</caption>
-    <thead><tr><th scope="col">اليوم</th><th scope="col">الوقت</th><th scope="col">الدرس والمكان</th><th scope="col">آخر درس</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    <thead><tr><th scope="col">اليوم</th><th scope="col">الوقت</th><th scope="col">الدرس والمكان</th><th scope="col"><span class="sr-only">الاستماع</span></th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 function schedulePage() {
   const c = crumbs([{ t: "جدول الدروس" }]), pin = state.ann.find(a => a.pin);
   return mkPage({
     nav: "schedule", path: href.schedule(),
     band: pageBand(c, `<span class="sec-ic" aria-hidden="true">${ic("calendar-days", 34)}</span>`, "جدول الدروس الأسبوعي",
-      `${esc(SCHEDULE.title)} ${esc(SCHEDULE.year)}، من ${esc(SCHEDULE.from)}. اضغط اسم الكتاب لفتح سلسلته، والرقم لآخر درس منه.`),
+      `${esc(SCHEDULE.title)} ${esc(SCHEDULE.year)}، من ${esc(SCHEDULE.from)}. اضغط اسم الكتاب لفتح سلسلته، أو «آخر درس» للاستماع إلى أحدث ما نُشر منه.`),
     html: `<div class="sched-page">${scheduleTable()}</div>${pin ? `${head2("إعلان الجدول")}<div class="posters">${poster(pin, 0, true)}</div>` : ""}`,
     title: withSite(`جدول الدروس الأسبوعي — ${SCHEDULE.title}`), description: clip(`مواعيد دروس ${NAME_FULL} الأسبوعية وأماكنها: ${SCHEDULE.items.map(x => x.book).join("، ")}.`, 200), jsonld: [c.ld],
   });
@@ -527,7 +531,7 @@ export function chromeTop(nav) {
 const dock = () => `<div class="dock" id="dock" hidden><div class="wrap dock-in">
     <a class="d-l" id="d-link" href="/"><span class="art mini" id="d-art" aria-hidden="true"></span><span class="tt"><span class="t" id="d-title"></span><span class="s" id="d-sub"></span></span></a>
     <div class="d-ctl">${cbtn("d-next", "skip-forward", "الدرس التالي", 20)}${cbtn("d-fwd", "rotate-cw", "تقديم ١٥ ثانية", 22)}${cbtn("d-play", "play", "تشغيل", 22, "cb play")}${cbtn("d-back", "rotate-ccw", "رجوع ١٥ ثانية", 22)}${cbtn("d-prev", "skip-back", "الدرس السابق", 20)}</div>
-    <div class="d-pr"><span id="d-cur">0:00</span><input type="range" class="seek" id="d-seek" min="0" max="0" value="0" step="1" aria-label="موضع التشغيل"><span id="d-dur"></span></div>
+    <div class="d-pr"><span id="d-cur">٠:٠٠</span><input type="range" class="seek" id="d-seek" min="0" max="0" value="0" step="1" aria-label="موضع التشغيل"><span id="d-dur"></span></div>
     <button type="button" class="d-rate" id="d-rate" aria-label="سرعة التشغيل">${speedLabel(1)}</button>
     ${cbtn("d-q", "list-video", "قائمة التشغيل", 21)}${cbtn("d-x", "x", "إغلاق المشغل", 20)}
     <audio id="d-aud" preload="none"></audio></div>
@@ -554,7 +558,7 @@ export function footer() {
   </div>
   </div>
   <div class="foot-bar"><div class="wrap foot-bar-in">
-    <p>التسجيلات من قناة الشيخ على تيليجرام · آخر تحديث للفهرس: ${fmtDate(state.DB.updated)}</p>
+    <p>التسجيلات من قناة الشيخ على تيليجرام، وآخر تحديث للفهرس ${fmtDate(state.DB.updated)}</p>
     <a class="foot-top" href="#app">${ic("arrow-up", 17)}<span>أعلى الصفحة</span></a>
   </div></div></footer>`;
 }
