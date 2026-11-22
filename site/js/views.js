@@ -252,7 +252,11 @@ function lessonPage(id) {
   const W = 12, win = sib.slice(Math.max(0, i - W), i + W + 1), title = fullTitle(l);
   const tg = l.tg ? safeUrl(l.tg) : "";
   /* hosted audio: a native <audio> for visitors without JavaScript, replaced by app.js with controls bound to the docked player */
-  const player = l.kind === "audio" && !l.src
+  const vid = l.yt && byId[l.yt] ? href.lesson(l.yt) : "";   // a gap filled from the video (tools/video_gaps.py): its video page
+  const player = l.kind === "audio" && !l.src && !tg && vid
+    ? `<div class="lp lp-tg"><p>${ic("video", 18)} لم يُنشر صوت هذا الدرس على تيليجرام، وتسجيله المرئي متاح على الموقع.</p>
+         <a class="btn brass" id="tg-listen" href="${vid}">${ic("play", 17)} شاهد الدرس</a></div>`
+    : l.kind === "audio" && !l.src
     ? `<div class="lp lp-tg"><p>${ic("headphones", 18)} هذا الدرس متاح الآن على قناة الشيخ في تيليجرام.</p>
          <a class="btn brass" id="tg-listen" href="${esc(tg)}" target="_blank" rel="noopener">${ic("external-link", 17)} استمع على تيليجرام</a></div>`
     : l.kind === "audio"
@@ -266,7 +270,7 @@ function lessonPage(id) {
   const ext = l.kind === "audio" && !l.src
     ? ""   // the band's «استمع على تيليجرام» already opens the same post
     : l.kind === "audio"
-    ? dlLink(l.src, title) + (tg ? `<a class="btn" href="${esc(tg)}" target="_blank" rel="noopener">${ic("external-link", 17)} المنشور على تيليجرام</a>` : "")
+    ? dlLink(l.src, title) + (tg ? `<a class="btn" href="${esc(tg)}" target="_blank" rel="noopener">${ic("external-link", 17)} المنشور على تيليجرام</a>` : "") + (vid ? `<a class="btn" href="${vid}">${ic("video", 17)} التسجيل المرئي</a>` : "")
     : `<a class="btn" href="https://www.youtube.com/watch?v=${safeYt(l.id)}" target="_blank" rel="noopener">${ic("external-link", 17)} فتح في يوتيوب</a>`;
   const c = crumbs(flat ? [{ t: sec.title, h: href.series(s.id) }, { t: title }] : [{ t: sec.title, h: href.section(sec) }, { t: s.title, h: href.series(s.id) }, { t: title }]);
   const bandHtml = band(`<a class="lart" href="${href.series(s.id)}" aria-label="${esc(s.title)}">${art(s, "big")}</a><div class="pb-t">${c.html}
@@ -281,7 +285,7 @@ function lessonPage(id) {
       <div class="list">${win.map(x => row(x, { now: x.id === l.id, inSeries: true })).join("")}</div></section>`;
   const desc = clip(`${title}${title.includes(s.title) ? "" : " — " + s.title}${ldate(l) ? "، " + ldate(l) : ""}. ${l.kind === "audio" ? "درس صوتي" : "درس مرئي"} لفضيلة الشيخ ${FULL_NAME} حفظه الله، للاستماع والتحميل.`, 200);
   const ld = l.kind === "audio"
-    ? !l.src ? { "@type": "AudioObject", url: tg }
+    ? !l.src ? { "@type": "AudioObject", url: tg || SITE + (vid || href.lesson(l.id)) }
     : { "@type": "AudioObject", contentUrl: safeUrl(l.src), encodingFormat: MIME[(l.src.split("?")[0].split(".").pop() || "").toLowerCase()] || "audio/mpeg" }
     : { "@type": "VideoObject", thumbnailUrl: [`https://i.ytimg.com/vi/${safeYt(l.id)}/hqdefault.jpg`], embedUrl: `https://www.youtube.com/embed/${safeYt(l.id)}` };
   const when = /^\d{4}-\d\d-\d\d$/.test(l.date || "") ? `${l.date}T00:00:00+03:00` : l.date;   // Google wants a full datetime with a zone; our dates are Riyadh days

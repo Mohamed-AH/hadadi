@@ -165,7 +165,7 @@ function wireSeries(id) {
   const resume = $("#resume"), last = byId[store.get("lastIn", {})[id]];
   plays.hidden = !order.length;
   const note = $("#plays-n");
-  if (note) note.textContent = order.length < info.all.length ? `يمكن تشغيل ${countAr(order.length, itemKind(id))} هنا من ${countAr(info.all.length, itemKind(id))} حتى الآن، والبقية على تيليجرام.` : "";
+  if (note) note.textContent = order.length < info.all.length ? `يمكن تشغيل ${countAr(order.length, itemKind(id))} هنا من ${countAr(info.all.length, itemKind(id))} حتى الآن، والبقية على ${info.all.some(l => !l.src && l.yt) ? "تيليجرام أو مرئية" : "تيليجرام"}.` : "";
   if (last && last.src && last.series === id && !progress(last.id)?.done) {
     resume.hidden = false;
     resume.innerHTML = `${ic("headphones", 17)} متابعة: <span class="rs-t">${esc(fullTitle(last))}</span>${saved(last.id) ? ` <span class="rs-d">(${tfmt(saved(last.id))})</span>` : ""}`;

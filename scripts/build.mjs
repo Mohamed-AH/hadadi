@@ -15,7 +15,7 @@ const readJSON = (f, optional = false) => { try { return JSON.parse(fs.readFileS
 const t0 = Date.now();
 /* MEDIA_JSON=<file>: build with another media manifest (tests/player_check.mjs uses tests/fixtures/media.json) */
 const MEDIA0 = process.env.MEDIA_JSON ? JSON.parse(fs.readFileSync(path.resolve(process.env.MEDIA_JSON), "utf8")) : readJSON("data/media.json", true);
-const ALL0 = mergeLibraries(readJSON("data/library.json", true), readJSON("data/makkah.json", true));   // library.json + lessons imported from makkahscholars.org
+const ALL0 = mergeLibraries(readJSON("data/library.json", true), readJSON("data/makkah.json", true), readJSON("data/from_videos.json", true));   // library.json + lessons imported from makkahscholars.org + audio-series gaps filled from the videos (tools/video_gaps.py)
 /* the admin portal's published uploads and added lessons (scripts/portal.mjs: on Cloudflare's build, from /api/published) */
 const { lib: ALL, media: MEDIA } = mergePortal(ALL0, MEDIA0, await loadPortal());
 /* Lessons without hosted audio stay published (hadadi owner 2026-11-17: keep every lesson while the audio is uploaded; a hosted
@@ -29,7 +29,7 @@ const DB = state.DB;
 setAnnouncements(readJSON("data/announcements.json", true));   // posters whose end date has passed are left out
 
 fs.rmSync(OUT, { recursive: true, force: true });
-fs.cpSync(SRC, OUT, { recursive: true, filter: s => !/[\\/]shell\.html$/.test(s) && !/[\\/]data[\\/]media\.json$/.test(s) && !/[\\/]data[\\/]makkah\.json$/.test(s) });   // the manifest stays out of dist: the merged library below carries the mirrored links
+fs.cpSync(SRC, OUT, { recursive: true, filter: s => !/[\\/]shell\.html$/.test(s) && !/[\\/]data[\\/]media\.json$/.test(s) && !/[\\/]data[\\/]makkah\.json$/.test(s) && !/[\\/]data[\\/]from_videos\.json$/.test(s) });   // the manifest stays out of dist: the merged library below carries the mirrored links
 if (process.env.TURNSTILE_SITEKEY) {   // tests only: bake Cloudflare's test site key into the browser copy too, so client-side navigation knows /contact/
   const f = path.join(OUT, "js", "core.js");
   fs.writeFileSync(f, fs.readFileSync(f, "utf8").replace('export const TURNSTILE_SITEKEY = "";', `export const TURNSTILE_SITEKEY = ${JSON.stringify(process.env.TURNSTILE_SITEKEY)};`));
