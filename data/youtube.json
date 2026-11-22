@@ -1,0 +1,84 @@
+{
+  "channel": "https://www.youtube.com/channel/UCVY9jqheVfH7OlrBYiLyQVQ",
+  "note": "The Sheikh's videos on «تسجيلات دروس جدة» (the recordings channel of جامع الشيخ ابن عثيمين، الربوة). Titles come from each video's own title; hd = the Hijri date written in it. tools/import_youtube.mjs -> site/catalogue.json (section «المرئيات»).",
+  "series": [
+    {
+      "id": "v-daa-dawa",
+      "title": "شرح الداء والدواء لابن القيم",
+      "subject": "العقيدة"
+    },
+    {
+      "id": "v-wabil",
+      "title": "شرح الوابل الصيب لابن القيم",
+      "subject": "العقيدة"
+    },
+    {
+      "id": "v-kabair",
+      "title": "شرح كتاب الكبائر",
+      "subject": "العقيدة"
+    },
+    {
+      "id": "v-sira",
+      "title": "شرح مختصر سيرة الرسول صلى الله عليه وسلم",
+      "subject": "السيرة"
+    },
+    {
+      "id": "v-khutab",
+      "title": "خطب الجمعة",
+      "subject": "الخطب"
+    },
+    {
+      "id": "v-lectures",
+      "title": "محاضرات وندوات ودروس",
+      "subject": "محاضرات"
+    }
+  ],
+  "videos": [
+    {"id": "Da4yamkpPEk", "series": "v-daa-dawa", "n": 1, "hd": "1448-3-15", "duration": 3452},
+    {"id": "ZLCQ_Oi5-Gg", "series": "v-daa-dawa", "n": 2, "hd": "1448-3-22", "duration": 3092},
+    {"id": "z86Q_Hj0HV4", "series": "v-daa-dawa", "n": 3, "hd": "1448-3-29", "duration": 3340},
+    {"id": "ITWM1CNHlns", "series": "v-daa-dawa", "n": 4, "hd": "1448-4-14", "duration": 3136},
+    {"id": "6ySCdm_eGh0", "series": "v-daa-dawa", "n": 5, "hd": "1448-4-21", "duration": 3699},
+    {"id": "uWg6RPhYUb8", "series": "v-daa-dawa", "n": 6, "hd": "1448-4-28", "duration": 3082},
+    {"id": "6l0XPjFScP0", "series": "v-daa-dawa", "n": 7, "hd": "1448-5-5", "duration": 3297},
+    {"id": "Wt0MC1YbEKA", "series": "v-daa-dawa", "n": 8, "hd": "1448-5-12", "duration": 3745},
+    {"id": "npcCJmvF-t4", "series": "v-daa-dawa", "n": 9, "hd": "1448-5-19", "duration": 2921},
+    {"id": "bwdNix3pO94", "series": "v-daa-dawa", "n": 10, "hd": "1448-5-26", "duration": 2566},
+    {"id": "3uPgsmRVTL8", "series": "v-daa-dawa", "n": 11, "hd": "1448-6-3", "duration": 3592},
+    {"id": "6qBykgNxBrs", "series": "v-daa-dawa", "n": 12, "hd": "1448-6-10", "duration": 2641},
+    {"id": "GEFx--RIya4", "series": "v-wabil", "n": 1, "hd": "1448-3-28", "duration": 4777},
+    {"id": "ypH7oI-4VLk", "series": "v-wabil", "n": 2, "hd": "1448-4-13", "duration": 4627},
+    {"id": "_PxhsneFk-g", "series": "v-wabil", "n": 3, "hd": "1448-4-20", "duration": 5049},
+    {"id": "mT7VPmxfwP4", "series": "v-wabil", "n": 4, "hd": "1448-4-27", "duration": 3689},
+    {"id": "5kCZo9BYGno", "series": "v-wabil", "n": 5, "hd": "1448-5-4", "duration": 4665},
+    {"id": "pDF94N-DTHo", "series": "v-wabil", "n": 6, "hd": "1448-5-11", "duration": 4597},
+    {"id": "fF_IH6zEfuY", "series": "v-wabil", "n": 8, "hd": "1448-6-9", "duration": 2831},
+    {"id": "ktxELgwlwRw", "series": "v-wabil", "title": "شرح الوابل الصيب (١٨ جمادى الأولى)", "hd": "1448-5-18", "duration": 4625},
+    {"id": "8S_ncn_YKhg", "series": "v-kabair", "n": 1, "hd": "1448-3-27", "duration": 2837},
+    {"id": "j6V2WBLW9_k", "series": "v-kabair", "n": 2, "hd": "1448-4-19", "duration": 3591},
+    {"id": "EBjDGS-dmQA", "series": "v-kabair", "n": 3, "hd": "1448-4-26", "duration": 2452},
+    {"id": "saDte5a0yFA", "series": "v-kabair", "n": 4, "hd": "1448-5-10", "duration": 3120},
+    {"id": "gQbxxTxOgMk", "series": "v-kabair", "n": 5, "hd": "1448-6-8", "duration": 2540},
+    {"id": "fAGDB0l5aGA", "series": "v-sira", "n": 1, "hd": "1448-3-25", "duration": 3273},
+    {"id": "3tanlm1PDWE", "series": "v-sira", "n": 2, "hd": "1448-4-18", "duration": 2723},
+    {"id": "hVjtGbekdiw", "series": "v-sira", "n": 3, "hd": "1448-4-25", "duration": 2488},
+    {"id": "VgZM0fTPtno", "series": "v-sira", "n": 4, "hd": "1448-5-9", "duration": 3832},
+    {"id": "IPf-XVXN7Xs", "series": "v-sira", "n": 5, "hd": "1448-6-7", "duration": 3614},
+    {"id": "7cUMDw9RRew", "series": "v-khutab", "title": "خطبة الجمعة: عقيدة أهل السنة في الصحابة", "hd": "1448-4-21", "duration": 1378},
+    {"id": "lszJn_-bsTw", "series": "v-khutab", "title": "خطبة الجمعة: الدعاء سلاح عند الفتن", "hd": "1448-5-5", "duration": 1226},
+    {"id": "XnH2ekcDQjs", "series": "v-khutab", "title": "خطبة الجمعة ١٢ جمادى الأولى", "hd": "1448-5-12", "duration": 1253},
+    {"id": "vrSWT6vJKdM", "series": "v-khutab", "title": "خطبة الجمعة ١٩ جمادى الأولى", "hd": "1448-5-19", "duration": 1549},
+    {"id": "P8HQ5u0yW_c", "series": "v-khutab", "title": "خطبة الجمعة ٢٦ جمادى الأولى", "hd": "1448-5-26", "duration": 1369},
+    {"id": "jy5nYY99cv0", "series": "v-khutab", "title": "خطبة الجمعة ٣ جمادى الآخرة", "hd": "1448-6-3", "duration": 948},
+    {"id": "-c3kHMcs0WM", "series": "v-khutab", "title": "خطبة الجمعة ١٠ جمادى الآخرة", "hd": "1448-6-10", "duration": 889},
+    {"id": "MgOTyjIvfxo", "series": "v-lectures", "title": "ندوة بعنوان: الانتماء واللحمة الوطنية", "hd": "1448-1-21", "duration": 3637},
+    {"id": "7KEy6AqD8j0", "series": "v-lectures", "title": "ندوة بعنوان: أهمية البناء الفكري (مع الشيخ عبداللطيف حكمي)", "hd": "1448-1-22", "duration": 4084},
+    {"id": "0tBRxvwJZXY", "series": "v-lectures", "title": "شرح رسالة: ستة مواضع من السيرة", "hd": "1448-2-3", "duration": 9323},
+    {"id": "kEwC0s-sdKo", "series": "v-lectures", "title": "شرح القصيدة اللامية لشيخ الإسلام ابن تيمية", "hd": "1448-3-10", "duration": 8492},
+    {"id": "NYdwczyS4IU", "series": "v-lectures", "title": "ندوة: وجوب الدفاع عن السعودية (مع الشيخ حسن الزهراني)", "hd": "1448-5-17", "duration": 2692},
+    {"id": "t-I8KEEJgTA", "series": "v-lectures", "title": "محاضرة: خطر جماعة الحوثي الإرهابية", "hd": "1448-5-23", "duration": 2119},
+    {"id": "HjAuNgBpm3A", "series": "v-lectures", "title": "محاضرة بعنوان: الجذور العقدية لإجرام الحوثيين", "hd": "1448-5-24", "duration": 3918},
+    {"id": "M9D-KfX8AQE", "series": "v-lectures", "title": "محاضرة بعنوان: المرابطون على ثغورنا وما ينبغي علينا", "hd": "1448-6-5", "duration": 1524},
+    {"id": "N22eQM6fKGg", "series": "v-lectures", "title": "محاضرة: خطورة تعظيم القبور والأموات", "hd": "1448-6-10", "duration": 2510}
+  ]
+}

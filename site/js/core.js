@@ -35,7 +35,7 @@ export const SECTIONS = [
   { id: "khutab",   title: "الخطب",            icon: "scroll-text",  desc: "خطب الجمعة والعيدين بجامع عبدالله بن عمار بجدة وغيره." },
   { id: "lectures", title: "المحاضرات",        icon: "mic-vocal",    desc: "محاضرات وكلمات وندوات." },
   { id: "tilawa",   title: "التلاوات",         icon: "headphones",   desc: "تلاوات من الصلوات." },
-  { id: "duroos",   title: "الدروس المرئية",   icon: "video",        desc: "الدروس المرئية من قناة الشيخ على يوتيوب." },
+  { id: "duroos",   title: "المرئيات",         icon: "video",        desc: "دروس الشيخ وخطبه ومحاضراته المرئية، من قناة «تسجيلات دروس جدة» على يوتيوب." },
   { id: "books",    title: "الكتب",            icon: "book-open",    desc: "مؤلفات الشيخ للقراءة والتحميل." },
 ];
 const UNIT = {};   // numbered-lesson label per series
@@ -133,7 +133,7 @@ export const NOUNS = { lesson: ["درس", "درسان", "دروس", "درسًا"
   khutba: ["خطبة", "خطبتان", "خطب", "خطبة", "خطبة واحدة"], lecture: ["محاضرة", "محاضرتان", "محاضرات", "محاضرة", "محاضرة واحدة"],
   tilawa: ["تلاوة", "تلاوتان", "تلاوات", "تلاوة", "تلاوة واحدة"] };
 /* what a series' items are called when counted (owner 2026-11-17: «١٧٤ خطبة», «٧٣ محاضرة», not «درسًا») */
-const ITEM = { khutab: "khutba", lectures: "lecture", tilawa: "tilawa" };
+const ITEM = { khutab: "khutba", lectures: "lecture", tilawa: "tilawa", "v-khutab": "khutba", "v-lectures": "item" };
 export const itemKind = sid => ITEM[sid] || "lesson";
 export const count = (n, kind) => {
   const [one, two, few, many, single] = NOUNS[kind], r = n % 100;
