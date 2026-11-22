@@ -3,7 +3,7 @@
 import {
   SITE, NAME, NAME_FULL, OFFICIAL_PRE, FULL_NAME, ROLE, OFFICIAL_NAME, YT_CHANNEL, TG_CHANNEL, LINKS, CONTACT_EMAIL, tsKey, hasContact, SECTIONS, COVER, COVER_PALETTE, PAGE, MAXQ, ROSHAN,
   state, byId, seriesById, secById, ic, brand, esc, fmtNum, count, itemKind, fmtYear, ldate, dur, isoDur, hours, dg, cleanQuery, oneOf, safeUrl, safeYt, safeLang, safeDecode, jsonLd,
-  DOCS, SCHEDULE, todayRiyadh, kindIcon, useLabel, label, mainTitle, fullTitle, secOfSeries, secOfLesson, seriesOrder, lang, thumb, STAR, match, sectionCount, visible, isFlat, seriesIn, href, fmtDate,
+  DOCS, SCHEDULE, todayRiyadh, kindIcon, useLabel, label, mainTitle, fullTitle, secOfSeries, secOfLesson, seriesOrder, lang, thumb, STAR, LOGO, match, sectionCount, visible, isFlat, seriesIn, href, fmtDate,
 } from "./core.js";
 
 const OG_DEFAULT = SITE + "/og/default.png";
@@ -516,7 +516,7 @@ export function chromeTop(nav) {
   const items = navItems();
   const drawerItems = [{ id: "home", t: "الرئيسية", i: "house", h: "/" }, { id: "library", t: "كل الأقسام", i: "layout-grid", h: href.library() }, { id: "search", t: "بحث", i: "search", h: href.search() }, ...extraItems(), ...items];
   return `<header class="top"><div class="wrap top-in">
-    <a class="brand" href="/" aria-label="${esc(NAME_FULL)} — الرئيسية"><span class="mark" aria-hidden="true">${STAR}</span><span><strong>${NAME} <span class="hd">حفظه الله</span></strong><small>دروس ومحاضرات وخطب</small></span></a>
+    <a class="brand" href="/" aria-label="${esc(NAME_FULL)} — الرئيسية"><span class="mark" aria-hidden="true">${LOGO}</span><span><strong>${NAME} <span class="hd">حفظه الله</span></strong><small>دروس ومحاضرات وخطب</small></span></a>
     <nav class="nav" id="nav" aria-label="الأقسام"><a href="/" data-nav="home"${cur(nav, "home")}>الرئيسية</a>${items.map(x => `<a href="${x.h}" data-nav="${x.id}"${cur(nav, x.id)}>${x.t}</a>`).join("")}</nav>
     <a class="icon-btn" id="hsearch" href="${href.search()}" aria-label="بحث">${ic("search", 19)}</a>
     <button type="button" class="icon-btn" id="theme" aria-label="تبديل الوضع الليلي">${ic("moon", 19)}</button>
@@ -551,7 +551,7 @@ export const socials = () => `<ul class="soc" role="list">${LINKS.map(x => `<li>
 export function footer() {
   return `<footer class="foot"><div class="wrap foot-in">
   <div class="foot-brand">
-    <a class="foot-id" href="/"><span class="mark" aria-hidden="true">${STAR}</span><span><small>${esc(OFFICIAL_PRE)}</small><strong>${esc(FULL_NAME)}</strong><span class="hd">حفظه الله ورعاه</span></span></a>
+    <a class="foot-id" href="/"><span class="mark" aria-hidden="true">${LOGO}</span><span><small>${esc(OFFICIAL_PRE)}</small><strong>${esc(FULL_NAME)}</strong><span class="hd">حفظه الله ورعاه</span></span></a>
     <p class="foot-tag">دروس ومحاضرات وخطب الشيخ في جدة، مرتبة في سلاسل يسهل الاستماع إليها ومتابعتها.</p>
   </div>
   <div class="foot-reach">

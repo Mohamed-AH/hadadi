@@ -6,7 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { chromium } from "playwright";
-import { STAR } from "../site/js/core.js";
+import { STAR, LOGO } from "../site/js/core.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const fonts = pathToFileURL(path.join(ROOT, "site", "fonts")).href;
@@ -18,10 +18,10 @@ const html = `<!doctype html><meta charset="utf-8"><style>
 @font-face{font-family:Amiri;font-weight:700;src:url(${fonts}/aref-ruqaa-arabic-700-subset.woff2)}
 *{box-sizing:border-box}body{margin:0;width:1200px;height:630px;direction:rtl;position:relative;overflow:hidden;color:#f6ead8;font-family:Tajawal;
  background:${pattern("e0b48a", .1)},#3a2a1e;background-size:84px}
-.mark{position:absolute;top:84px;right:96px;width:84px;height:84px;color:#e0b48a}
-.pre{position:absolute;top:196px;right:96px;font:700 36px Tajawal;color:#e0b48a}
-h1{position:absolute;top:250px;right:96px;margin:0;font:700 70px/1.3 Amiri}
-.dua{position:absolute;top:404px;right:96px;font:400 40px Tajawal;color:#dcc9b0}
+.mark{position:absolute;top:58px;right:96px;width:94px;height:130px;color:#e0b48a}
+.pre{position:absolute;top:204px;right:96px;font:700 36px Tajawal;color:#e0b48a}
+h1{position:absolute;top:256px;right:96px;margin:0;font:700 70px/1.3 Amiri}
+.dua{position:absolute;top:406px;right:96px;font:400 40px Tajawal;color:#dcc9b0}
 .sub{position:absolute;bottom:70px;right:96px;font:400 30px Tajawal;color:#f6ead8}
 .sub b{color:#e0b48a;font-weight:700}
 .art{position:absolute;left:60px;top:170px;width:270px;height:290px;border-radius:46% 46% 18px 18px / 26% 26% 18px 18px;background:${pattern("ffffff", .12)},#1f5f5b;background-size:84px;box-shadow:0 30px 60px -20px rgba(0,0,0,.6);transform:rotate(-4deg)}
@@ -31,7 +31,7 @@ h1{position:absolute;top:250px;right:96px;margin:0;font:700 70px/1.3 Amiri}
 .art span{position:absolute;bottom:34px;right:34px;left:34px;font:700 38px/1.35 Kufi;color:#fff}
 </style>
 <div class="art art2"></div><div class="art"></div><div class="art art3">${STAR}<span>شرح كتاب التوحيد</span></div>
-<div class="mark">${STAR}</div>
+<div class="mark">${LOGO}</div>
 <div class="pre">الموقع الرسمي لفضيلة الشيخ</div>
 <h1>حسن بن علي بن حسن حدادي</h1><div class="dua">حفظه الله ورعاه</div>
 <div class="sub"><b>دروس</b> · محاضرات · خطب · للاستماع والتحميل</div>`;
