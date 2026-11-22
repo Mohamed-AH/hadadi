@@ -1,5 +1,5 @@
 /* worker/index.js (the /dl/ download route) against fake ASSETS + R2 bindings.   Usage: node tests/worker_check.mjs */
-import w, { fileName, disposition, dispatch, JOBS, health } from "../worker/index.js";
+import w, { fileName, disposition, dispatch, JOBS, EXPIRE_CRON, health } from "../worker/index.js";
 const env = { ASSETS: { fetch: r => new Response("asset " + new URL(r.url).pathname) },
   MEDIA: { get: async k => k === "audio/2137b5d426dbcd69.m4a" ? { body: "AUDIO", size: 5 } : null } };
 let bad = 0; const t = (n, c) => { if (!c) bad++; console.log(c ? "ok  " : "FAIL", n); };
@@ -11,7 +11,7 @@ t("attachment utf-8", /^attachment; filename="lesson.m4a"; filename\*=UTF-8''%D8
 t("no slash/quote/bidi", decodeURIComponent(r.headers.get("content-disposition").split("''")[1]) === "تفسير ابن كثير البقرة x.m4a");
 r = await w.fetch(new Request("https://x/dl/0000000000000000"), env); t("missing 404", r.status === 404);
 r = await w.fetch(new Request("https://x/bot", { method: "POST", body: "{}" }), env); t("/bot without settings -> 503", r.status === 503);
-r = await w.fetch(new Request("https://x/bot", { method: "POST", body: "{}" }), { ...env, TELEGRAM_BOT_TOKEN: "t", GH_TOKEN: "g" }); t("/bot without Telegram's secret -> 403", r.status === 403);
+r = await w.fetch(new Request("https://x/bot", { method: "POST", body: "{}" }), { ...env, TELEGRAM_BOT_TOKEN: "t", DB: {}, MEDIA: {} }); t("/bot without Telegram's secret -> 403", r.status === 403);
 r = await w.fetch(new Request("https://x/dl/../secret"), env); t("bad key -> assets", (await r.text()).startsWith("asset"));
 r = await w.fetch(new Request("https://x/dl/2137b5d426dbcd69", { method: "POST" }), env); t("POST 405", r.status === 405);
 t("empty name", fileName("") === "lesson.m4a" && fileName("(أ)") === "(أ).m4a" && disposition("(أ).m4a").includes("%28"));
@@ -36,6 +36,6 @@ t("health 503 when site/bucket fail", r.status === 503 && hj.site === "fail" && 
 r = await w.fetch(new Request("https://x/health"), henv(true)); t("/health routed", r.headers.get("content-type") === "application/json");
 t("/health runs in the Worker", (await import("node:fs")).readFileSync(new URL("../wrangler.jsonc", import.meta.url), "utf8").includes('"/health"'));
 const fs = await import("node:fs"), wr = fs.readFileSync(new URL("../wrangler.jsonc", import.meta.url), "utf8");
-t("crons match JOBS", Object.keys(JOBS).every(c => wr.includes(`"${c}"`))
+t("crons match JOBS and the poster timer", [...Object.keys(JOBS), EXPIRE_CRON].every(c => wr.includes(`"${c}"`))
   && Object.values(JOBS).every(f => fs.existsSync(new URL("../.github/workflows/" + f, import.meta.url))));
 process.exit(bad ? 1 : 0);

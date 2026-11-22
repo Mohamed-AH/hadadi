@@ -1,8 +1,8 @@
-/* Announcement posters: pure helpers shared by the Worker's bot (worker/bot.js) and the hourly job (tools/announce_bot.mjs).
-   A poster in site/data/announcements.json:
-     { id: 12 hex, title, image: "/ann/<sha16>.<ext>", w, h, until: "YYYY-MM-DD" | "", added, pin?: true, draft?: true,
-       file_id?, file_uid? }      the array order is the order on the site.
-   A draft (added in the bot, not yet published) has no image until the hourly job fetches file_id from Telegram. */
+/* Announcement posters: pure helpers for the Worker's bot (worker/bot.js, store in worker/poster_store.js).
+   A poster (D1 table posters; the site gets the published ones through /api/posters):
+     { id: 12 hex, title, image: "/ann/<sha16>.<ext>", thumb?: "/ann/thumb/<sha16>.jpg", w, h, until: "YYYY-MM-DD" | "", added,
+       pin?: true, draft?: true, file_id?, file_uid?, tg? }      the array order is the order on the site.
+   A draft (added in the bot, not yet published) already has its picture in R2 but is not on the site. */
 
 const AR = s => String(s).replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
 

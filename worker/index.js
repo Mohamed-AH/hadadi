@@ -1,7 +1,8 @@
-/* Serves the static site (dist/, via the ASSETS binding) and three dynamic routes (/health and /bot are below):
+/* Serves the static site (dist/, via the ASSETS binding) and a few dynamic routes (/health, /bot, /ann/*, /api/* below):
    /dl/<16 hex>?n=<title>  ->  R2 object audio/<hex>.m4a with Content-Disposition: attachment, so the lesson page's
    «تحميل» button saves the file under the lesson's title instead of opening it in a new tab (cross-origin `download` is ignored). */
 import { webhook } from "./bot.js";
+import { annFile, postersApi, expire } from "./poster_store.js";
 import { contact } from "./contact.js";
 import { admin, ADMIN_HOST } from "./admin/index.mjs";
 import { published } from "./admin/publish.mjs";
@@ -18,7 +19,8 @@ export const disposition = name => `attachment; filename="lesson.m4a"; filename*
 /* Timer (Cloudflare cron triggers in wrangler.jsonc, UTC): GitHub drops most scheduled Actions runs, so the Worker starts them
    through the API instead. Needs the secret GH_TOKEN (fine-grained token, this repo only, Actions: read and write). */
 export const REPO = "Mohamed-AH/hadadi";
-export const JOBS = {};   // no timers yet (the announcements bot and a YouTube sync can be added later, as on the Jabri site)
+export const JOBS = {};   // no GitHub workflows to start (the sync job has GitHub's own schedule, .github/workflows/sync.yml)
+export const EXPIRE_CRON = "7 21 * * *";   // 00:07 Riyadh: posters whose end date passed leave the site (worker/poster_store.js)
 export async function dispatch(workflow, env, fetcher = fetch) {
   if (!env.GH_TOKEN) { console.log("GH_TOKEN is not set: not starting " + workflow); return 0; }
   const r = await fetcher(`https://api.github.com/repos/${REPO}/actions/workflows/${workflow}/dispatches`, { method: "POST",
@@ -50,6 +52,7 @@ export async function health(env, fetcher = fetch) {
 
 export default {
   async scheduled(event, env) {
+    if (event.cron === EXPIRE_CRON) return void await expire(env);
     const wf = JOBS[event.cron];
     if (wf) await dispatch(wf, env);
   },
@@ -66,7 +69,9 @@ export default {
     if (url.pathname === "/api/event") return event(req, env);       // anonymous listening counters (worker/stats.js)
     if (url.pathname === "/api/published") return published(env);   // the portal's last Publish, read by the Cloudflare build (scripts/portal.mjs)
     if (url.pathname === "/api/sync-report") return syncReport(req, env);   // the sync job's report, emailed to the team (worker/sync_report.js)
-    if (url.pathname === "/bot") return webhook(req, env, { dispatch });   // the announcements bot (Telegram webhook, worker/bot.js)
+    if (url.pathname === "/api/posters") return postersApi(env);     // the published posters, read by the Cloudflare build (scripts/posters.mjs)
+    if (url.pathname === "/bot") return webhook(req, env);            // the announcements bot (Telegram webhook, worker/bot.js)
+    if (url.pathname.startsWith("/ann/")) return (await annFile(req, env)) || env.ASSETS.fetch(req);   // poster pictures (R2)
     if (!m) return env.ASSETS.fetch(req);
     if (req.method !== "GET" && req.method !== "HEAD") return new Response(null, { status: 405, headers: { allow: "GET, HEAD" } });
     const obj = await env.MEDIA.get(`audio/${m[1]}.m4a`);
