@@ -3,7 +3,7 @@
 import {
   SITE, NAME, NAME_FULL, OFFICIAL_PRE, FULL_NAME, ROLE, OFFICIAL_NAME, YT_CHANNEL, TG_CHANNEL, LINKS, CONTACT_EMAIL, tsKey, hasContact, SECTIONS, COVER, COVER_PALETTE, PAGE, MAXQ, ROSHAN,
   state, byId, seriesById, secById, ic, brand, esc, fmtNum, count, itemKind, fmtYear, ldate, rawDate, dur, isoDur, hours, dg, cleanQuery, oneOf, safeUrl, safeYt, safeLang, safeDecode, jsonLd,
-  DOCS, SCHEDULE, todayRiyadh, kindIcon, useLabel, label, mainTitle, fullTitle, secOfSeries, secOfLesson, seriesOrder, lang, thumb, STAR, LOGO, match, sectionCount, visible, isFlat, seriesIn, href, fmtDate,
+  DOCS, SCHEDULE, todayRiyadh, kindIcon, asVideo, useLabel, label, mainTitle, fullTitle, secOfSeries, secOfLesson, seriesOrder, lang, thumb, STAR, LOGO, match, sectionCount, visible, isFlat, seriesIn, href, fmtDate,
 } from "./core.js";
 
 const OG_DEFAULT = SITE + "/og/default.png";
@@ -56,7 +56,7 @@ export function row(l, opts = {}) {
   const pg = opts.prog;   // this browser's listening progress {done, p} (series lists in the browser only)
   return `<a class="row${opts.now ? " now" : ""}${pg?.done ? " done" : ""}" href="${href.lesson(l.id)}" style="--i:${Math.min(opts.i || 0, 24)}"${opts.now ? ' aria-current="page"' : ""}${lang(l)}>
     <span class="no">${l.n != null ? fmtNum(l.n) : ic(kindIcon(l) === "video" ? "video" : opts.now ? "headphones" : "play", 17)}</span>
-    <span class="tt"><span class="t">${esc(opts.inSeries ? shortTitle(l, s, !opts.noSection) : mainTitle(l, !opts.noSection))}</span><span class="s">${sub}${pg?.done ? `<span class="mk">${ic("circle-check", 14)} تم الاستماع</span>` : ""}</span></span>
+    <span class="tt"><span class="t">${esc(opts.inSeries ? shortTitle(l, s, !opts.noSection) : mainTitle(l, !opts.noSection))}</span><span class="s">${sub}${asVideo(l) ? `<span class="mk vd">${ic("video", 14)} مرئي</span>` : ""}${pg?.done ? `<span class="mk">${ic("circle-check", 14)} تم الاستماع</span>` : ""}</span></span>
     ${l.duration ? `<span class="d">${dur(l.duration)}</span>` : ""}${pg && !pg.done && pg.p > 0 ? `<span class="pgb" style="--p:${Math.round(Math.min(1, pg.p) * 100)}%" title="استمعت إلى جزء منه"></span>` : ""}</a>`;
 }
 const chip = (s, n, i = 0) => `<a class="chip" href="${href.section(s)}" style="--i:${i}">${ic(s.icon, 18)}<span>${s.title}</span><small>${fmtNum(n)}</small></a>`;
@@ -252,7 +252,12 @@ function lessonPage(id) {
   const W = 12, win = sib.slice(Math.max(0, i - W), i + W + 1), title = fullTitle(l);
   const tg = l.tg ? safeUrl(l.tg) : "";
   /* hosted audio: a native <audio> for visitors without JavaScript, replaced by app.js with controls bound to the docked player */
-  const player = l.kind === "audio" && !l.src
+  /* a gap in an audio series filled from its video (tools/video_gaps.py): the video plays here until the audio is hosted */
+  const yv = asVideo(l) ? safeYt(l.yt) : "", vid = l.yt && byId[l.yt] ? href.lesson(l.yt) : "";
+  const lite = id => `<div class="frame"><div class="player lite" data-yt="${id}"><img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="lite-play" aria-label="تشغيل الفيديو: ${esc(title)}"><i>${ic("play", 30)}</i></button></div></div>`;
+  const player = yv
+    ? `${lite(yv)}<p class="vnote">${ic("video", 16)} تسجيل مرئي: لم يُنشر صوت هذا الدرس بعد، ويُضاف هنا حين يُنشر.</p>`
+    : l.kind === "audio" && !l.src
     ? `<div class="lp lp-tg"><p>${ic("headphones", 18)} هذا الدرس متاح الآن على قناة الشيخ في تيليجرام.</p>
          <a class="btn brass" id="tg-listen" href="${esc(tg)}" target="_blank" rel="noopener">${ic("external-link", 17)} استمع على تيليجرام</a></div>`
     : l.kind === "audio"
@@ -262,11 +267,12 @@ function lessonPage(id) {
            <div class="times"><span id="lp-cur">٠:٠٠</span><span id="lp-dur">${dur(l.duration) || ""}</span></div>
            <div class="ctl">${cbtn("lp-fwd", "rotate-cw", "تقديم ١٥ ثانية")}${cbtn("lp-play", "play", "تشغيل", 28, "cb play")}${cbtn("lp-back", "rotate-ccw", "رجوع ١٥ ثانية")}
              <div class="speeds" role="group" aria-label="سرعة التشغيل">${SPEEDS.map(v => `<button type="button" data-v="${v}" class="${v === 1 ? "on" : ""}" aria-pressed="${v === 1}">${speedLabel(v)}</button>`).join("")}</div></div></div></div>`
-    : `<div class="frame"><div class="player lite" data-yt="${safeYt(l.id)}"><img src="https://i.ytimg.com/vi/${safeYt(l.id)}/hqdefault.jpg" alt="" width="480" height="360"><button type="button" class="lite-play" aria-label="تشغيل الفيديو: ${esc(title)}"><i>${ic("play", 30)}</i></button></div></div>`;
-  const ext = l.kind === "audio" && !l.src
+    : lite(safeYt(l.id));
+  const ext = yv ? `<a class="btn" href="https://www.youtube.com/watch?v=${yv}" target="_blank" rel="noopener">${ic("external-link", 17)} فتح في يوتيوب</a>`
+    : l.kind === "audio" && !l.src
     ? ""   // the band's «استمع على تيليجرام» already opens the same post
     : l.kind === "audio"
-    ? dlLink(l.src, title) + (tg ? `<a class="btn" href="${esc(tg)}" target="_blank" rel="noopener">${ic("external-link", 17)} المنشور على تيليجرام</a>` : "")
+    ? dlLink(l.src, title) + (tg ? `<a class="btn" href="${esc(tg)}" target="_blank" rel="noopener">${ic("external-link", 17)} المنشور على تيليجرام</a>` : "") + (vid ? `<a class="btn" href="${vid}">${ic("video", 17)} التسجيل المرئي</a>` : "")
     : `<a class="btn" href="https://www.youtube.com/watch?v=${safeYt(l.id)}" target="_blank" rel="noopener">${ic("external-link", 17)} فتح في يوتيوب</a>`;
   const c = crumbs(flat ? [{ t: sec.title, h: href.series(s.id) }, { t: title }] : [{ t: sec.title, h: href.section(sec) }, { t: s.title, h: href.series(s.id) }, { t: title }]);
   const bandHtml = band(`<a class="lart" href="${href.series(s.id)}" aria-label="${esc(s.title)}">${art(s, "big")}</a><div class="pb-t">${c.html}
@@ -279,18 +285,20 @@ function lessonPage(id) {
         ${ext}<button type="button" class="btn" id="share">${ic("link", 17)} نسخ الرابط</button></div>
     <section class="side" aria-labelledby="side-h">${head2(`<span id="side-h">دروس السلسلة</span>`, more(href.series(s.id), `كل الدروس (${fmtNum(sib.length)})`))}
       <div class="list">${win.map(x => row(x, { now: x.id === l.id, inSeries: true })).join("")}</div></section>`;
-  const desc = clip(`${title}${title.includes(s.title) ? "" : " — " + s.title}${ldate(l) ? "، " + ldate(l) : ""}. ${l.kind === "audio" ? "درس صوتي" : "درس مرئي"} لفضيلة الشيخ ${FULL_NAME} حفظه الله، للاستماع والتحميل.`, 200);
-  const ld = l.kind === "audio"
+  const desc = clip(`${title}${title.includes(s.title) ? "" : " — " + s.title}${ldate(l) ? "، " + ldate(l) : ""}. ${l.kind === "audio" && !yv ? "درس صوتي" : "درس مرئي"} لفضيلة الشيخ ${FULL_NAME} حفظه الله، للاستماع والتحميل.`, 200);
+  const thumbOf = yv || (l.kind === "video" ? safeYt(l.id) : "");
+  const ld = yv ? { "@type": "VideoObject", thumbnailUrl: [`https://i.ytimg.com/vi/${yv}/hqdefault.jpg`], embedUrl: `https://www.youtube.com/embed/${yv}` }
+    : l.kind === "audio"
     ? !l.src ? { "@type": "AudioObject", url: tg }
     : { "@type": "AudioObject", contentUrl: safeUrl(l.src), encodingFormat: MIME[(l.src.split("?")[0].split(".").pop() || "").toLowerCase()] || "audio/mpeg" }
     : { "@type": "VideoObject", thumbnailUrl: [`https://i.ytimg.com/vi/${safeYt(l.id)}/hqdefault.jpg`], embedUrl: `https://www.youtube.com/embed/${safeYt(l.id)}` };
   const when = /^\d{4}-\d\d-\d\d$/.test(l.date || "") ? `${l.date}T00:00:00+03:00` : l.date;   // Google wants a full datetime with a zone; our dates are Riyadh days
   return mkPage({
     nav: s.sec, path: href.lesson(l.id), band: bandHtml, html, wire: { t: "lesson", id: l.id, next: next ? href.lesson(next.id) : "" }, ogType: "article",
-    image: l.kind === "video" ? `https://i.ytimg.com/vi/${safeYt(l.id)}/hqdefault.jpg` : OG_DEFAULT,
+    image: thumbOf ? `https://i.ytimg.com/vi/${thumbOf}/hqdefault.jpg` : OG_DEFAULT,
     title: withSite(title), description: desc,
     jsonld: [c.ld, { "@context": "https://schema.org", ...ld, name: title, description: desc, inLanguage: "ar",
-      ...(l.date ? (l.kind === "video" ? { uploadDate: when } : { dateCreated: when }) : {}), ...(l.duration ? { duration: isoDur(l.duration) } : {}),
+      ...(l.date ? (l.kind === "video" || yv ? { uploadDate: when } : { dateCreated: when }) : {}), ...(l.duration ? { duration: isoDur(l.duration) } : {}),
       author: { "@type": "Person", name: FULL_NAME, url: SITE + (state.bio ? href.about() : "/") }, isPartOf: { "@type": "CreativeWorkSeries", name: s.title, url: SITE + href.series(s.id) } }],
   });
 }

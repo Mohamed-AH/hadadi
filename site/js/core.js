@@ -58,8 +58,8 @@ export function applyMedia(lib = {}, media = null) {
   return { ...lib,
     lessons: (lib.lessons || []).map(l => {
       if (l.src) return mine(l.src) ? { ...l, src: mine(l.src), src_alt: l.src } : l;
-      const u = l.tg && mine(l.tg); if (!u) return l;   // audio fetched from its Telegram post (tools/fetch_audio.py): play ours, keep the post link
-      const d = mm[l.tg].duration; return { ...l, src: u, duration: l.duration || (Number.isInteger(d) && d > 0 ? d : 0) };
+      const k = l.tg || (l.yt ? "https://youtu.be/" + l.yt : ""), u = k && mine(k); if (!u) return l;   // audio fetched from its Telegram post, or from the video (yt: tools/video_gaps.py), by tools/fetch_audio.py: play ours, keep the post link
+      const d = mm[k].duration; return { ...l, src: u, duration: l.duration || (Number.isInteger(d) && d > 0 ? d : 0) };
     }),
     books: (lib.books || []).map(b => ({ ...b, files: b.files.map(f => mine(f.url) ? { ...f, url: mine(f.url), url_alt: f.url } : f) })) };
 }
@@ -164,7 +164,8 @@ export const safeLang = l => /^[a-z]{2,3}$/.test(String(l)) ? String(l) : "";
 export const jsonLd = o => JSON.stringify(o).replace(/</g, "\\u003c");                              // safe inside <script type="application/ld+json">
 
 /* ───────── Model helpers ───────── */
-export const kindIcon = l => l.kind === "audio" ? "headphones" : "video";
+export const asVideo = l => l.kind === "audio" && !l.src && !l.tg && !!l.yt;   // an audio-series gap shown with its video until the audio is hosted (tools/video_gaps.py)
+export const kindIcon = l => l.kind === "audio" && !asVideo(l) ? "headphones" : "video";
 export const useLabel = l => l.kind === "video" && l.n != null && l.series !== "misc";   // YouTube titles are long; show "المجلس N" instead
 export const label = l => `${seriesById[l.series].unit || "الدرس"} ${fmtNum(l.n)}`;
 export const mainTitle = (l, withBook = true) => useLabel(l) ? `${label(l)}${withBook && l.section ? " — " + l.section : ""}` : dg(l.title);

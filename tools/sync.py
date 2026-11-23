@@ -5,6 +5,8 @@
      safety: a run that would drop a lesson that is on the site stops here and commits nothing
   3. tools/fetch_audio.py     host the new lessons' audio in R2 -> site/data/media.json (a failed file is retried next run)
   4. tools/youtube_sync.py + tools/import_youtube.mjs -> data/youtube.json, site/catalogue.json (skipped if YouTube refuses; both channels)
+     then tools/video_gaps.py: a numbered lesson that is on YouTube but was never posted as audio joins its audio series
+     (site/data/from_videos.json; its audio comes with `fetch_audio.py --youtube`, run by hand)
   5. node scripts/build.mjs   the site must still build
   6. commit + push to main    Cloudflare redeploys on the push
   7. report                   GitHub's run summary, and an email to the team inbox (POST /api/sync-report, SYNC_TOKEN)
@@ -18,9 +20,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 LIB = ROOT / "site" / "data" / "library.json"
 MEDIA = ROOT / "site" / "data" / "media.json"
+GAPS = ROOT / "site" / "data" / "from_videos.json"
 LESSONS = ROOT / "data" / "channels" / "lessons.json"
 REPORT_URLS = ["https://hadadi.emah84.workers.dev/api/sync-report", "https://h-haddadi.com/api/sync-report"]
-FILES = ["data/channels", "site/data/library.json", "site/data/media.json", "data/youtube.json", "site/catalogue.json"]
+FILES = ["data/channels", "site/data/library.json", "site/data/media.json", "data/youtube.json", "site/catalogue.json", "site/data/from_videos.json"]
 ENV = {**os.environ, "TELEGRAM_EXPORTS": str(ROOT / "data" / "channels"), "PYTHONUNBUFFERED": "1"}
 
 
@@ -91,6 +94,7 @@ def main(argv=None):
     old = load(LIB, {"lessons": []})
     old_ids = {l["id"] for l in old["lessons"]}
     old_media = load(MEDIA, {})
+    old_gaps = {l["id"] for l in load(GAPS, {"lessons": []})["lessons"]}
 
     # 1-2. Telegram
     try:
@@ -138,6 +142,13 @@ def main(argv=None):
         except Exception as e:
             rep["errors"].append("YouTube (videos skipped this run): " + str(e)[:300])
             run(["git", "checkout", "--", "data/youtube.json", "site/catalogue.json"], check=False)
+    try:   # after both imports: a gap can open (a new video) or close (its audio was posted after all)
+        run([sys.executable, "tools/video_gaps.py"])
+        rep["lessons"] += [f"{l['title']} ({l['id']}, from the video: its audio waits for fetch_audio.py --youtube)"
+                           for l in load(GAPS, {"lessons": []})["lessons"] if l["id"] not in old_gaps]
+    except Exception as e:
+        rep["errors"].append("Gaps from videos: " + str(e)[:300])
+        run(["git", "checkout", "--", "site/data/from_videos.json"], check=False)
 
     # 5-6. build, commit, push
     files = changed_files()

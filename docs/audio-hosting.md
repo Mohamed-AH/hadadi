@@ -34,6 +34,7 @@ python tools/fetch_audio.py --limit 3                     # try three lessons fi
 python tools/fetch_audio.py --max-gb 3                    # a batch: stop after about 3 GB downloaded
 python tools/fetch_audio.py --max-gb 5 --commit-every 25  # also commit and push site/data/media.json as it goes
 python tools/fetch_audio.py --series riyad bukhari        # only some series
+python tools/fetch_audio.py --youtube                    # also the lessons never posted as audio (site/data/from_videos.json): audio from the video, needs yt-dlp
 ```
 
 Without `--commit-every`, commit `site/data/media.json` yourself afterwards. Every push deploys, and the new lessons start playing.

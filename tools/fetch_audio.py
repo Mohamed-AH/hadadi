@@ -11,6 +11,7 @@ r"""Download the lesson audio from Telegram, shrink it, and host it in our own C
     python tools/fetch_audio.py --max-gb 5 --commit-every 25   # also commit + push site/data/media.json as it goes
     python tools/fetch_audio.py --redo https://t.me/jabiri/755 --file ~/Downloads/right.m4a   # replace one lesson's audio with a file you have
     python tools/fetch_audio.py --export ~/Downloads/Telegram\ Desktop/ChatExport_jabiri   # use files already exported by Telegram Desktop
+    python tools/fetch_audio.py --youtube                 # the lessons never posted as audio (site/data/from_videos.json): audio from the video, yt-dlp
 
 For each lesson in site/data/library.json that has no audio of ours yet, newest first:
   1. get the file of its Telegram post (t.me/<channel>/<id>) - through your own Telegram account (Telethon, read-only, slow
@@ -27,9 +28,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LIBRARY = ROOT / "site" / "data" / "library.json"
+FROM_VIDEOS = ROOT / "site" / "data" / "from_videos.json"    # tools/video_gaps.py: audio-series gaps whose recording is only on YouTube
 MANIFEST = ROOT / "site" / "data" / "media.json"
 SESSION = ROOT / ".telegram"          # Telethon adds ".session"
 POST = re.compile(r"^https://t\.me/([A-Za-z0-9_]{4,32})/(\d+)$")
+YT = re.compile(r"^[\w-]{11}$")
+
+
+def key_of(l):
+    """media.json key: the Telegram post, or https://youtu.be/<id> for a lesson whose audio comes from its video."""
+    if POST.match(l.get("tg", "")): return l["tg"]
+    return f"https://youtu.be/{l['yt']}" if YT.match(l.get("yt", "")) else ""
 
 
 def load_env():
@@ -52,7 +61,7 @@ def save(manifest):
 
 
 def todo_list(lib, manifest, series=None):
-    out = [l for l in lib["lessons"] if l.get("kind") == "audio" and not l.get("src") and POST.match(l.get("tg", "")) and l["tg"] not in manifest]
+    out = [l for l in lib["lessons"] if l.get("kind") == "audio" and not l.get("src") and key_of(l) and key_of(l) not in manifest]
     if series: out = [l for l in out if l["series"] in series]
     return sorted(out, key=lambda l: l.get("date", ""), reverse=True)     # newest first: what visitors open most
 
@@ -118,6 +127,22 @@ class ExportSource:
         p = self.files.get((cid, msg_id)) if cid else None
         if not p: raise LookupError("not in the export folder(s)")
         shutil.copyfile(p, dst)
+        return os.path.getsize(dst)
+
+
+class YouTubeSource:
+    """The audio track of a YouTube video, with yt-dlp (pip install yt-dlp). For the lessons in site/data/from_videos.json only."""
+    def __init__(self):
+        if not shutil.which("yt-dlp"): sys.exit("yt-dlp is not installed (pip install yt-dlp)")
+
+    def fetch(self, video_id, dst):
+        if not YT.match(video_id): raise LookupError("bad video id")
+        tmpl = dst + ".%(ext)s"
+        subprocess.run(["yt-dlp", "-q", "--no-playlist", "--no-progress", "-f", "bestaudio/best", "-o", tmpl,
+                        f"https://www.youtube.com/watch?v={video_id}"], check=True, timeout=1800)
+        got = [p for p in Path(dst).parent.glob(Path(dst).name + ".*")]
+        if not got: raise LookupError("yt-dlp wrote no file")
+        shutil.move(str(got[0]), dst)
         return os.path.getsize(dst)
 
 
@@ -218,11 +243,14 @@ def main(argv=None, source=None, s3=None):
     ap.add_argument("--redo", nargs="*", default=[], help="convert and upload these lessons again (their t.me links), replacing our copy")
     ap.add_argument("--file", help="with one --redo link: use this audio file instead of the Telegram post's file")
     ap.add_argument("--relink", action="store_true", help="only rewrite the links in media.json to the current MEDIA_BASE (after moving the bucket to a custom domain); nothing is downloaded or uploaded")
+    ap.add_argument("--youtube", action="store_true", help="also the lessons never posted as audio on Telegram (site/data/from_videos.json): take the audio from the video with yt-dlp")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args(argv)
     load_env()
 
     lib, manifest = json.loads(LIBRARY.read_text(encoding="utf-8")), load_manifest()
+    if a.youtube and FROM_VIDEOS.exists():
+        lib = {**lib, "lessons": lib["lessons"] + json.loads(FROM_VIDEOS.read_text(encoding="utf-8")).get("lessons", [])}
     if a.relink:
         base = os.environ.get("MEDIA_BASE", "").rstrip("/")
         if not base.startswith("https://"): sys.exit("set MEDIA_BASE to the new https:// address first")
@@ -230,16 +258,18 @@ def main(argv=None, source=None, s3=None):
         save(manifest); print(f"relinked {len(manifest)} lessons to {base}  -> commit site/data/media.json", file=sys.stderr)
         return 0
     redo = set(a.redo)
-    todo = [l for l in lib["lessons"] if l.get("tg") in redo] if redo else todo_list(lib, manifest, a.series)
+    todo = [l for l in lib["lessons"] if key_of(l) in redo] if redo else todo_list(lib, manifest, a.series)
     print(f"{len(todo)} lessons without our own audio; {len(manifest)} already hosted", file=sys.stderr)
     if a.dry_run:
-        for l in todo[: a.limit or None]: print(f"  {l.get('date', ''):10}  {l['tg']:32}  {l['title'][:70]}")
+        for l in todo[: a.limit or None]: print(f"  {l.get('date', ''):10}  {key_of(l):32}  {l['title'][:70]}")
         return 0
     if not todo: return 0
     if not shutil.which("ffmpeg"): sys.exit("ffmpeg is not installed (https://ffmpeg.org/download.html)")
     s3 = s3 or r2_client()
     if a.file and len(todo) != 1: sys.exit("--file needs exactly one lesson: --redo <its t.me link> --file <audio file>")
-    source = source or (FileSource(a.file) if a.file else ExportSource(a.export) if a.export else TelegramSource(a.pause))
+    tg_todo = any(POST.match(l.get("tg", "")) for l in todo)
+    source = source or (FileSource(a.file) if a.file else ExportSource(a.export) if a.export else TelegramSource(a.pause) if tg_todo else None)
+    ysource = None
     bucket, base = os.environ.get("R2_BUCKET", ""), os.environ.get("MEDIA_BASE", "").rstrip("/")
 
     done, got, failed, since_commit = 0, 0, [], 0
@@ -248,29 +278,36 @@ def main(argv=None, source=None, s3=None):
         for i, l in enumerate(todo, 1):
             if a.limit and done >= a.limit: break
             if a.max_gb and got >= a.max_gb * 1e9: print(f"reached --max-gb {a.max_gb}", file=sys.stderr); break
-            channel, msg_id = POST.match(l["tg"]).groups()
+            k = key_of(l)
             raw, out = work / "in", work / "out.m4a"
             try:
-                print(f"  [{i}/{len(todo)}] {l['tg']}  {l['title'][:50]}", file=sys.stderr, flush=True)
-                got += source.fetch(channel, int(msg_id), str(raw))
+                print(f"  [{i}/{len(todo)}] {k}  {l['title'][:50]}", file=sys.stderr, flush=True)
+                if isinstance(source, FileSource):        # --redo <link> --file <audio>: the file given, whatever the lesson's source
+                    got += source.fetch("", 0, str(raw))
+                elif POST.match(l.get("tg", "")):
+                    channel, msg_id = POST.match(l["tg"]).groups()
+                    got += source.fetch(channel, int(msg_id), str(raw))
+                else:
+                    ysource = ysource or YouTubeSource()
+                    got += ysource.fetch(l["yt"], str(raw))
                 print("    converting ...", end="", file=sys.stderr, flush=True)
                 secs, kbps = convert(str(raw), str(out))
                 print(" uploading ...", file=sys.stderr, flush=True)
                 sha, size = sha256(out), out.stat().st_size
                 key = f"audio/{sha[:16]}.m4a"
                 upload(s3, str(out), bucket, key, {"ContentType": "audio/mp4", "CacheControl": "public, max-age=31536000, immutable",
-                                                   "Metadata": {"source": l["tg"], "sha256": sha}})
+                                                   "Metadata": {"source": k, "sha256": sha}})
                 if a.keep_dir:
                     Path(a.keep_dir).mkdir(parents=True, exist_ok=True); shutil.copyfile(out, Path(a.keep_dir) / f"{l['id']}.m4a")
-                old = manifest.get(l["tg"], {}).get("key")
-                manifest[l["tg"]] = {"url": f"{base}/{key}", "key": key, "sha256": sha, "size": size, "duration": secs, "src_size": raw.stat().st_size}
+                old = manifest.get(k, {}).get("key")
+                manifest[k] = {"url": f"{base}/{key}", "key": key, "sha256": sha, "size": size, "duration": secs, "src_size": raw.stat().st_size}
                 if old and old != key and not any(m.get("key") == old for m in manifest.values()):
                     s3.delete_object(Bucket=bucket, Key=old)   # --redo: drop the earlier copy, unless another lesson still uses it
                 save(manifest); done += 1; since_commit += 1
                 print(f"    done: {raw.stat().st_size / 1e6:.1f} -> {size / 1e6:.1f} MB ({kbps} kbps), {secs // 60} min", file=sys.stderr, flush=True)
                 if a.commit_every and since_commit >= a.commit_every: git_publish(since_commit); since_commit = 0
             except Exception as e:
-                failed.append((l["tg"], f"{type(e).__name__}: {e}")); print(f"  FAILED {l['tg']}: {e}", file=sys.stderr)
+                failed.append((k, f"{type(e).__name__}: {e}")); print(f"  FAILED {k}: {e}", file=sys.stderr)
             finally:
                 for p in (raw, out):
                     if p.exists(): p.unlink()

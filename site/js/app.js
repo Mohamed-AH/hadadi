@@ -1,5 +1,5 @@
 /* Browser app. Pages arrive pre-rendered (scripts/build.mjs); this script wires them up and handles client-side navigation. */
-import { init, setAnnouncements, todayRiyadh, state, byId, seriesById, secById, ic, safeYt, safeUrl, cleanQuery, oneOf, hashToPath, href, dur, fullTitle, esc, NAME, PAGE, SECTIONS, count as countAr, itemKind } from "./core.js";
+import { init, setAnnouncements, todayRiyadh, state, byId, seriesById, secById, ic, safeYt, safeUrl, cleanQuery, oneOf, hashToPath, href, dur, fullTitle, esc, NAME, PAGE, SECTIONS, count as countAr, itemKind, asVideo } from "./core.js";
 import { resolve, searchResults, seriesInfo, seriesList, listenOrder, moreBtn, SERIES_PAGE, ogTitle, coverColor, speedLabel, SPEEDS, CONTACT_MSG } from "./views.js";
 
 const $ = s => document.querySelector(s);
@@ -165,7 +165,7 @@ function wireSeries(id) {
   const resume = $("#resume"), last = byId[store.get("lastIn", {})[id]];
   plays.hidden = !order.length;
   const note = $("#plays-n");
-  if (note) note.textContent = order.length < info.all.length ? `يمكن تشغيل ${countAr(order.length, itemKind(id))} هنا من ${countAr(info.all.length, itemKind(id))} حتى الآن، والبقية على تيليجرام.` : "";
+  if (note) note.textContent = order.length < info.all.length ? `يمكن تشغيل ${countAr(order.length, itemKind(id))} هنا من ${countAr(info.all.length, itemKind(id))} حتى الآن، والبقية ${((v, t) => v && t ? "على تيليجرام أو تسجيلات مرئية" : v ? "تسجيلات مرئية" : "على تيليجرام")(info.all.some(l => asVideo(l)), info.all.some(l => !l.src && !asVideo(l)))}.` : "";
   if (last && last.src && last.series === id && !progress(last.id)?.done) {
     resume.hidden = false;
     resume.innerHTML = `${ic("headphones", 17)} متابعة: <span class="rs-t">${esc(fullTitle(last))}</span>${saved(last.id) ? ` <span class="rs-d">(${tfmt(saved(last.id))})</span>` : ""}`;
