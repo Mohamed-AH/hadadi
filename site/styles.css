@@ -350,9 +350,10 @@ body.has-dock{padding-bottom:80px}
 .soc{display:flex;flex-wrap:wrap;gap:10px}
 .soc a{display:grid;place-items:center;width:44px;height:44px;border-radius:8px;border:1px solid var(--night-line);background:var(--night-2);color:var(--brass);transition:background .2s,border-color .2s,color .2s,transform .2s}
 .soc a:hover{background:var(--brass);border-color:var(--brass);color:#2b1d12;transform:translateY(-2px)}
-.soc .soc-telegram{color:#26a5e4}.soc .soc-whatsapp{color:#25d366}
+.soc .soc-telegram{color:#26a5e4}.soc .soc-whatsapp{color:#25d366}.soc .soc-youtube{color:#ff0000}
+.soc .soc-youtube:hover{background:#ff0000;border-color:#ff0000;color:#fff}
 .soc .soc-telegram:hover{background:#26a5e4;border-color:#26a5e4;color:#fff}.soc .soc-whatsapp:hover{background:#25d366;border-color:#25d366;color:#fff}
-.drawer-f .brand-telegram{color:#26a5e4}.drawer-f .brand-whatsapp{color:#1fa855}
+.drawer-f .brand-telegram{color:#26a5e4}.drawer-f .brand-whatsapp{color:#1fa855}.drawer-f .brand-youtube{color:#e00}
 /* «تواصل معنا»: the same tile as the social marks beside it (owner 2026-11-22: the filled sand block did not fit), with a label */
 .foot-cta{display:inline-flex;align-items:center;gap:9px;padding:0 16px 0 18px;height:44px;border-radius:8px;border:1px solid var(--night-line);background:var(--night-2);color:var(--on-night)!important;font-weight:500;font-size:16.5px;transition:background .2s,border-color .2s,color .2s,transform .2s}
 .foot-cta svg{color:var(--brass);transition:color .2s}
@@ -714,7 +715,7 @@ button svg, button .ic { pointer-events: none; }   /* clicks land on the button,
 .c-links a>svg:last-child{margin-inline-start:auto;color:var(--on-night-2);opacity:.7}
 .c-links a:hover{border-color:var(--brass);transform:translateY(-2px)}
 .c-links a:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
-.c-telegram>svg:first-child{color:#26a5e4}.c-whatsapp>svg:first-child{color:#25d366}
+.c-telegram>svg:first-child{color:#26a5e4}.c-whatsapp>svg:first-child{color:#25d366}.c-youtube>svg:first-child{color:#e00}
 .c-note{display:flex;gap:8px;align-items:flex-start;margin-top:18px!important;padding-top:16px;border-top:1px solid var(--night-line);font-size:15.5px;line-height:1.7}
 .c-note svg{flex:none;margin-top:4px;color:var(--brass)}
 @media(max-width:900px){.contact{grid-template-columns:1fr;gap:22px;margin-top:24px}}

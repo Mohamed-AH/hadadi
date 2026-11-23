@@ -4,7 +4,7 @@
   2. telegram_lessons.py + import_telegram.py (TELEGRAM_EXPORTS=data/channels) -> site/data/library.json
      safety: a run that would drop a lesson that is on the site stops here and commits nothing
   3. tools/fetch_audio.py     host the new lessons' audio in R2 -> site/data/media.json (a failed file is retried next run)
-  4. tools/youtube_sync.py + tools/import_youtube.mjs -> data/youtube.json, site/catalogue.json (skipped if YouTube refuses)
+  4. tools/youtube_sync.py + tools/import_youtube.mjs -> data/youtube.json, site/catalogue.json (skipped if YouTube refuses; both channels)
      then tools/video_gaps.py: a numbered lesson that is on YouTube but was never posted as audio joins its audio series
      (site/data/from_videos.json; its audio comes with `fetch_audio.py --youtube`, run by hand)
   5. node scripts/build.mjs   the site must still build
@@ -138,6 +138,7 @@ def main(argv=None):
             if got["added"]: run(["node", "tools/import_youtube.mjs"])
             rep["videos"] = [f"{v['title']} (https://youtu.be/{v['id']})" for v in got["added"]]
             rep["held"] += [f"Video https://youtu.be/{v['id']}: {v['why']}. {v['title']}" for v in got["held"]]
+            rep["errors"] += ["YouTube: " + x for x in got.get("errors", [])]
         except Exception as e:
             rep["errors"].append("YouTube (videos skipped this run): " + str(e)[:300])
             run(["git", "checkout", "--", "data/youtube.json", "site/catalogue.json"], check=False)

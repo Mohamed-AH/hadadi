@@ -2,7 +2,7 @@
    Used by scripts/build.mjs (pre-rendering to real static HTML) and by js/app.js (client-side navigation). */
 import {
   SITE, NAME, NAME_FULL, OFFICIAL_PRE, FULL_NAME, ROLE, OFFICIAL_NAME, YT_CHANNEL, TG_CHANNEL, LINKS, CONTACT_EMAIL, tsKey, hasContact, SECTIONS, COVER, COVER_PALETTE, PAGE, MAXQ, ROSHAN,
-  state, byId, seriesById, secById, ic, brand, esc, fmtNum, count, itemKind, fmtYear, ldate, dur, isoDur, hours, dg, cleanQuery, oneOf, safeUrl, safeYt, safeLang, safeDecode, jsonLd,
+  state, byId, seriesById, secById, ic, brand, esc, fmtNum, count, itemKind, fmtYear, ldate, rawDate, dur, isoDur, hours, dg, cleanQuery, oneOf, safeUrl, safeYt, safeLang, safeDecode, jsonLd,
   DOCS, SCHEDULE, todayRiyadh, kindIcon, useLabel, label, mainTitle, fullTitle, secOfSeries, secOfLesson, seriesOrder, lang, thumb, STAR, LOGO, match, sectionCount, visible, isFlat, seriesIn, href, fmtDate,
 } from "./core.js";
 
@@ -210,7 +210,7 @@ export function seriesList(info, st) {
 }
 export const moreBtn = left => `<button type="button" class="more" id="more">عرض المزيد (${fmtNum(left)})</button>`;
 
-const NEWEST_FIRST = new Set(["khutab", "lectures", "tilawa", "fatawa", "tafsir", "v-khutab", "v-lectures"]);   // collections, not books: newest first
+const NEWEST_FIRST = new Set(["khutab", "lectures", "tilawa", "fatawa", "tafsir", "v-khutab", "v-lectures", "v-fawaid"]);   // collections, not books: newest first
 function seriesPage(id) {
   const info = seriesInfo(id); if (!info) return null;
   const { s, sec, flat, ordered, sections } = info;
@@ -218,8 +218,8 @@ function seriesPage(id) {
   const list = seriesList(info, st);
   // no invented blurbs: a series without its own description says what the data says (how many lessons, from when to when)
   const dated = info.all.filter(l => l.date).sort((a, b) => a.date.localeCompare(b.date));
-  const d1 = dated.length ? ldate(dated[0]) : "", d2 = dated.length ? ldate(dated[dated.length - 1]) : "";
-  const span = !d1 ? "" : d1 === d2 ? `في ${d1}` : `من ${d1} إلى ${d2}`;
+  const d1 = dated.length ? rawDate(dated[0]) : "", d2 = dated.length ? rawDate(dated[dated.length - 1]) : "";
+  const span = (dated.length && dated.every(l => l.posted) ? "نُشرت " : "") + (!d1 ? "" : d1 === d2 ? `في ${d1}` : `من ${d1} إلى ${d2}`);
   const c = crumbs(flat ? [{ t: sec.title }] : [{ t: sec.title, h: href.section(sec) }, { t: s.title }]);
   const audio = info.all.some(l => l.src);
   const html = `
@@ -375,7 +375,7 @@ function contactPage(params) {
       <button type="submit" class="btn cform-go" id="cform-go">${ic("send", 19)}<span>إرسال الرسالة</span></button>
     </form>
     <aside class="c-side" aria-labelledby="c-side-h"><h2 id="c-side-h">قنوات الشيخ</h2><p>تُنشر الدروس والإعلانات أولًا بأول في:</p>
-      <ul class="c-links" role="list">${LINKS.map(x => `<li><a class="c-${x.b}" href="${x.h}" target="_blank" rel="noopener" aria-label="${esc(x.t)} (يفتح في نافذة جديدة)">${brand(x.b, 22)}<span>${x.b === "telegram" ? "قناة تيليجرام" : "مجموعة واتساب"}</span>${ic("external-link", 15)}</a></li>`).join("")}</ul>
+      <ul class="c-links" role="list">${LINKS.map(x => `<li><a class="c-${x.b}" href="${x.h}" target="_blank" rel="noopener" aria-label="${esc(x.t)} (يفتح في نافذة جديدة)">${brand(x.b, 22)}<span>${{ telegram: "قناة تيليجرام", whatsapp: "مجموعة واتساب", youtube: "قناة يوتيوب" }[x.b] || esc(x.s)}</span>${ic("external-link", 15)}</a></li>`).join("")}</ul>
       <p class="c-note">${ic("shield-check", 17)} رسالتك تصل إلى القائمين على الموقع وحدهم، ولا نعرضها لأحد.</p></aside></div>`,
     title: withSite("تواصل معنا"), description: `راسل القائمين على موقع ${NAME_FULL}، دون الحاجة إلى بريد إلكتروني.`, jsonld: [c.ld], wire: { t: "contact" },
   });
