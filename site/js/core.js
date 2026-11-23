@@ -164,7 +164,8 @@ export const safeLang = l => /^[a-z]{2,3}$/.test(String(l)) ? String(l) : "";
 export const jsonLd = o => JSON.stringify(o).replace(/</g, "\\u003c");                              // safe inside <script type="application/ld+json">
 
 /* ───────── Model helpers ───────── */
-export const kindIcon = l => l.kind === "audio" ? "headphones" : "video";
+export const asVideo = l => l.kind === "audio" && !l.src && !l.tg && !!l.yt;   // an audio-series gap shown with its video until the audio is hosted (tools/video_gaps.py)
+export const kindIcon = l => l.kind === "audio" && !asVideo(l) ? "headphones" : "video";
 export const useLabel = l => l.kind === "video" && l.n != null && l.series !== "misc";   // YouTube titles are long; show "المجلس N" instead
 export const label = l => `${seriesById[l.series].unit || "الدرس"} ${fmtNum(l.n)}`;
 export const mainTitle = (l, withBook = true) => useLabel(l) ? `${label(l)}${withBook && l.section ? " — " + l.section : ""}` : dg(l.title);

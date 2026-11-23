@@ -30,7 +30,9 @@ cat = {"lessons": [
     {"id": "CCCCCCCCCC1", "series": "v-khutab", "n": 1, "hd": "1448-3-25", "date": "2026-09-07", "duration": 65},
 ]}
 g = gaps(lib, cat)
-check([l["id"] for l in g] == ["yt-AAAAAAAAAA2", "yt-BBBBBBBBBB1"], f"gaps {[l['id'] for l in g]}")
+check([l["id"] for l in g] == ["yt-AAAAAAAAAA2", "yt-AAAAAAAAAA7", "yt-BBBBBBBBBB1"], f"gaps {[l['id'] for l in g]}")
+check(g[1]["title"] == "الداء — ١٨ جمادى الأولى ١٤٤٨هـ", "an unnumbered video keeps its date: " + g[1]["title"])
+g = [x for x in g if x["id"] != "yt-AAAAAAAAAA7"]
 check(g[0]["title"] == "الداء — المجلس الثاني" and g[0]["yt"] == "AAAAAAAAAA2" and g[0]["kind"] == "audio" and g[0]["src"] == "", "gap lesson shape")
 check(g[0]["duration"] == 61 and g[0]["hd"] == "1448-3-22" and g[0]["date"] == "2026-09-04", "date and duration from the video")
 check(g[1]["title"] == "السيرة — الدرس الأول", "unit word falls back to the series' titles")
@@ -39,8 +41,9 @@ check(g[1]["title"] == "السيرة — الدرس الأول", "unit word fall
 root = Path(__file__).resolve().parent.parent
 real = gaps(json.loads((root / "site/data/library.json").read_text("utf-8")), json.loads((root / "site/catalogue.json").read_text("utf-8")))
 want = {("daa-dawa", "ITWM1CNHlns"), ("daa-dawa", "Wt0MC1YbEKA"), ("daa-dawa", "npcCJmvF-t4"), ("daa-dawa", "3uPgsmRVTL8"),
-        ("kabair", "8S_ncn_YKhg"), ("kabair", "EBjDGS-dmQA"), ("kabair", "saDte5a0yFA")}
-check(want <= {(l["series"], l["yt"]) for l in real}, "الداء والدواء 4/8/9/11 and الكبائر 1/3/4 filled")
+        ("kabair", "8S_ncn_YKhg"), ("kabair", "EBjDGS-dmQA"), ("kabair", "saDte5a0yFA"), ("wabil", "ktxELgwlwRw")}
+check(want <= {(l["series"], l["yt"]) for l in real}, "الداء والدواء 4/8/9/11, الكبائر 1/3/4 and الوابل «١٨ جمادى الأولى» filled")
+check(not any(l["series"] in ("khutab", "lectures") for l in real), "khutab and talks are not sequences")
 check(not any(l["series"] == "kabair" and l["yt"] == "j6V2WBLW9_k" for l in real), "الكبائر 2 is on Telegram already")
 committed = json.loads((root / "site/data/from_videos.json").read_text("utf-8"))["lessons"]
 check(committed == real, "site/data/from_videos.json is up to date (run tools/video_gaps.py)")

@@ -227,6 +227,7 @@ span.btn{cursor:default}
 
 /* lite YouTube player (YouTube loads only when the visitor presses play) */
 .frame{margin-top:20px;border-radius:6px;overflow:hidden;max-width:760px}
+.vnote{display:flex;align-items:center;gap:8px;margin-top:10px;max-width:760px;color:var(--on-night-2);font-family:var(--ui);font-size:.95rem}
 .player{aspect-ratio:16/9;background:#000;position:relative}
 .player iframe{width:100%;height:100%;border:0;display:block}
 .player.lite{cursor:pointer}

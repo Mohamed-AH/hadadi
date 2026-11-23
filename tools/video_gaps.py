@@ -47,6 +47,14 @@ def number(title):
     return None
 
 
+MONTHS = ["محرم", "صفر", "ربيع الأول", "ربيع الآخر", "جمادى الأولى", "جمادى الآخرة", "رجب", "شعبان", "رمضان", "شوال", "ذو القعدة", "ذو الحجة"]
+
+
+def hijri(hd):
+    y, m, d = (int(x) for x in hd.split("-"))
+    return f"{d} {MONTHS[m - 1]} {y}هـ".translate(str.maketrans("0123456789", "٠١٢٣٤٥٦٧٨٩"))
+
+
 def unit_word(lessons):
     """The word this series' own titles use («المجلس» for الداء والدواء), «الدرس» by default."""
     seen = [m.group(0) for l in lessons for m in [re.search(WORDS, l["title"])] if m]
@@ -58,15 +66,19 @@ def gaps(lib, cat):
     audio = {}
     for l in lib["lessons"]:
         audio.setdefault(l["series"], []).append(l)
+    numbered = {v["series"] for v in cat["lessons"] if isinstance(v.get("n"), int)}   # book series; khutab and talks are not sequences
     out = []
-    for v in sorted(cat["lessons"], key=lambda v: (v["series"], v.get("n") or 0)):
+    for v in sorted(cat["lessons"], key=lambda v: (v["series"], v["date"])):
         sid = v["series"][2:] if v["series"].startswith("v-") else ""
-        if not sid or sid not in meta or not isinstance(v.get("n"), int): continue
+        if not sid or sid not in meta or v["series"] not in numbered: continue
+        n = v.get("n") if isinstance(v.get("n"), int) else None
         day = dt.date.fromisoformat(v["date"])
         mine = [l for l in audio.get(sid, []) if l.get("date") and abs((dt.date.fromisoformat(l["date"]) - day).days) <= RUN]
-        if any(number(l["title"]) == v["n"] for l in mine): continue
-        if any(l.get("date") and 0 <= (dt.date.fromisoformat(l["date"]) - day).days <= NEAR and number(l["title"]) is None for l in mine): continue
-        out.append({"id": f"yt-{v['id']}", "title": f"{meta[sid]['title']} — {unit_word(mine or audio.get(sid, []))} {ordinal(v['n'])}", "series": sid,
+        if n is not None and any(number(l["title"]) == n for l in mine): continue
+        if any(0 <= (dt.date.fromisoformat(l["date"]) - day).days <= NEAR and (n is None or number(l["title"]) is None) for l in mine): continue
+        # a video with no number in its own title (الوابل «١٨ جمادى الأولى») keeps its date as the title: its number is not guessed
+        name = f"{unit_word(mine or audio.get(sid, []))} {ordinal(n)}" if n is not None else hijri(v["hd"])
+        out.append({"id": f"yt-{v['id']}", "title": f"{meta[sid]['title']} — {name}", "series": sid,
                     "kind": "audio", "src": "", "yt": v["id"], "hd": v["hd"], "date": v["date"], "duration": v["duration"]})
     return out
 
